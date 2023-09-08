@@ -14,7 +14,8 @@ headerDict.setdefault('x-api-key', token["token"])
 paramDict = {}
 
 # Request
-game_id=27233969
+game_id=27619194
+end_point=2000
 while(True):
     i=0
     game_id+=1
@@ -23,8 +24,9 @@ while(True):
     responce_datas = requestDataWithHeader.json()
     with open(f"{game_id}.json",'w',encoding='utf-8') as outfile:
         json.dump(responce_datas,outfile, indent="\t",ensure_ascii=False)
-    if i==1000:
+    if i==end_point:
         break
+    i+=1
     time.sleep(1)
 # with open("27233969.json", "r",encoding='utf-8') as json_file:
 #     json_data = json.load(json_file)
