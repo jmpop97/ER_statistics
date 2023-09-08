@@ -34,7 +34,8 @@ getMMR_range[100]="100~125"
 getMMR_range[125]="125~150"
 getMMR_range[150]="150~175"
 getMMR_range[175]="175~200"
-getMMR_range[200]="200~"
+getMMR_range[200]="200~225"
+getMMR_range[225]="225~"
 class Tier:
     def __init__(self):
         self.tier={}

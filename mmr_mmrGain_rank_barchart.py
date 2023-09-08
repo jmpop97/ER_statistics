@@ -18,12 +18,11 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import numpy as np
-plt.rcParams["font.family"] = 'Malgun Gothic'
-plt.style.use('_mpl-gallery')
-mpl.rcParams['axes.unicode_minus'] = False
-
 
 for num in characterNum_dic:
+    plt.rcParams["font.family"] = 'Malgun Gothic'
+    plt.style.use('_mpl-gallery')
+    mpl.rcParams['axes.unicode_minus'] = False
     #캐릭터별
     plt.figure(num,figsize = (15, 8))
     plot_place=1
@@ -63,3 +62,6 @@ for num in characterNum_dic:
         plt.ylim([0,1])
     plt.subplots_adjust(left=0.07,bottom=0.07,top=0.9)
     plt.savefig("fig/"+character_name[str(num)]+"mmr_mmrGain_rank_range")
+    plt.cla()   # clear the current axes
+    plt.clf()   # clear the current figure
+    plt.close() # closes the current figure

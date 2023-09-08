@@ -16,9 +16,11 @@ character_name=LoadCharacter()
 '''
 import json
 i=0
+start_point=27619195
+end_point=2026
 characterNum_dic={}
-while i<1000:
-    datas_num=27233969+i
+while i<end_point:
+    datas_num=start_point+i
     with open(f"datas/{datas_num}.json", "r", encoding='utf-8') as f:
         game_datas = json.load(f)
     
