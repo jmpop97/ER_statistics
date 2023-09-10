@@ -1,5 +1,7 @@
 def mmr_charges(mmr):
-    if mmr<5000:
+    if mmr<1000:
+        mmr_charge=0
+    elif mmr<5000:
         mmr_charge=int(mmr/250)*2+2
     else:
         mmr_charge=int(mmr/250)*3-17
@@ -68,5 +70,35 @@ class Tier:
                 break
 
 
+class Tier_over:
+    def __init__(self):
+        self.tier={}
+        self.tier["아이언"]={}
+        self.tier["브론즈"]={}
+        self.tier["실버"]={}
+        self.tier["골드"]={}
+        self.tier["플레티넘"]={}
+        self.tier["다이아"]={}
+        self.tier["데미갓"]={}
+        self.tier["all"]={}
 
+    def split_getmmr(self,getMMR):
+        mmrGain_range=[0,25,50,75,100,125,150,175,200,225]
+        while mmrGain_range!=[]:
+            getMMR_min=mmrGain_range.pop()
+            if getMMR_min<=getMMR:
+                return getMMR_range[getMMR_min]
+        return "~0"
+
+    def split_tier(self,mmrBefore,getMMR):
+        mmrBefore_range=[0,1000,2000,3000,4000,5000,6000]
+        mmrGain_range=self.split_getmmr(getMMR)
+        self.tier["all"][mmrGain_range]=self.tier["all"].get(mmrGain_range,0)+1
+        while mmrBefore_range!=[]:  
+            tier_min=mmrBefore_range.pop()
+            if tier_min<=mmrBefore:
                 
+                self.tier[tier_range[tier_min]][mmrGain_range]=self.tier[tier_range[tier_min]].get(mmrGain_range,0)+1
+                break
+
+
