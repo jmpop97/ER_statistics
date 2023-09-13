@@ -1,4 +1,4 @@
-from ER1_mmr_datas import *
+from ER1_mmr_datas_dic import dic_characterNum_characterCount,dic_characterNum_characterName,dic_characterNum_mmrBefore
 
 #통계분석
 import matplotlib as mpl
@@ -6,8 +6,6 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import numpy as np
 
-
-characterNumber=len(characterNum_dic)
 
 from mmr_range import mmr_charges,mmr_line
 mmr_ranges,mmr_lines=mmr_line()
