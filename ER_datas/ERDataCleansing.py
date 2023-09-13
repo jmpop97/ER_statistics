@@ -38,7 +38,7 @@ def ERDataCleansing(start_point,end_point,type,condition):
 
         for user_data in game_datas["userGames"]:
             '''유저 정보'''
-            result_data.filter_data(user_data)
+            result_data.result(user_data)
 
              # mmrBefore_mmrGain[mmrBefore]=mmrBefore_mmrGain.get(mmrBefore,[])+[mmrGain]
         
@@ -46,9 +46,13 @@ def ERDataCleansing(start_point,end_point,type,condition):
     return result_data
 
 class FilterType():
+    '''type=filter
+    dic_characterNum_datas[condition]=datas
+    '''
     def filter_data_init(self):
         self.dic_characterNum_datas={}
         pass
+    
     def filter_data(self,user_data):
         characterNum=user_data["characterNum"]
         datas={}
@@ -56,23 +60,44 @@ class FilterType():
         for request_datatype in request_datatype_list:
             datas[request_datatype]=user_data[request_datatype]
             self.dic_characterNum_datas[characterNum]=self.dic_characterNum_datas.get(characterNum,[])+[datas]
-        return self.dic_characterNum_datas
+
+    
+    '''type=mmrBefore_mmrGain
+
+    '''
+    def mmrBefore_mmrGain_init(self):
+        self.dic_characterNum_datas={}
+        pass
+    
+    def mmrBefore_mmrGain(self,user_data):
+        characterNum=user_data["characterNum"]
+        for condition in self.condition:
+            data=user_data[condition]
+            dic_characterNum_datas=self.dic_characterNum_datas.get(characterNum,{})
+            dic_characterNum_datas[condition]=dic_characterNum_datas.get(condition,[])+[data]
+        self.dic_characterNum_datas[characterNum]=dic_characterNum_datas
+
     dic_type_init={
-        "filter": filter_data_init
+        "filter": filter_data_init,
+        "mmrBefore_mmrGain": mmrBefore_mmrGain_init
     }
     dic_type_result={
-        "filter": filter_data
+        "filter": filter_data,
+        "mmrBefore_mmrGain": mmrBefore_mmrGain
     }
+    
+    '''setting'''
     def __init__(self,type,condition):
         self.type=type
         self.condition=condition
         self.dic_type_init[type](self)
         pass
+    '''add result'''
     def result(self,user_data):
         self.dic_type_result[self.type](self,user_data)
 
 request_datatype_list=["mmrBefore","mmrGain"]
-dic_characterNum_datas=ERDataCleansing(27619195,27621220,"filter",["mmrBefore","mmrGain"])
+dic_characterNum_datas=ERDataCleansing(27619195,27621220,"mmrBefore_mmrGain",["mmrBefore","mmrGain"])
 print(dic_characterNum_datas.dic_characterNum_datas)
 
     
