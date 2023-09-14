@@ -40,7 +40,7 @@ def ERDataCleansing(start_point,end_point,type,condition):
             '''유저 정보'''
             result_data.result(user_data)
 
-             # mmrBefore_mmrGain[mmrBefore]=mmrBefore_mmrGain.get(mmrBefore,[])+[mmrGain]
+             # data_cleansing[mmrBefore]=data_cleansing.get(mmrBefore,[])+[mmrGain]
         
 
     return result_data
@@ -51,39 +51,40 @@ class FilterType():
     '''
     def filter_data_init(self):
         self.dic_characterNum_datas={}
-        pass
+
     
     def filter_data(self,user_data):
         characterNum=user_data["characterNum"]
         datas={}
-        request_datatype_list=self.condition
-        for request_datatype in request_datatype_list:
+        list_request_datatype=self.condition
+        for request_datatype in list_request_datatype:
             datas[request_datatype]=user_data[request_datatype]
             self.dic_characterNum_datas[characterNum]=self.dic_characterNum_datas.get(characterNum,[])+[datas]
 
     
-    '''type=mmrBefore_mmrGain
+    '''type=data_cleansing
 
     '''
-    def mmrBefore_mmrGain_init(self):
+    def data_cleansing_init(self):
         self.dic_characterNum_datas={}
-        pass
+
     
-    def mmrBefore_mmrGain(self,user_data):
+    def data_cleansing(self,user_data):
+
         characterNum=user_data["characterNum"]
+        dic_characterNum_datas=self.dic_characterNum_datas.get(characterNum,{})
         for condition in self.condition:
             data=user_data[condition]
-            dic_characterNum_datas=self.dic_characterNum_datas.get(characterNum,{})
             dic_characterNum_datas[condition]=dic_characterNum_datas.get(condition,[])+[data]
         self.dic_characterNum_datas[characterNum]=dic_characterNum_datas
 
     dic_type_init={
         "filter": filter_data_init,
-        "mmrBefore_mmrGain": mmrBefore_mmrGain_init
+        "data_cleansing": data_cleansing_init
     }
     dic_type_result={
         "filter": filter_data,
-        "mmrBefore_mmrGain": mmrBefore_mmrGain
+        "data_cleansing": data_cleansing
     }
     
     '''setting'''
@@ -96,8 +97,8 @@ class FilterType():
     def result(self,user_data):
         self.dic_type_result[self.type](self,user_data)
 
-request_datatype_list=["mmrBefore","mmrGain"]
-dic_characterNum_datas=ERDataCleansing(27619195,27621220,"mmrBefore_mmrGain",["mmrBefore","mmrGain"])
-print(dic_characterNum_datas.dic_characterNum_datas)
+# list_request_datatype=["mmrBefore","mmrGain"]
+# dic_characterNum_datas=ERDataCleansing(27619195,27621220,"data_cleansing",["mmrBefore","mmrGain"])
+# print(dic_characterNum_datas.dic_characterNum_datas)
 
     

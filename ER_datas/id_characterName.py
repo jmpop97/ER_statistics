@@ -11,5 +11,5 @@ def LoadCharacter():
             strings+=[string]
             i+=1
     return character_name
-character_name=LoadCharacter()
+# character_name=LoadCharacter()
 

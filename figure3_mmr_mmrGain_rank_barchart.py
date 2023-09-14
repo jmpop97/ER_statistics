@@ -1,7 +1,7 @@
 from ER1_mmr_datas import *
 from mmr_range import Tier,getMMR_range,tier_range
 from mmr_range import mmr_charges,mmr_line
-from rank_mmr import rank_mmr
+from ER_datas.rank_mmr import rank_mmr
 
 for i in characterNum_dic:
     globals()["range_num"+str(i)]=Tier()

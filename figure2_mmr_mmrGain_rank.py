@@ -10,7 +10,7 @@ import numpy as np
 characterNumber=len(characterNum_dic)
 
 from mmr_range import mmr_charges,mmr_line
-from rank_mmr import rank_mmr
+from ER_datas.rank_mmr import rank_mmr
 mmr_ranges,mmr_lines=mmr_line()
 
 
