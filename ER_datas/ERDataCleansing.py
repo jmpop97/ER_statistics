@@ -1,6 +1,6 @@
 import os
 os.system('cls')
-
+from .rank_mmr import mmr_charges
 # 캐릭터 이름
 '''
 dic_characterNum_characterName[characterNum] = 캐릭터명
@@ -15,6 +15,7 @@ dic_BeforeMMR_datas
 '''
 
 #game_data 가져오기
+
 
 import json
 
@@ -78,13 +79,35 @@ class FilterType():
             dic_characterNum_datas[condition]=dic_characterNum_datas.get(condition,[])+[data]
         self.dic_characterNum_datas[characterNum]=dic_characterNum_datas
 
+    def mmrGain_noCharge_init(self):
+        self.dic_characterNum_datas={}
+        pass
+
+    def mmrGain_noCharge(self,user_data):
+        characterNum=user_data["characterNum"]
+        dic_characterNum_datas=self.dic_characterNum_datas.get(characterNum,{})
+        data=user_data["mmrGain"]+mmr_charges(user_data["mmrBefore"])
+
+
+        dic_characterNum_datas["mmrGain"]=dic_characterNum_datas.get("mmrGain",[])+[data]
+        for condition in self.condition:
+            data=user_data[condition]
+            dic_characterNum_datas[condition]=dic_characterNum_datas.get(condition,[])+[data]
+        self.dic_characterNum_datas[characterNum]=dic_characterNum_datas
+
+        pass
+
+
+
     dic_type_init={
         "filter": filter_data_init,
-        "data_cleansing": data_cleansing_init
+        "data_cleansing": data_cleansing_init,
+        "mmrGain_noCharge": mmrGain_noCharge_init,
     }
     dic_type_result={
         "filter": filter_data,
-        "data_cleansing": data_cleansing
+        "data_cleansing": data_cleansing,
+        "mmrGain_noCharge": mmrGain_noCharge,
     }
     
     '''setting'''
