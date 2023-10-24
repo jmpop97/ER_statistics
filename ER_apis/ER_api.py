@@ -26,8 +26,4 @@ def save_games(start_game,end_game):
         game_api(game_id)
         print(game_id)
         game_id+=1
-
-        
-
-
-
+    print("end")

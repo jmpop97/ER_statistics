@@ -13,22 +13,22 @@ dic_dataType_figureType={
     "data_cleansing":{
         "plot":{"condition":["*","*"]},
         "plot_mmrcharge":{"condition":["mmrBefore","mmrGain"]}},
-    "mmrGain_noCharge": {
+    "mmrGain_option": {
         "plot":{"condition":["*"]},
         "plot_mmrcharge":{"condition":["mmrBefore"]}
     }
            }
 #sort datas
 from ER_datas.ERDataCleansing import ERDataCleansing
-data_type="mmrGain_noCharge"
-list_request_datatype=["mmrBefore"]
-dic_characterNum_datas=ERDataCleansing(27619195,27621220,data_type,list_request_datatype)
-#figure 
-from ER_fig.figure_datas import figure_save
-figure_type="plot_mmrcharge"
+data_type="split_mmr"
 list_request_datatype=["mmrBefore","mmrGain"]
-figure_save(dic_characterNum_datas,figure_type,list_request_datatype)
+dic_characterNum_datas=ERDataCleansing(27619195,27621220,data_type,list_request_datatype)
 
+print(dic_characterNum_datas.dic_characterNum_datas[1],)
+#figure 
+# from ER_fig.figure_datas import figure_save
+# figure_type="plot_mmrcharge"
+# list_request_datatype=["mmrBefore","mmrGain"]
+# figure_save(dic_characterNum_datas,figure_type,list_request_datatype)
 
-    
 

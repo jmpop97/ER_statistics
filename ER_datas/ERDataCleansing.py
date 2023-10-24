@@ -1,6 +1,7 @@
 import os
 os.system('cls')
 from .rank_mmr import mmr_charges
+from .tier_mmr import Tier
 # 캐릭터 이름
 '''
 dic_characterNum_characterName[characterNum] = 캐릭터명
@@ -48,12 +49,11 @@ def ERDataCleansing(start_point,end_point,type,condition):
 
 class FilterType():
     '''type=filter
-    dic_characterNum_datas[condition]=datas
+    dic_characterNum_datas[characterNum][condition]=datas
     '''
     def filter_data_init(self):
         self.dic_characterNum_datas={}
 
-    
     def filter_data(self,user_data):
         characterNum=user_data["characterNum"]
         datas={}
@@ -62,14 +62,13 @@ class FilterType():
             datas[request_datatype]=user_data[request_datatype]
             self.dic_characterNum_datas[characterNum]=self.dic_characterNum_datas.get(characterNum,[])+[datas]
 
-    
-    '''type=data_cleansing
 
+    '''type=data_cleansing
+    dic_characterNum_datas[condition]=datas
     '''
     def data_cleansing_init(self):
         self.dic_characterNum_datas={}
 
-    
     def data_cleansing(self,user_data):
 
         characterNum=user_data["characterNum"]
@@ -79,11 +78,16 @@ class FilterType():
             dic_characterNum_datas[condition]=dic_characterNum_datas.get(condition,[])+[data]
         self.dic_characterNum_datas[characterNum]=dic_characterNum_datas
 
-    def mmrGain_noCharge_init(self):
-        self.dic_characterNum_datas={}
-        pass
 
-    def mmrGain_noCharge(self,user_data):
+    '''type=data_cleansing
+    dic_characterNum_datas["mmrGain"]=datas
+    dic_characterNum_datas["condition"]=datas
+    '''
+    def mmrGain_option_init(self):
+        self.dic_characterNum_datas={}
+
+    def mmrGain_option(self,user_data):
+      
         characterNum=user_data["characterNum"]
         dic_characterNum_datas=self.dic_characterNum_datas.get(characterNum,{})
         data=user_data["mmrGain"]+mmr_charges(user_data["mmrBefore"])
@@ -95,19 +99,28 @@ class FilterType():
             dic_characterNum_datas[condition]=dic_characterNum_datas.get(condition,[])+[data]
         self.dic_characterNum_datas[characterNum]=dic_characterNum_datas
 
-        pass
+    '''split_mmr'''
+    def split_mmr_init(self):
+        self.dic_characterNum_datas={}
+        
 
-
+    def split_mmr(self,user_data):
+        characterNum=user_data["characterNum"]
+        dic_characterNum_datas=self.dic_characterNum_datas.get(characterNum,Tier())
+        dic_characterNum_datas.split_tier(user_data["mmrBefore"],user_data["mmrGain"])
+        self.dic_characterNum_datas[characterNum]=dic_characterNum_datas
 
     dic_type_init={
         "filter": filter_data_init,
         "data_cleansing": data_cleansing_init,
-        "mmrGain_noCharge": mmrGain_noCharge_init,
+        "mmrGain_option": mmrGain_option_init,
+        "split_mmr":split_mmr_init,
     }
     dic_type_result={
         "filter": filter_data,
         "data_cleansing": data_cleansing,
-        "mmrGain_noCharge": mmrGain_noCharge,
+        "mmrGain_option": mmrGain_option,
+        "split_mmr":split_mmr,
     }
     
     '''setting'''
