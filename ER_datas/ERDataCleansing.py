@@ -110,17 +110,27 @@ class FilterType():
         dic_characterNum_datas.split_tier(user_data["mmrBefore"],user_data["mmrGain"])
         self.dic_characterNum_datas[characterNum]=dic_characterNum_datas
 
+    def test_init(self):
+        self.maxHp=[]
+        self.gameRank=[]
+    def test(self,user_data):
+        self.maxHp+=[user_data["maxHp"]]
+        self.gameRank+=[user_data["gameRank"]]
+
+
     dic_type_init={
         "filter": filter_data_init,
         "data_cleansing": data_cleansing_init,
         "mmrGain_option": mmrGain_option_init,
         "split_mmr":split_mmr_init,
+        "test":test_init,
     }
     dic_type_result={
         "filter": filter_data,
         "data_cleansing": data_cleansing,
         "mmrGain_option": mmrGain_option,
         "split_mmr":split_mmr,
+        "test":test
     }
     
     '''setting'''
