@@ -40,11 +40,11 @@ def ERDataCleansing(start_point,end_point,type,condition):
 
         for user_data in game_datas["userGames"]:
             '''유저 정보'''
-            result_data.result(user_data)
+            result_data.add_data(user_data)
 
              # data_cleansing[mmrBefore]=data_cleansing.get(mmrBefore,[])+[mmrGain]
         
-
+    result_data.last_calculate()
     return result_data
 
 class FilterType():
@@ -116,11 +116,15 @@ class FilterType():
         "mmrGain_option": mmrGain_option_init,
         "split_mmr":split_mmr_init,
     }
-    dic_type_result={
+    dic_type_add_data={
         "filter": filter_data,
         "data_cleansing": data_cleansing,
         "mmrGain_option": mmrGain_option,
         "split_mmr":split_mmr,
+    }
+
+    dic_type_last_calculate={
+
     }
     
     '''setting'''
@@ -130,8 +134,12 @@ class FilterType():
         self.dic_type_init[type](self)
         pass
     '''add result'''
-    def result(self,user_data):
-        self.dic_type_result[self.type](self,user_data)
+    def add_data(self,user_data):
+        self.dic_type_add_data[self.type](self,user_data)
+
+    def last_calculate(self):
+        self.dic_type_last_calculate.get(self.type,"")
+        print("last")
 
 # list_request_datatype=["mmrBefore","mmrGain"]
 # dic_characterNum_datas=ERDataCleansing(27619195,27621220,"data_cleansing",["mmrBefore","mmrGain"])
