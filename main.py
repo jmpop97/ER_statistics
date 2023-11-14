@@ -1,6 +1,6 @@
 #save api datas
 from ER_apis.ER_api import save_games
-#save_games(27721413,27721414)
+save_games(29889463,29889463)
 
 
 
@@ -20,14 +20,15 @@ dic_dataType_figureType={
            }
 #sort datas
 from ER_datas.ERDataCleansing import ERDataCleansing
-data_type="split_mmr"
-list_request_datatype=["mmrBefore","mmrGain"]
-dic_characterNum_datas=ERDataCleansing(27619195,27621220,data_type,list_request_datatype)
+from ER_datas.data_class import *
+data_class=FilterData("mmrBefore","mmrGain")
+ERDataCleansing(27619195,27621220,data_class)
+
 
 #figure 
 # from ER_fig.figure_datas import figure_save
-# figure_type="plot_mmrcharge"
+# figure_type="range_split_mmr"
 # list_request_datatype=["mmrBefore","mmrGain"]
-# figure_save(dic_characterNum_datas,figure_type,list_request_datatype)
+# # figure_save(dic_characterNum_datas,figure_type,list_request_datatype)
 
 

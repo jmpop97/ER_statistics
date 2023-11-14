@@ -1,5 +1,6 @@
 import os
 os.system('cls')
+from ER_datas.data_class import DataClass
 from .rank_mmr import mmr_charges
 from .tier_mmr import Tier
 # 캐릭터 이름
@@ -20,9 +21,8 @@ dic_BeforeMMR_datas
 
 import json
 
-def ERDataCleansing(start_point,end_point,type,condition):
+def ERDataCleansing(start_point=1,end_point=1,data_class=DataClass()):
     datas_num=start_point
-    result_data=FilterType(type,condition)
     while datas_num<=end_point:
         # 데이터 읽기
         with open(f"datas/{datas_num}.json", "r", encoding='utf-8') as f:
@@ -40,12 +40,11 @@ def ERDataCleansing(start_point,end_point,type,condition):
 
         for user_data in game_datas["userGames"]:
             '''유저 정보'''
-            result_data.result(user_data)
+            data_class.add_data(user_data)
 
              # data_cleansing[mmrBefore]=data_cleansing.get(mmrBefore,[])+[mmrGain]
         
-
-    return result_data
+    data_class.last_calculate()
 
 class FilterType():
     '''type=filter
@@ -116,11 +115,15 @@ class FilterType():
         "mmrGain_option": mmrGain_option_init,
         "split_mmr":split_mmr_init,
     }
-    dic_type_result={
+    dic_type_add_data={
         "filter": filter_data,
         "data_cleansing": data_cleansing,
         "mmrGain_option": mmrGain_option,
         "split_mmr":split_mmr,
+    }
+
+    dic_type_last_calculate={
+
     }
     
     '''setting'''
@@ -130,8 +133,12 @@ class FilterType():
         self.dic_type_init[type](self)
         pass
     '''add result'''
-    def result(self,user_data):
-        self.dic_type_result[self.type](self,user_data)
+    def add_data(self,user_data):
+        self.dic_type_add_data[self.type](self,user_data)
+
+    def last_calculate(self):
+        self.dic_type_last_calculate.get(self.type,"")
+        print("last")
 
 # list_request_datatype=["mmrBefore","mmrGain"]
 # dic_characterNum_datas=ERDataCleansing(27619195,27621220,"data_cleansing",["mmrBefore","mmrGain"])
