@@ -1,5 +1,6 @@
 import os
 os.system('cls')
+from ER_datas.data_class import DataClass
 from .rank_mmr import mmr_charges
 from .tier_mmr import Tier
 # 캐릭터 이름
@@ -20,9 +21,8 @@ dic_BeforeMMR_datas
 
 import json
 
-def ERDataCleansing(start_point,end_point,type,condition):
+def ERDataCleansing(start_point=1,end_point=1,data_class=DataClass()):
     datas_num=start_point
-    result_data=FilterType(type,condition)
     while datas_num<=end_point:
         # 데이터 읽기
         with open(f"datas/{datas_num}.json", "r", encoding='utf-8') as f:
@@ -40,12 +40,11 @@ def ERDataCleansing(start_point,end_point,type,condition):
 
         for user_data in game_datas["userGames"]:
             '''유저 정보'''
-            result_data.add_data(user_data)
+            data_class.add_data(user_data)
 
              # data_cleansing[mmrBefore]=data_cleansing.get(mmrBefore,[])+[mmrGain]
         
-    result_data.last_calculate()
-    return result_data
+    data_class.last_calculate()
 
 class FilterType():
     '''type=filter
