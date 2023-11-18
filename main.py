@@ -1,6 +1,6 @@
 #save api datas
 from ER_apis.ER_api import save_games
-save_games(29889463,29889463)
+#save_games(29889463,29889463)
 
 
 
@@ -21,10 +21,12 @@ dic_dataType_figureType={
 #sort datas
 from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.data_class import *
-data_class=FilterData("mmrBefore","mmrGain")
-ERDataCleansing(27619195,27621220,data_class)
-
-
+'''
+data_class=CharacterClass("")
+ERDataCleansing(30386977,30386977,data_class)
+'''
+emoticon_class=EmoticonMMRClass(split_range=250)
+print(ERDataCleansing(30383343,30386977,emoticon_class))
 #figure 
 # from ER_fig.figure_datas import figure_save
 # figure_type="range_split_mmr"
