@@ -54,3 +54,18 @@ def figure_save(dic_datas,figure_type,condition):
         plt.cla()   # clear the current axes
         plt.clf()   # clear the current figure
         plt.close() # closes the current figure
+
+
+
+class FigureType():
+    def __init__(self):
+        self.plt=plt
+    def scatterplot(self,db,x_type,y_type,titles="",team_color="red",figure_n=1):
+        plts= self.plt
+        plts.figure(figure_n)
+        plts.scatter(db[x_type], db[y_type],color=team_color)     #산포도 그래프 호출: scatter(x, y)
+        plts.title(titles)
+        plts.xlabel(x_type)
+        plts.ylabel(y_type) 
+    def show(self):
+        self.plt.show()
