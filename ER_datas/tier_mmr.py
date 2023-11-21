@@ -50,7 +50,13 @@ class Tier:
                 
                 self.tier[tier_range[tier_min]][mmrGain_range]=self.tier[tier_range[tier_min]].get(mmrGain_range,0)+1
                 break
-
+    
+    def mean(self):
+        tiers=self.tier
+        for tier_values in tiers.values():
+            total=sum(tier_values.values())
+            for tier_value in tier_values:
+                tier_values[tier_value]/=total
 
 class Tier_over:
     def __init__(self):

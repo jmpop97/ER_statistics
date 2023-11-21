@@ -60,12 +60,26 @@ def figure_save(dic_datas,figure_type,condition):
 class FigureType():
     def __init__(self):
         self.plt=plt
+
+
     def scatterplot(self,db,x_type,y_type,titles="",team_color="red",figure_n=1):
         plts= self.plt
         plts.figure(figure_n)
-        plts.scatter(db[x_type], db[y_type],color=team_color)     #산포도 그래프 호출: scatter(x, y)
         plts.title(titles)
         plts.xlabel(x_type)
-        plts.ylabel(y_type) 
+        plts.ylabel(y_type)
+        plts.scatter(db[x_type], db[y_type],color=team_color)     #산포도 그래프 호출: scatter(x, y)
+
+    def bar_graph(self,db={},titles="",bar_count=1,bar_num=1,team_color="red",figure_n=2):
+        alpha=0.5#1/bar_count
+        bar_width =0.7/bar_count
+        plts= self.plt
+        plts.figure(figure_n)
+        plts.title(titles)
+        x=np.arange(len(db))
+        plts.bar(x+(bar_num-1)*bar_width,db.values(),bar_width,alpha=alpha,color=team_color)
+        # plts.xticks(x,db.keys())
+
+
     def show(self):
         self.plt.show()
