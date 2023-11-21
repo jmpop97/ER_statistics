@@ -25,30 +25,28 @@ def ERDataCleansing(start_point=1,end_point=1,data_class=DataClass()):
     datas_num=start_point
     while datas_num<=end_point:
         # 데이터 읽기
-        try:
-            with open(f"datas/{datas_num}.json", "r", encoding='utf-8') as f:
-                game_datas = json.load(f)
-            datas_num+=1
-            
-            # 404 error
-            if game_datas["code"]==404:
-                continue
-            
-            # 일반제거
-            game_type=game_datas["userGames"][0]["matchingMode"]
-            if game_type==2 or game_type==6:
-                continue
-            print("Add {0}.json".format(datas_num-1))
-            for user_data in game_datas["userGames"]:
-                '''유저 정보'''
-                data_class.add_data(user_data)
-            #print(data_class.get_data())
-                # data_cleansing[mmrBefore]=data_cleansing.get(mmrBefore,[])+[mmrGain]
-        except FileNotFoundError:
-            #print("No File {0} Found".format(datas_num))
-            datas_num+=1
+        with open(f"datas/{datas_num}.json", "r", encoding='utf-8') as f:
+            game_datas = json.load(f)
+        datas_num+=1
+        
+        # 404 error
+        if game_datas["message"]=="Too Many Requests":
             continue
-    return data_class.last_calculate()
+        if game_datas["code"]==404:
+            continue
+        
+        # 일반제거
+        game_type=game_datas["userGames"][0]["matchingMode"]
+        if game_type==2 or game_type==6:
+            continue
+
+        for user_data in game_datas["userGames"]:
+            '''유저 정보'''
+            data_class.add_data(user_data)
+        data_class.add_data_game_id(user_data)
+             # data_cleansing[mmrBefore]=data_cleansing.get(mmrBefore,[])+[mmrGain]
+        
+    data_class.last_calculate()
 
 class FilterType():
     '''type=filter
