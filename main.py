@@ -20,10 +20,12 @@ dic_dataType_figureType={
 #sort datas
 from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.data_class import *
-
-character_console_class=CharacterClass("")
-print(ERDataCleansing(30383343,30386977,character_console_class))
-print(character_console_class.get_data())
+'''example filterData class'''
+# data_class=FilterData("mmrBefore","mmrGain")
+# ERDataCleansing(27619195,27621220,data_class)
+# character_console_class=CharacterClass("")
+# print(ERDataCleansing(30383343,30386977,character_console_class))
+# print(character_console_class.get_data())
 
 import pprint
 emoticon_class=EmoticonMMRClass(split_range=1000)
