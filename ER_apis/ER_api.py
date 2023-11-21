@@ -14,14 +14,20 @@ def game_api(game_id):
     requestDataWithHeader = requests.get(
         f'https://open-api.bser.io/v1/games/{game_id}', headers=headerDict)
     responce_datas = requestDataWithHeader.json()
-    while responce_datas['message'] != "Success":
-        print("too much request")
-        responce_datas = requestDataWithHeader.json()
+    time.sleep(1)
     save_game(game_id,responce_datas)
     return True
 
 def save_game(game_id,responce_datas):
-    with open(f"./datas/{game_id}.json",'w',encoding='utf-8') as outfile:
+    user_data = responce_datas['userGames'][0]
+    game_major_version = user_data['versionMajor']
+    game_minor_version=user_data["versionMinor"]
+    game_mode="Normal"
+    if user_data['matchingMode']==3:
+        game_mode= "Rank"
+    file_name = "./datas/Ver{0}.{1}_{2}_{3}.json".format(game_major_version, game_minor_version, game_mode, game_id)
+    print(file_name)
+    with open(file_name,'w',encoding='utf-8') as outfile:
         json.dump(responce_datas,outfile, indent="\t",ensure_ascii=False)
 
 def save_games(start_game,n):
