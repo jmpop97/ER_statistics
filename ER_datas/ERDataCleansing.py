@@ -42,7 +42,7 @@ def ERDataCleansing(start_point=1,end_point=1,data_class=DataClass()):
             for user_data in game_datas["userGames"]:
                 '''유저 정보'''
                 data_class.add_data(user_data)
-            print(data_class.get_data())
+            #print(data_class.get_data())
                 # data_cleansing[mmrBefore]=data_cleansing.get(mmrBefore,[])+[mmrGain]
         except FileNotFoundError:
             #print("No File {0} Found".format(datas_num))
@@ -65,10 +65,6 @@ class FilterType():
             datas[request_datatype]=user_data[request_datatype]
             self.dic_characterNum_datas[characterNum]=self.dic_characterNum_datas.get(characterNum,[])+[datas]
 
-
-    '''type=data_cleansing
-    dic_characterNum_datas[condition]=datas
-    '''
     def data_cleansing_init(self):
         self.dic_characterNum_datas={}
 
