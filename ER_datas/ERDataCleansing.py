@@ -30,6 +30,8 @@ def ERDataCleansing(start_point=1,end_point=1,data_class=DataClass()):
         datas_num+=1
         
         # 404 error
+        if game_datas["message"]=="Too Many Requests":
+            continue
         if game_datas["code"]==404:
             continue
         
@@ -41,7 +43,7 @@ def ERDataCleansing(start_point=1,end_point=1,data_class=DataClass()):
         for user_data in game_datas["userGames"]:
             '''유저 정보'''
             data_class.add_data(user_data)
-
+        data_class.add_data_game_id(user_data)
              # data_cleansing[mmrBefore]=data_cleansing.get(mmrBefore,[])+[mmrGain]
         
     data_class.last_calculate()
@@ -61,10 +63,6 @@ class FilterType():
             datas[request_datatype]=user_data[request_datatype]
             self.dic_characterNum_datas[characterNum]=self.dic_characterNum_datas.get(characterNum,[])+[datas]
 
-
-    '''type=data_cleansing
-    dic_characterNum_datas[condition]=datas
-    '''
     def data_cleansing_init(self):
         self.dic_characterNum_datas={}
 
