@@ -4,6 +4,9 @@ from ER_datas.data_class import DataClass
 from .rank_mmr import mmr_charges
 from .tier_mmr import Tier
 # 캐릭터 이름
+CURRENT_GAME_MAJOR_VERSION=8
+CURRENT_GAME_MINOR_VERSION=0
+
 '''
 dic_characterNum_characterName[characterNum] = 캐릭터명
 dic_characterNum_characterCount[characterNum] = 캐릭터별 빈도
@@ -20,8 +23,28 @@ dic_BeforeMMR_datas
 
 
 import json
-
-def ERDataCleansing(start_point=1,end_point=1,data_class=DataClass()):
+from glob import glob
+# game_mode ["Rank", "Normal"]
+# "Rank"
+# 
+def ERDataCleansing(major_version=CURRENT_GAME_MAJOR_VERSION, minor_version=CURRENT_GAME_MINOR_VERSION, data_class=DataClass(), game_mode=["Rank"]):
+    for mode in game_mode:
+        game_list = glob("./datas/Ver{0}.{1}_{2}_*.json".format(major_version, minor_version, mode))
+        print("game_mode: ", game_mode)
+        print(game_list)
+        for file_name in game_list:
+            with open(file_name, "r", encoding='utf-8') as f:
+                game_datas = json.load(f)
+            if game_datas["code"]==404:
+                continue
+            file_index = str(file_name.split("_")[2]).split(".")[0]
+            print("Add {0}.json".format(file_index))
+            for user_data in game_datas["userGames"]:
+                '''유저 정보'''
+                data_class.add_data(user_data)
+        #if "rank" in condition:
+    
+    '''
     datas_num=start_point
     while datas_num<=end_point:
         # 데이터 읽기
@@ -40,7 +63,7 @@ def ERDataCleansing(start_point=1,end_point=1,data_class=DataClass()):
                 continue
             print("Add {0}.json".format(datas_num-1))
             for user_data in game_datas["userGames"]:
-                '''유저 정보'''
+                # 유저 정보
                 data_class.add_data(user_data)
             #print(data_class.get_data())
                 # data_cleansing[mmrBefore]=data_cleansing.get(mmrBefore,[])+[mmrGain]
@@ -48,6 +71,7 @@ def ERDataCleansing(start_point=1,end_point=1,data_class=DataClass()):
             #print("No File {0} Found".format(datas_num))
             datas_num+=1
             continue
+    '''
     return data_class.last_calculate()
 
 class FilterType():

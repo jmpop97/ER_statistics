@@ -1,6 +1,6 @@
 #save api datas
 from ER_apis.ER_api import save_games
-save_games(30610390,3)
+#save_games(30610390,3)
 
 #doc string
 dic_dataType_figureType={
@@ -18,14 +18,14 @@ dic_dataType_figureType={
            }
 
 #sort datas
-'''
+
 from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.data_class import *
 
 character_console_class=CharacterClass("")
-print(ERDataCleansing(30383343,30386977,character_console_class))
+print(ERDataCleansing(character_console_class, ["Rank", "Normal"]))
 print(character_console_class.get_data())
-
+'''
 import pprint
 emoticon_class=EmoticonMMRClass(split_range=1000)
 pprint.pprint(ERDataCleansing(30386977,30386977,emoticon_class))

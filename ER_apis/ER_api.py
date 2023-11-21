@@ -15,6 +15,7 @@ def game_api(game_id):
         f'https://open-api.bser.io/v1/games/{game_id}', headers=headerDict)
     responce_datas = requestDataWithHeader.json()
     time.sleep(1)
+    #if (responce_datas['message'])
     save_game(game_id,responce_datas)
     return True
 
