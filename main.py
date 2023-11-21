@@ -1,8 +1,8 @@
 #save api datas
-# from ER_apis.ER_api import save_games
-# save_games(30306839,30306839+1000)
+from ER_apis.ER_api import save_games
+save_games(30307849)
 
-
+'''
 #sort datas
 from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.data_class import *
@@ -20,3 +20,4 @@ for tier_name in data_class.team["domestic_team"]["tier"].tier:
     test.bar_graph(data_class.team["foreigner_team"]["tier"].tier[tier_name],bar_count=2,bar_num=2,team_color="red",figure_n=tier_name)
 
 test.show()
+'''
