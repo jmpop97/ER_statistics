@@ -14,7 +14,7 @@ from glob import glob
 # game_mode ["Rank", "Normal"]
 # "Rank"
 
-def ERDataCleansing(data_class=DataClass(), game_mode=["Rank"], major_version=CURRENT_GAME_MAJOR_VERSION, minor_version=CURRENT_GAME_MINOR_VERSION):
+def ERDataCleansing(game_mode=["Rank"], data_class=DataClass(), major_version=CURRENT_GAME_MAJOR_VERSION, minor_version=CURRENT_GAME_MINOR_VERSION):
     for mode in game_mode:
         game_list = glob("./datas/Ver{0}.{1}_{2}_*.json".format(major_version, minor_version, mode))
         print("game_mode: ", mode)

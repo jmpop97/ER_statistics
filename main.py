@@ -9,7 +9,7 @@ from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.data_class import *
 
 character_console_class=CharacterClass("")
-print(ERDataCleansing(data_class=character_console_class, game_mode=["Rank", "Normal"]))
+print(ERDataCleansing(["Rank", "Normal"], character_console_class))
 print(character_console_class.get_data())
 '''
 import pprint
