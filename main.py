@@ -9,7 +9,7 @@ from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.data_class import *
 
 character_console_class=CharacterClass("")
-print(ERDataCleansing(character_console_class, ["Rank", "Normal"]))
+print(ERDataCleansing(data_class=character_console_class, game_mode=["Rank", "Normal"]))
 print(character_console_class.get_data())
 '''
 import pprint
@@ -22,4 +22,4 @@ pprint.pprint(ERDataCleansing(30386977,30386977,emoticon_class))
 # figure_type="range_split_mmr"
 # list_request_datatype=["mmrBefore","mmrGain"]
 # # figure_save(dic_characterNum_datas,figure_type,list_request_datatype)
-"""
+'''

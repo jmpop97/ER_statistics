@@ -3,34 +3,21 @@ os.system('cls')
 from ER_datas.data_class import DataClass
 from .rank_mmr import mmr_charges
 from .tier_mmr import Tier
-# 캐릭터 이름
+# 게임 버전 갖고오기
 CURRENT_GAME_MAJOR_VERSION=8
 CURRENT_GAME_MINOR_VERSION=0
 
-'''
-dic_characterNum_characterName[characterNum] = 캐릭터명
-dic_characterNum_characterCount[characterNum] = 캐릭터별 빈도
-dic_characterNum_BeforeMMR[characterNum]= {BeforeMMR:dic_BeforeMMR_datas}
-dic_BeforeMMR_datas
-=[{         
-    "mmrGain": 얻은점수,
-    "gameRank":게임 순위,
-    "escapeState":탈출유무
- }]
-'''
-
 #game_data 가져오기
-
 
 import json
 from glob import glob
 # game_mode ["Rank", "Normal"]
 # "Rank"
-# 
-def ERDataCleansing(major_version=CURRENT_GAME_MAJOR_VERSION, minor_version=CURRENT_GAME_MINOR_VERSION, data_class=DataClass(), game_mode=["Rank"]):
+
+def ERDataCleansing(data_class=DataClass(), game_mode=["Rank"], major_version=CURRENT_GAME_MAJOR_VERSION, minor_version=CURRENT_GAME_MINOR_VERSION):
     for mode in game_mode:
         game_list = glob("./datas/Ver{0}.{1}_{2}_*.json".format(major_version, minor_version, mode))
-        print("game_mode: ", game_mode)
+        print("game_mode: ", mode)
         print(game_list)
         for file_name in game_list:
             with open(file_name, "r", encoding='utf-8') as f:
@@ -44,34 +31,7 @@ def ERDataCleansing(major_version=CURRENT_GAME_MAJOR_VERSION, minor_version=CURR
                 data_class.add_data(user_data)
         #if "rank" in condition:
     
-    '''
-    datas_num=start_point
-    while datas_num<=end_point:
-        # 데이터 읽기
-        try:
-            with open(f"datas/{datas_num}.json", "r", encoding='utf-8') as f:
-                game_datas = json.load(f)
-            datas_num+=1
-            
-            # 404 error
-            if game_datas["code"]==404:
-                continue
-            
-            # 일반제거
-            game_type=game_datas["userGames"][0]["matchingMode"]
-            if game_type==2 or game_type==6:
-                continue
-            print("Add {0}.json".format(datas_num-1))
-            for user_data in game_datas["userGames"]:
-                # 유저 정보
-                data_class.add_data(user_data)
-            #print(data_class.get_data())
-                # data_cleansing[mmrBefore]=data_cleansing.get(mmrBefore,[])+[mmrGain]
-        except FileNotFoundError:
-            #print("No File {0} Found".format(datas_num))
-            datas_num+=1
-            continue
-    '''
+
     return data_class.last_calculate()
 
 class FilterType():
