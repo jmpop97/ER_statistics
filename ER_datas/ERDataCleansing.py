@@ -46,7 +46,7 @@ def ERDataCleansing(start_point=1, end_point=1, data_class=DataClass()):
         for user_data in game_datas["userGames"]:
             """유저 정보"""
             data_class.add_data(user_data)
-        data_class.add_data_game_id(user_data)
+        data_class.add_data_game_id()
         # data_cleansing[mmrBefore]=data_cleansing.get(mmrBefore,[])+[mmrGain]
 
     data_class.last_calculate()
