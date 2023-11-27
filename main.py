@@ -1,26 +1,23 @@
 # save api datas
-# sort datas
 from ER_apis.ER_api import save_games
 
-save_games(30779251,1000)
+# save_games(30779251,1000)
 
-
+# sort data
 from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.data_class import *
 
 """example FilterData class"""
-# data_class=FilterData("mmrBefore","mmrGain")
-# ERDataCleansing(27619195,27621220,data_class)
-# character_console_class=CharacterClass("")
-# print(ERDataCleansing(30383343,30386977,character_console_class))
-# print(character_console_class.get_data())
-
+"""0
+data_class=FilterData("mmrBefore","mmrGain")
+ERDataCleansing(data_class=data_class)
+print(data_class.dic_characterNum_datas)
+0"""
 """example ForeignTeam class"""
 
-""" 1
 # sort datas
 data_class = ForeignTeam("mmrBefore", "mmrGainInGame", "gameRank")
-ERDataCleansing(30306839, 30306839 + 1000, data_class)
+ERDataCleansing(data_class=data_class)
 print(data_class.team["domestic_team"]["tier"].total)
 
 # figure
@@ -44,8 +41,8 @@ for tier_name in data_class.team["domestic_team"]["tier"].tier:
         team_color="red",
         figure_n=tier_name,
     )
-test.show()
-1 """
+# test.show()
+
 
 # import pprint
 

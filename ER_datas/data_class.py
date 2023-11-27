@@ -9,7 +9,7 @@ class DataClass:
     def add_data(self, user_data):
         print("not add_data")
 
-    def add_data_game_id(self, user_data):
+    def add_data_game_id(self):
         print("not add_data_game_id")
 
     def last_calculate(self):
@@ -95,8 +95,10 @@ class ForeignTeam(DataClass):
             team[condition] += [memory[condition]]
 
     def last_calculate(self):
+        print("last_calcu")
         teams = self.team
         for team in teams:
+            print("team", team)
             teams[team]["tier"].mean()
 
 

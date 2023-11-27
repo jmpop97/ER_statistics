@@ -59,9 +59,10 @@ class Tier:
         for tier in tiers:
             tier_values = tiers[tier]
             total = sum(tier_values.values())
+            self.total[tier] = total
+            print(total)
             for tier_value in tier_values:
                 tier_values[tier_value] /= total
-            self.total[tier] = total
 
 
 class Tier_over:
