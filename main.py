@@ -8,9 +8,9 @@ from ER_apis.ER_api import save_games
 from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.data_class import *
 
-character_console_class=CharacterClass("")
+character_console_class=CharacterClass()
 print(ERDataCleansing(["Rank", "Normal"], character_console_class))
-print(character_console_class.get_data())
+print(character_console_class.get_percentage())
 '''
 import pprint
 emoticon_class=EmoticonMMRClass(split_range=1000)
