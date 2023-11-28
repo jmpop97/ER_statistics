@@ -6,6 +6,9 @@ from .rank_mmr import mmr_charges
 from .tier_mmr import Tier
 
 # 캐릭터 이름
+CURRENT_GAME_MAJOR_VERSION = 9
+CURRENT_GAME_MINOR_VERSION = 0
+
 """
 dic_characterNum_characterName[characterNum] = 캐릭터명
 dic_characterNum_characterCount[characterNum] = 캐릭터별 빈도
@@ -22,33 +25,31 @@ dic_BeforeMMR_datas
 
 
 import json
+from glob import glob
 
 
-def ERDataCleansing(start_point=1, end_point=1, data_class=DataClass()):
-    datas_num = start_point
-    while datas_num <= end_point:
-        # 데이터 읽기
-        with open(f"datas/{datas_num}.json", "r", encoding="utf-8") as f:
-            game_datas = json.load(f)
-        datas_num += 1
-
-        # 404 error
-        if game_datas["message"] == "Too Many Requests":
-            continue
-        if game_datas["code"] == 404:
-            continue
-
-        # 일반제거
-        game_type = game_datas["userGames"][0]["matchingMode"]
-        if game_type == 2 or game_type == 6:
-            continue
-
-        for user_data in game_datas["userGames"]:
-            """유저 정보"""
-            data_class.add_data(user_data)
-        data_class.add_data_game_id(user_data)
-        # data_cleansing[mmrBefore]=data_cleansing.get(mmrBefore,[])+[mmrGain]
-
+# game_mode ["Rank", "Normal"]
+# "Rank"
+#
+def ERDataCleansing(
+    major_version=CURRENT_GAME_MAJOR_VERSION,
+    minor_version=CURRENT_GAME_MINOR_VERSION,
+    data_class=DataClass(),
+    game_mode=["Rank"],
+):
+    for mode in game_mode:
+        game_list = glob(
+            "./datas/Ver{0}.{1}_{2}_*.json".format(major_version, minor_version, mode)
+        )
+        for file_name in game_list:
+            with open(file_name, "r", encoding="utf-8") as f:
+                game_datas = json.load(f)
+            # file_index = str(file_name.split("_")[2]).split(".")[0]
+            # print("Add {0}.json".format(file_index))
+            for user_data in game_datas["userGames"]:
+                """유저 정보"""
+                data_class.add_data(user_data)
+            data_class.add_data_game_id()
     data_class.last_calculate()
 
 
