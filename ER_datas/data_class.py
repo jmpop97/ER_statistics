@@ -177,14 +177,17 @@ class CharacterClass(DataClass):
 
     def get_data(self):
         return self.dic_characterNum_datas_list
+
     def get_percentage(self):
         datas = {}
         for class_key in self.dic_characterNum_datas_list:
             datas[class_key] = np.sum(self.dic_characterNum_datas_list[class_key])
-        sum_of_datas = datas['tanker']+datas['dealer']+datas['support']
-        percent={ 'tanker':float(datas["tanker"]*100/sum_of_datas), 
-                   'dealer':float(datas["dealer"]*100/sum_of_datas), 
-                   'support':float(datas["support"]*100/sum_of_datas)}
+        sum_of_datas = datas["tanker"] + datas["dealer"] + datas["support"]
+        percent = {
+            "tanker": float(datas["tanker"] * 100 / sum_of_datas),
+            "dealer": float(datas["dealer"] * 100 / sum_of_datas),
+            "support": float(datas["support"] * 100 / sum_of_datas),
+        }
         return percent
 
 
