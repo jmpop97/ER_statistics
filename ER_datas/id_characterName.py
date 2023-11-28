@@ -5,6 +5,3 @@ def LoadCharacter():
         file_data = json.load(f)
     character_name = file_data['Character']['Name']
     return character_name
-
-character_name=LoadCharacter()
-print(character_name)
