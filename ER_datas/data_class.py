@@ -64,9 +64,10 @@ class ForeignTeam(DataClass):
         memory = self.memory[teamNumber]
 
         """미확인"""
+        _language = user_data.get("language", "error")
         if memory["state"] == 0:
-            memory["language"] = user_data["language"]
-        elif memory["language"] != user_data["language"]:
+            memory["language"] = _language
+        elif memory["language"] != _language:
             memory["state"] = -1
 
         for condition in self.conditions:
