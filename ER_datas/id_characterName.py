@@ -1,16 +1,10 @@
+import json
 def LoadCharacter():
-    i = 1
-    strings = []
-    character_name = {}
-    with open("test2.txt", "r", encoding="utf-8") as f:
-        while i < 71:
-            string = f.readline()
-            string = string.replace("┃", "\n").replace("/", "\n")
-            string = string.split("\n")
-            character_name[string[2]] = string[3]
-            strings += [string]
-            i += 1
+    file_name = "./base_datas/game_base_data.json"
+    with open(file_name, "rt", encoding="utf-8-sig") as f:
+        file_data = json.load(f)
+    character_name = file_data['Character']['Name']
     return character_name
 
-
-# character_name=LoadCharacter()
+character_name=LoadCharacter()
+print(character_name)
