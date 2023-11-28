@@ -62,8 +62,6 @@ def ERDataCleansing(
         game_list = glob(
             "./datas/Ver{0}.{1}_{2}_*.json".format(major_version, minor_version, mode)
         )
-        print("game_mode: ", mode)
-        print(game_list)
         for file_name in game_list:
             with open(file_name, "r", encoding="utf-8") as f:
                 game_datas = json.load(f)
