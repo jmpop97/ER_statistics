@@ -93,7 +93,7 @@ class ForeignTeam(DataClass):
                 memory["mmrBefore"][team_mate], memory["mmrGainInGame"][team_mate]
             )
         for condition in self.conditions:
-            team[condition] += [memory[condition]]
+            team[condition] += [*memory[condition]]
 
     def last_calculate(self):
         print("last_calcu")

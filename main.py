@@ -19,8 +19,8 @@ print(data_class.dic_characterNum_datas)
 # sort datas
 data_class = ForeignTeam("mmrBefore", "mmrGainInGame", "gameRank")
 ERDataCleansing(data_class=data_class)
-print("domestic_team", data_class.team["domestic_team"]["tier"].total)
-print("foreigner_team", data_class.team["foreigner_team"]["tier"].total)
+print("domestic_team", data_class.team["domestic_team"]["mmrBefore"])
+print("foreigner_team", data_class.team["foreigner_team"]["tier"].tier)
 
 # figure
 from ER_fig.figure_datas import FigureType
