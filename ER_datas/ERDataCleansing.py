@@ -55,12 +55,13 @@ def ERDataCleansing(
 ):
     if major_version == -1 and minor_version == -1:
         major_version, minor_version = load_lastest_verson_from_file()
+    elif major_version == -1 or minor_version ==-1:
+        print("version error,used base Version")
+    
     for mode in game_mode:
         game_list = glob(
             "./datas/Ver{0}.{1}_{2}_*.json".format(major_version, minor_version, mode)
         )
-        print("game_mode: ", mode)
-        print(game_list)
         for file_name in game_list:
             with open(file_name, "r", encoding="utf-8") as f:
                 game_datas = json.load(f)
