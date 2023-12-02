@@ -1,11 +1,17 @@
 # save api datas
 from ER_apis.ER_api import save_games
 
-# save_games(30780251,4000)
+# save_games(30769613, 3000)
 
 # sort data
 from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.data_class import *
+
+from ER_apis.ER_DB import query_mongoDB, create_query_gameId, create_query_version
+query = create_query_version(8, 0, ["Normal"])
+match_list = query_mongoDB(query_list=query)
+for match in match_list:
+    print(match['userGames'][0]['gameId'])
 
 30780683
 """example FilterData class"""
@@ -17,6 +23,7 @@ print(data_class.dic_characterNum_datas)
 """example ForeignTeam class"""
 
 # sort datas
+
 data_class = ForeignTeam("mmrBefore", "mmrGainInGame", "gameRank")
 ERDataCleansing(data_class)
 print("domestic_team", data_class.team["domestic_team"]["tier"].total)
