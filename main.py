@@ -7,8 +7,11 @@ from ER_apis.ER_api import save_games
 from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.data_class import *
 
+# ER_DB 추가
 from ER_apis.ER_DB import query_mongoDB, create_query_gameId, create_query_version
+# majorVersion, minorVersion, gameMode, minPlayerNumber
 query = create_query_version(8, 0, ["Normal"])
+query = create_query_gameId(fromGameId=1, toGameId=1000, game_mode=["Normal", "Rank", "Cobalt"], min_players=18)
 match_list = query_mongoDB(query_list=query)
 for match in match_list:
     print(match['userGames'][0]['gameId'])

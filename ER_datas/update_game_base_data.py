@@ -84,4 +84,5 @@ def update_game_base_data(language="Korean"):
     ) as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
+
 change_txt_to_json()
