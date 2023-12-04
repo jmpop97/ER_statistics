@@ -49,18 +49,21 @@ def put_in_dictionary(input_list, d):
             print("input_list: ", input_list)
     return d
 
+
 def cleanDictionary(input_key_list, output_dict):
     while input_key_list:
-        if type(output_dict[input_key_list[0]])==list:
-            if len(output_dict[input_key_list[0]])==1:
-                output_dict[input_key_list[0]]=output_dict[input_key_list[0]][0]
-        elif type(output_dict[input_key_list[0]])==dict:
+        if type(output_dict[input_key_list[0]]) == list:
+            if len(output_dict[input_key_list[0]]) == 1:
+                output_dict[input_key_list[0]] = output_dict[input_key_list[0]][0]
+        elif type(output_dict[input_key_list[0]]) == dict:
             next_key_list = list(output_dict[input_key_list[0]].keys())
             cleanDictionary(next_key_list, output_dict[input_key_list[0]])
-        elif type(output_dict[input_key_list[0]])==str:
-            print("건너뛰기")
+        elif type(output_dict[input_key_list[0]]) == str:
+            input_key_list.pop(0)
+            continue
         else:
-            print("이건 뭐임")
+            print("error")
+            exit(1)
         input_key_list.pop(0)
     return output_dict
 
