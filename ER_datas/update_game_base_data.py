@@ -7,39 +7,62 @@ TXT_GAME_BASE_DATA_FILE_NAME = "game_base_data.txt"
 JSON_GAME_BASE_DATA_FILE_NAME = "game_base_data.json"
 
 
-def put_in_dictionary(list, d):
+def put_in_dictionary(input_list, d):
     """
     리스트가 존재할 때
-    첫번째 인덱스일때에는 dictionary에 list[0]에 해당하는 딕셔너리 추가하기
+    첫번째 인덱스일때에는 dictionary에 input_list[0]에 해당하는 딕셔너리 추가하기
     점차 재귀로 들어가야한다.
     """
     try:
-        if d.get(list[0]) == None:
-            if len(list) == 2:
-                d[list[0]] = [list[1]]
+        if d.get(input_list[0]) == None:
+            if len(input_list) == 2:
+                d[input_list[0]] = [input_list[1]]
             else:
-                d[list[0]] = {}
-                d[list[0]] = put_in_dictionary(list[1:], d[list[0]])
+                d[input_list[0]] = {}
+                d[input_list[0]] = put_in_dictionary(input_list[1:], d[input_list[0]])
         else:
-            if len(list) == 2:
-                d[list[0]] = list[1]
+            if len(input_list) == 2:
+                d[input_list[0]] = input_list[1]
             else:
-                d[list[0]] = put_in_dictionary(list[1:], d[list[0]])
+                d[input_list[0]] = put_in_dictionary(input_list[1:], d[input_list[0]])
     except AttributeError as e:
-        # list
-        if len(list) == 2:
-            d.append({list[0]: list[1]})
+        # input_list
+        if len(input_list) == 2:
+            d.append({input_list[0]: input_list[1]})
         else:
             temp_dictionary = {}
-            put_in_dictionary(list[1:], temp_dictionary)
+            put_in_dictionary(input_list[1:], temp_dictionary)
             # try:
-            d.append(temp_dictionary)
+            # if type(d)==dict:
+            if type(d) == list:
+                d.append(temp_dictionary)
+            elif type(d) == dict:
+                key = input_list[0]
+                d[key] = temp_dictionary
+            else:
+                d.append(temp_dictionary)
+
             # except AttributeError as e2:
-            #    d[list[0]].append()
+            #    d[input_list[0]].append()
             print("error name: ", e)
             print("dictionary: ", d)
-            print("list: ", list)
+            print("input_list: ", input_list)
     return d
+
+def cleanDictionary(input_key_list, output_dict):
+    while input_key_list:
+        if type(output_dict[input_key_list[0]])==list:
+            if len(output_dict[input_key_list[0]])==1:
+                output_dict[input_key_list[0]]=output_dict[input_key_list[0]][0]
+        elif type(output_dict[input_key_list[0]])==dict:
+            next_key_list = list(output_dict[input_key_list[0]].keys())
+            cleanDictionary(next_key_list, output_dict[input_key_list[0]])
+        elif type(output_dict[input_key_list[0]])==str:
+            print("건너뛰기")
+        else:
+            print("이건 뭐임")
+        input_key_list.pop(0)
+    return output_dict
 
 
 def change_txt_to_json():
@@ -79,10 +102,11 @@ def save_updated_game_base_data(language="Korean"):
 def update_game_base_data(language="Korean"):
     save_updated_game_base_data(language)
     data = change_txt_to_json()
+    data = cleanDictionary(list(data.keys()), data)
     with open(
         BASE_DATAS_PATH + JSON_GAME_BASE_DATA_FILE_NAME, "w", encoding="UTF-8-sig"
     ) as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
 
-change_txt_to_json()
+update_game_base_data()
