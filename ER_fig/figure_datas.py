@@ -64,8 +64,10 @@ def figure_save(dic_datas, figure_type, condition):
 
 
 class FigureType:
-    def __init__(self):
+    def __init__(self, bool_save=False, bool_show=True):
         self.plt = plt
+        self.bool_save = bool_save
+        self.bool_show = bool_show
 
     def scatterplot(self, db, x_type, y_type, titles="", team_color="red", figure_n=1):
         plts = self.plt
@@ -77,7 +79,7 @@ class FigureType:
             db[x_type], db[y_type], color=team_color
         )  # 산포도 그래프 호출: scatter(x, y)
 
-    def bar_graph(
+    def bar_graph_n(
         self, db={}, titles="", bar_count=1, bar_num=1, team_color="red", figure_n=2
     ):
         alpha = 0.5  # 1/bar_count
@@ -97,3 +99,18 @@ class FigureType:
 
     def show(self):
         self.plt.show()
+
+    def save(self, name="error"):
+        self.plt.savefig("fig/" + name)
+
+    def clear(self):
+        self.plt.cla()  # clear the current axes
+        self.plt.clf()  # clear the current figure
+        self.plt.close()  # closes the current figure
+
+    def save_show(self, name="error"):
+        if self.bool_save:
+            self.show()
+        if self.bool_save:
+            self.save(name)
+        self.clear()

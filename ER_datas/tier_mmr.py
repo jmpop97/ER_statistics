@@ -9,15 +9,15 @@ tier_range[6000] = "데미갓"
 tier_range["all"] = "all"
 
 mmrGain_range = {}
-mmrGain_range[0] = "0~25"
-mmrGain_range[25] = "25~50"
-mmrGain_range[50] = "50~75"
-mmrGain_range[75] = "75~100"
-mmrGain_range[100] = "100~125"
-mmrGain_range[125] = "125~150"
-mmrGain_range[150] = "150~175"
-mmrGain_range[175] = "175~200"
-mmrGain_range[200] = "200~225"
+mmrGain_range[0] = "0~24"
+mmrGain_range[25] = "25~49"
+mmrGain_range[50] = "50~74"
+mmrGain_range[75] = "75~99"
+mmrGain_range[100] = "100~124"
+mmrGain_range[125] = "125~149"
+mmrGain_range[150] = "150~174"
+mmrGain_range[175] = "175~199"
+mmrGain_range[200] = "200~224"
 mmrGain_range[225] = "225~"
 
 
@@ -36,7 +36,7 @@ class Tier:
 
     def _split_mmrGain(self, mmrGain):
         mmrGain_range = [0, 25, 50, 75, 100, 125, 150, 175, 200, 225]
-        while mmrGain_range != []:
+        while mmrGain_range:
             mmrGain_min = mmrGain_range.pop()
             if mmrGain_min <= mmrGain:
                 return mmrGain_min
@@ -46,7 +46,7 @@ class Tier:
         mmrBefore_range = [0, 1000, 2000, 3000, 4000, 5000, 6000]
         mmrGain_range = self._split_mmrGain(mmrGain)
         self.tier["all"][mmrGain_range] = self.tier["all"].get(mmrGain_range, 0) + 1
-        while mmrBefore_range != []:
+        while mmrBefore_range:
             tier_min = mmrBefore_range.pop()
             if tier_min <= mmrBefore:
                 self.tier[tier_range[tier_min]][mmrGain_range] = (
@@ -64,7 +64,7 @@ class Tier:
                 tier_values[tier_value] /= total
 
 
-class Tier_over:
+class Re_Tier:
     def __init__(self):
         self.tier = {}
         self.tier["아이언"] = {}
@@ -75,23 +75,25 @@ class Tier_over:
         self.tier["다이아"] = {}
         self.tier["데미갓"] = {}
         self.tier["all"] = {}
+        self.total = {}
 
-    def split_mmrGain(self, mmrGain):
-        mmrGain_range = [0, 25, 50, 75, 100, 125, 150, 175, 200, 225]
-        while mmrGain_range != []:
-            mmrGain_min = mmrGain_range.pop()
-            if mmrGain_min <= mmrGain:
-                return mmrGain_range[mmrGain_min]
-        return "~0"
-
-    def split_tier(self, mmrBefore, mmrGain):
+    def split_tier(self, mmrBefore, condition):
         mmrBefore_range = [0, 1000, 2000, 3000, 4000, 5000, 6000]
-        mmrGain_range = self.split_mmrGain(mmrGain)
-        self.tier["all"][mmrGain_range] = self.tier["all"].get(mmrGain_range, 0) + 1
-        while mmrBefore_range != []:
+        # mmrGain_range = self._add_data(condition)
+        # self.tier["all"][mmrGain_range] = self.tier["all"].get(mmrGain_range, 0) + 1
+        while mmrBefore_range:
             tier_min = mmrBefore_range.pop()
             if tier_min <= mmrBefore:
-                self.tier[tier_range[tier_min]][mmrGain_range] = (
-                    self.tier[tier_range[tier_min]].get(mmrGain_range, 0) + 1
-                )
+                self._add_Data(tier_min, mmrBefore)
+                # self.tier[tier_range[tier_min]][mmrGain_range] = (
+                #     self.tier[tier_range[tier_min]].get(mmrGain_range, 0) + 1
+                # )
                 break
+
+    def _add_Data(self, tier, mmrGain):
+        mmrGain_range = [0, 25, 50, 75, 100, 125, 150, 175, 200, 225]
+        while mmrGain_range:
+            mmrGain_min = mmrGain_range.pop()
+            if mmrGain_min <= mmrGain:
+                return mmrGain_min
+        return "~0"
