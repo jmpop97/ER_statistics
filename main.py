@@ -7,27 +7,13 @@ from ER_apis.ER_api import save_games
 from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.data_class import *
 
-30780683
-"""example FilterData class"""
-"""0
-data_class=FilterData("mmrBefore","mmrGain")
-ERDataCleansing(data_class=data_class)
-print(data_class.dic_characterNum_datas)
-0"""
-"""example ForeignTeam class"""
-
-# sort datas
-data_class = ForeignTeam("mmrBefore", "mmrGainInGame", "gameRank")
-ERDataCleansing(data_class=data_class)
-# print("domestic_team", data_class.team["domestic_team"]["mmrBefore"])
-# print("foreigner_team", data_class.team["foreigner_team"]["tier"].tier)
 
 # figure
 from ER_fig.figure_datas import FigureType
 
 test = FigureType()
-# test.scatterplot(data_class.team["domestic_team"],"mmrGainInGame","mmrBefore",titles="domestic_team",team_color="blue",figure_n=1)
-# test.scatterplot(data_class.team["foreigner_team"],"mmrGainInGame","mmrBefore",titles="foreign_team",team_color="red",figure_n=1)
+test.scatterplot(data_class.team["domestic_team"],"mmrGainInGame","mmrBefore",titles="domestic_team",team_color="blue",figure_n=1)
+test.scatterplot(data_class.team["foreigner_team"],"mmrGainInGame","mmrBefore",titles="foreign_team",team_color="red",figure_n=1)
 for tier_name in data_class.team["domestic_team"]["tier"].tier:
     test.bar_graph_n(
         data_class.team["domestic_team"]["tier"].tier[tier_name],
