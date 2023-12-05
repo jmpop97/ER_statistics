@@ -2,3 +2,4 @@ secret.json
 venv/
 __pycache__
 datas/
+.vscode

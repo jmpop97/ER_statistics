@@ -116,18 +116,35 @@ class FilterType:
         dic_characterNum_datas = self.dic_characterNum_datas.get(characterNum, Tier())
         dic_characterNum_datas.split_tier(user_data["mmrBefore"], user_data["mmrGain"])
         self.dic_characterNum_datas[characterNum] = dic_characterNum_datas
+        
+    def camera_init(self):
+        self.addSurveillanceCamera=[]
+        self.addTelephotoCamera=[]
+        self.mmrGain=[]
+        self.mmrBefore=[]
+        self.gameRank=[]
+
+    def camera(self,user_data):
+        self.addSurveillanceCamera+=[user_data["addSurveillanceCamera"]]
+        self.addTelephotoCamera+=[user_data["addTelephotoCamera"]]
+        self.mmrGain+=[user_data["mmrGain"]]
+        self.mmrBefore+=[user_data["mmrBefore"]]
+        self.gameRank+=[user_data["gameRank"]]
+
 
     dic_type_init = {
         "filter": filter_data_init,
         "data_cleansing": data_cleansing_init,
         "mmrGain_option": mmrGain_option_init,
         "split_mmr": split_mmr_init,
+        "camera_init": camera_init
     }
     dic_type_add_data = {
         "filter": filter_data,
         "data_cleansing": data_cleansing,
         "mmrGain_option": mmrGain_option,
         "split_mmr": split_mmr,
+        "camera": camera
     }
 
     dic_type_last_calculate = {}
