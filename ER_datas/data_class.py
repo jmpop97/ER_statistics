@@ -1,3 +1,4 @@
+from typing import Any
 from function.public_function import emty_list
 from .tier_mmr import Tier
 import numpy as np
@@ -178,26 +179,117 @@ class CharacterClass(DataClass):
     def get_data(self):
         return self.dic_characterNum_datas_list
 
-    def get_percentage(self):
-        datas = {}
-        for class_key in self.dic_characterNum_datas_list:
-            datas[class_key] = np.sum(self.dic_characterNum_datas_list[class_key])
-        sum_of_datas = datas["tanker"] + datas["dealer"] + datas["support"]
-        percent = {
-            "tanker": float(datas["tanker"] * 100 / sum_of_datas),
-            "dealer": float(datas["dealer"] * 100 / sum_of_datas),
-            "support": float(datas["support"] * 100 / sum_of_datas),
-        }
-        return percent
 
-
-# 크레딧으로 빌드업 템 만드는것과 후반 보면서 빌드하는 것에 차이(gainMMR)
-class CreditBuildUpMMR(DataClass):
-    def __init__(self) -> None:
-        super().__init__()
+# #카메라 통합
+class Camera_All(DataClass):
+    def __init__(self, *condition):
+        self.condition = condition
+        self.dic_cameraGroup_mmr = {}
+        self.dic_cameraGroup_tier = {}
+        self.dic_cameraGroup_Rank = {}
+        self.dic_cameraGroup_LukeMai = {"나머지": []}
+        self.tier_range = {}
+        self.tier_range[0] = "아이언"
+        self.tier_range[1000] = "브론즈"
+        self.tier_range[2000] = "실버"
+        self.tier_range[3000] = "골드"
+        self.tier_range[4000] = "플레티넘"
+        self.tier_range[5000] = "다이아"
+        self.tier_range[6000] = "데미갓"
+        self.tier_range["all"] = "all"
 
     def add_data(self, user_data):
-        return super().add_data(user_data)
+        # #총 카메라 수
+        addScamera = user_data["addSurveillanceCamera"]
+        addTcamera = user_data["addTelephotoCamera"]
+        addCamera = addTcamera + addScamera
+        # #카메라 설치 수에 따른 mmr 증가량
+        mmrGainIngame = user_data["mmrGainInGame"]
+        self.dic_cameraGroup_mmr[addCamera] = self.dic_cameraGroup_mmr.get(
+            addCamera, []
+        ) + [mmrGainIngame]
+
+        # #티어 별 카메라 설치 평균
+        mmrBefore = user_data["mmrBefore"]
+        if mmrBefore > 6000:
+            mmrBefore = 6000
+        mmrBefore_thousand = (mmrBefore % 10000 // 1000) * 1000
+        tier = self.tier_range[mmrBefore_thousand]
+        self.dic_cameraGroup_tier[tier] = self.dic_cameraGroup_tier.get(tier, []) + [
+            addCamera
+        ]
+
+        # #등수 별 카메라 설치 평균
+        gameRank = user_data["gameRank"]
+        self.dic_cameraGroup_Rank[gameRank] = self.dic_cameraGroup_Rank.get(
+            gameRank, []
+        ) + [addCamera]
+
+        # #루크/마이의 카메라 설치 평균
+        character_name = LoadCharacter()
+        characterNum = user_data["characterNum"]
+        str_characterNum = str(characterNum)
+        if characterNum == 22:
+            self.dic_cameraGroup_LukeMai[
+                character_name[str_characterNum]
+            ] = self.dic_cameraGroup_LukeMai.get(
+                character_name[str_characterNum], []
+            ) + [
+                addCamera
+            ]
+        elif characterNum == 45:
+            self.dic_cameraGroup_LukeMai[
+                character_name[str_characterNum]
+            ] = self.dic_cameraGroup_LukeMai.get(
+                character_name[str_characterNum], []
+            ) + [
+                addCamera
+            ]
+        else:
+            self.dic_cameraGroup_LukeMai["나머지"].append(addCamera)
 
     def last_calculate(self):
-        return super().last_calculate()
+        # #카메라 설치 수에 따른 mmr 증가량
+        for key in self.dic_cameraGroup_mmr:
+            self.dic_cameraGroup_mmr[key] = np.mean(self.dic_cameraGroup_mmr[key])
+        self.dic_cameraGroup_mmr = dict(
+            sorted(self.dic_cameraGroup_mmr.items(), key=lambda x: x[0])
+        )
+
+        # #티어 별 카메라 설치 평균
+        for tier in self.dic_cameraGroup_tier:
+            self.dic_cameraGroup_tier[tier] = np.mean(self.dic_cameraGroup_tier[tier])
+        rank_order = ["아이언", "브론즈", "실버", "골드", "플레티넘", "다이아", "데미갓"]
+        self.dic_cameraGroup_tier = {
+            key: value
+            for key, value in sorted(
+                self.dic_cameraGroup_tier.items(), key=lambda x: rank_order.index(x[0])
+            )
+        }
+
+        # #등수 별 카메라 설치 평균
+        for gameRank in self.dic_cameraGroup_Rank:
+            self.dic_cameraGroup_Rank[gameRank] = np.mean(
+                self.dic_cameraGroup_Rank[gameRank]
+            )
+        self.dic_cameraGroup_Rank = dict(
+            sorted(self.dic_cameraGroup_Rank.items(), key=lambda x: x[0])
+        )
+
+        # #루크/마이의 카메라 설치 평균 수
+        for character in self.dic_cameraGroup_LukeMai:
+            self.dic_cameraGroup_LukeMai[character] = np.mean(
+                self.dic_cameraGroup_LukeMai[character]
+            )
+
+
+# #크레딧으로 빌드업 템 만드는것과 후반 보면서 빌드하는 것에 차이(gainMMR)
+# class CreditBuildUpMMR(DataClass):
+#     def __init__(self) -> None:
+#         super().__init__()
+
+#     def add_data(self, user_data):
+#         return super().add_data(user_data)
+
+#     def last_calculate(self):
+#         return super().last_calculate()

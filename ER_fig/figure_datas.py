@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import numpy as np
 
+plt.rcParams["font.family"] = "Malgun Gothic"
+plt.rcParams["axes.unicode_minus"] = False
+
 from ER_datas.id_characterName import LoadCharacter
 
 dic_characterNum_Name = LoadCharacter()
@@ -94,6 +97,46 @@ class FigureType:
             color=team_color,
         )
         # plts.xticks(x,db.keys())
+
+    def bar_graph_one(
+        self, db={}, titles="", bar_count=1, bar_num=1, team_color="red", figure_n=2
+    ):
+        db_list = db.items()
+        x, y = zip(*db_list)
+        alpha = 0.5  # 1/bar_count
+        bar_width = 0.7 / bar_count
+        plt.bar(x, y, bar_width, alpha=alpha, color=team_color)
+
+    def bar_graph_all(
+        self,
+        db1={},
+        db2={},
+        db3={},
+        db4={},
+        titles="",
+        bar_count=1,
+        bar_num=1,
+        team_color="red",
+        figure_n=2,
+    ):
+        db1_list = db1.items()
+        x1, y1 = zip(*db1_list)
+        db2_list = db2.items()
+        x2, y2 = zip(*db2_list)
+        db3_list = db3.items()
+        x3, y3 = zip(*db3_list)
+        db4_list = db4.items()
+        x4, y4 = zip(*db4_list)
+        alpha = 0.5  # 1/bar_count
+        bar_width = 0.7 / bar_count
+        plt.figure(1)
+        plt.bar(x1, y1, bar_width, alpha=alpha, color=team_color)
+        plt.figure(2)
+        plt.bar(x2, y2, bar_width, alpha=alpha, color=team_color)
+        plt.figure(3)
+        plt.bar(x3, y3, bar_width, alpha=alpha, color=team_color)
+        plt.figure(4)
+        plt.bar(x4, y4, bar_width, alpha=alpha, color=team_color)
 
     def show(self):
         self.plt.show()
