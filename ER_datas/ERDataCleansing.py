@@ -5,7 +5,6 @@ from ER_datas.data_class import DataClass
 from .rank_mmr import mmr_charges
 from .tier_mmr import Tier
 
-# 캐릭터 이름
 """
 dic_characterNum_characterName[characterNum] = 캐릭터명
 dic_characterNum_characterCount[characterNum] = 캐릭터별 빈도
@@ -22,33 +21,56 @@ dic_BeforeMMR_datas
 
 
 import json
+from glob import glob
 
 
-def ERDataCleansing(start_point=1, end_point=1, data_class=DataClass()):
-    datas_num = start_point
-    while datas_num <= end_point:
-        # 데이터 읽기
-        with open(f"datas/{datas_num}.json", "r", encoding="utf-8") as f:
-            game_datas = json.load(f)
-        datas_num += 1
+# game_mode ["Rank", "Normal"]
+# "Rank"
+#
 
-        # 404 error
-        if game_datas["message"] == "Too Many Requests":
-            continue
-        if game_datas["code"] == 404:
-            continue
 
-        # 일반제거
-        game_type = game_datas["userGames"][0]["matchingMode"]
-        if game_type == 2 or game_type == 6:
-            continue
+def load_lastest_version():
+    game_list = sorted(glob("./datas/Ver*.json"))
+    last_game = (game_list[-1].split("Ver")[1]).split("._")[0]
+    lastest_version = last_game.split("_")[0]
+    print(lastest_version)
+    return lastest_version.split(".")[0], lastest_version.split(".")[1]
 
-        for user_data in game_datas["userGames"]:
-            """유저 정보"""
-            data_class.add_data(user_data)
-        data_class.add_data_game_id(user_data)
-        # data_cleansing[mmrBefore]=data_cleansing.get(mmrBefore,[])+[mmrGain]
 
+def load_lastest_verson_from_file():
+    file_name = "./base_datas/game_version.json"
+    with open(file_name, "r", encoding="utf-8") as f:
+        lastest_version = json.load(f)
+    return (
+        lastest_version["CURRENT_GAME_MAJOR_VERSION"],
+        lastest_version["CURRENT_GAME_MINOR_VERSION"],
+    )
+
+
+def ERDataCleansing(
+    data_class=DataClass(),
+    game_mode=["Rank"],
+    major_version=-1,
+    minor_version=-1,
+):
+    if major_version == -1 and minor_version == -1:
+        major_version, minor_version = load_lastest_verson_from_file()
+    elif major_version == -1 or minor_version ==-1:
+        print("version error,used base Version")
+    
+    for mode in game_mode:
+        game_list = glob(
+            "./datas/Ver{0}.{1}_{2}_*.json".format(major_version, minor_version, mode)
+        )
+        for file_name in game_list:
+            with open(file_name, "r", encoding="utf-8") as f:
+                game_datas = json.load(f)
+            # file_index = str(file_name.split("_")[2]).split(".")[0]
+            # print("Add {0}.json".format(file_index))
+            for user_data in game_datas["userGames"]:
+                """유저 정보"""
+                data_class.add_data(user_data)
+            data_class.add_data_game_id()
     data_class.last_calculate()
 
 

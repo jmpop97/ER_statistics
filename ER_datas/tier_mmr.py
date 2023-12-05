@@ -32,6 +32,7 @@ class Tier:
         self.tier["다이아"] = {}
         self.tier["데미갓"] = {}
         self.tier["all"] = {}
+        self.total = {}
 
     def _split_mmrGain(self, mmrGain):
         mmrGain_range = [0, 25, 50, 75, 100, 125, 150, 175, 200, 225]
@@ -55,8 +56,10 @@ class Tier:
 
     def mean(self):
         tiers = self.tier
-        for tier_values in tiers.values():
+        for tier in tiers:
+            tier_values = tiers[tier]
             total = sum(tier_values.values())
+            self.total[tier] = total
             for tier_value in tier_values:
                 tier_values[tier_value] /= total
 

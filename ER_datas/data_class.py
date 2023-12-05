@@ -10,7 +10,7 @@ class DataClass:
     def add_data(self, user_data):
         print("not add_data")
 
-    def add_data_game_id(self, user_data):
+    def add_data_game_id(self):
         print("not add_data_game_id")
 
     def last_calculate(self):
@@ -55,45 +55,52 @@ class ForeignTeam(DataClass):
             memory_i = {}
             memory_i["state"] = 0
             memory_i["language"] = ""
-            memory_i["mmrGainInGame"] = 0
-            memory_i["gameRank"] = 0
+            for condition in self.conditions:
+                memory_i[condition] = []
             self.memory[i] = memory_i
 
     def add_data(self, user_data):
         # 입력 내용
         teamNumber = user_data["teamNumber"]
         memory = self.memory[teamNumber]
-        """외국팀"""
-        if memory["state"] == -1:
-            return
+
         """미확인"""
+        _language = user_data.get("language", "error")
         if memory["state"] == 0:
-            memory["language"] = user_data["language"]
-            for condition in self.conditions:
-                memory[condition] = user_data[condition]
-        elif memory["language"] != user_data["language"]:
+            memory["language"] = _language
+        elif memory["language"] != _language:
             memory["state"] = -1
-            self._add_team_data("foreigner_team", user_data)
-            return
-        else:
-            pass
-        memory["state"] += 1
-        """국내팀"""
-        if memory["state"] == 3:
-            self._add_team_data("domestic_team", user_data)
 
-    def _add_team_data(self, key, user_data):
-        team = self.team[key]
-        team["tier"].split_tier(user_data["mmrBefore"], user_data["mmrGainInGame"])
         for condition in self.conditions:
-            team[condition] += [user_data[condition]]
+            memory[condition] += [user_data[condition]]
+        if memory["state"] != -1:
+            memory["state"] += 1
 
-    def add_data_game_id(self, user_data):
+    def add_data_game_id(self):
+        for team_id in self.memory:
+            if self.memory[team_id]["state"] == 3:
+                self._add_team_data("domestic_team", self.memory[team_id])
+            elif self.memory[team_id]["state"] == -1:
+                self._add_team_data("foreigner_team", self.memory[team_id])
+            else:
+                pass
+
         self._memory_reset()
 
+    def _add_team_data(self, key, memory):
+        team = self.team[key]
+        for team_mate in range(0, 3):
+            team["tier"].split_tier(
+                memory["mmrBefore"][team_mate], memory["mmrGainInGame"][team_mate]
+            )
+        for condition in self.conditions:
+            team[condition] += [memory[condition]]
+
     def last_calculate(self):
+        print("last_calcu")
         teams = self.team
         for team in teams:
+            print("team", team)
             teams[team]["tier"].mean()
 
 
@@ -172,95 +179,15 @@ class CharacterClass(DataClass):
     def get_data(self):
         return self.dic_characterNum_datas_list
 
-# #카메라 설치 수에 따른 mmr증가량
-class Camera_mmr(DataClass):
-    def __init__(self,*condition):
-        self.condition=condition
-        self.dic_cameraGroup={}
-    def add_data(self, user_data):
-        addScamera=user_data["addSurveillanceCamera"]
-        addTcamera=user_data["addTelephotoCamera"]
-        addCamera=addTcamera+addScamera
-        mmrGainIngame=user_data["mmrGainInGame"]
-        self.dic_cameraGroup[addCamera]=self.dic_cameraGroup.get(addCamera,[])+[mmrGainIngame]
-    def last_calculate(self):
-        for key in self.dic_cameraGroup:
-            self.dic_cameraGroup[key]=np.mean(self.dic_cameraGroup[key])
-        self.dic_cameraGroup=dict(sorted(self.dic_cameraGroup.items(), key= lambda x : x[0]))
 
-# #티어별 카메라 설치 평균
-class Camera_tier(DataClass):
-    def __init__(self,*condition):
-        self.condition=condition
-        self.dic_cameraGroup={}
-        self.tier_range = {}
-        self.tier_range[0] = "아이언"
-        self.tier_range[1000] = "브론즈"
-        self.tier_range[2000] = "실버"
-        self.tier_range[3000] = "골드"
-        self.tier_range[4000] = "플레티넘"
-        self.tier_range[5000] = "다이아"
-        self.tier_range[6000] = "데미갓"
-        self.tier_range["all"] = "all"
-    def add_data(self, user_data):
-        addScamera=user_data["addSurveillanceCamera"]
-        addTcamera=user_data["addTelephotoCamera"]
-        addCamera=addTcamera+addScamera
-        mmrBefore=user_data["mmrBefore"]
-        if mmrBefore>6000:
-            mmrBefore=6000
-        mmrBefore_thousand=(mmrBefore%10000//1000)*1000
-        tier=self.tier_range[mmrBefore_thousand]
-        self.dic_cameraGroup[tier]=self.dic_cameraGroup.get(tier,[])+[addCamera]
-    def last_calculate(self):
-        for tier in self.dic_cameraGroup:
-            self.dic_cameraGroup[tier]=np.mean(self.dic_cameraGroup[tier])
-        rank_order = ["아이언", "브론즈", "실버", "골드", "플레티넘", "다이아", "데미갓"]
-        self.dic_cameraGroup={key:value for key, value in sorted(self.dic_cameraGroup.items(), key=lambda x: rank_order.index(x[0]))}
-
-# #등수 별 카메라 설치 평균
-class Camera_rank(DataClass):
-    def __init__(self,*condition):
-        self.condition=condition
-        self.dic_cameraGroup={}
-    def add_data(self, user_data):
-        addScamera=user_data["addSurveillanceCamera"]
-        addTcamera=user_data["addTelephotoCamera"]
-        addCamera=addTcamera+addScamera
-        gameRank=user_data["gameRank"]
-        self.dic_cameraGroup[gameRank]=self.dic_cameraGroup.get(gameRank,[])+[addCamera]
-    def last_calculate(self):
-        for gameRank in self.dic_cameraGroup:
-            self.dic_cameraGroup[gameRank]=np.mean(self.dic_cameraGroup[gameRank])
-        self.dic_cameraGroup=dict(sorted(self.dic_cameraGroup.items(), key= lambda x : x[0]))
-
-# #루크/마이의 카메라 설치 평균
-class Camera_LukeMai(DataClass):
-    def __init__(self,*condition):
-        self.condition=condition
-        self.dic_cameraGroup={'나머지':[]}
-    def add_data(self, user_data):
-        addScamera=user_data["addSurveillanceCamera"]
-        addTcamera=user_data["addTelephotoCamera"]
-        addCamera=addTcamera+addScamera
-        character_name = LoadCharacter()
-        characterNum = user_data["characterNum"]
-        str_characterNum=str(characterNum)
-        if characterNum == 22:
-            self.dic_cameraGroup[character_name[str_characterNum]]=self.dic_cameraGroup.get(character_name[str_characterNum],[])+[addCamera]
-        elif characterNum == 45:
-            self.dic_cameraGroup[character_name[str_characterNum]]=self.dic_cameraGroup.get(character_name[str_characterNum],[])+[addCamera]
-        else:
-            self.dic_cameraGroup['나머지'].append(addCamera)
-    def last_calculate(self):
-        for character in self.dic_cameraGroup:
-            self.dic_cameraGroup[character]=np.mean(self.dic_cameraGroup[character])
 # #카메라 통합
-class Camera_all(DataClass):
+class Camera_All(DataClass):
     def __init__(self,*condition):
         self.condition=condition
         self.dic_cameraGroup_mmr={}
         self.dic_cameraGroup_tier={}
+        self.dic_cameraGroup_Rank={}
+        self.dic_cameraGroup_LukeMai={'나머지':[]}
         self.tier_range = {}
         self.tier_range[0] = "아이언"
         self.tier_range[1000] = "브론즈"
@@ -270,8 +197,7 @@ class Camera_all(DataClass):
         self.tier_range[5000] = "다이아"
         self.tier_range[6000] = "데미갓"
         self.tier_range["all"] = "all"
-        self.dic_cameraGroup_Rank={}
-        self.dic_cameraGroup_LukeMai={'나머지':[]}
+
     def add_data(self, user_data):
         # #총 카메라 수
         addScamera=user_data["addSurveillanceCamera"]

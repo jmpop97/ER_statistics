@@ -1,4 +1,5 @@
 secret.json
+base_datas/game_version.json
 venv/
 __pycache__
 datas/
