@@ -7,36 +7,38 @@ from ER_apis.ER_api import save_games
 from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.data_class import *
 
-
+dic_name = {"10*gameRank": "gameRank10"}
+data_class = ListFilterData(
+    "playTime", "mmrGainInGame", "gameRank", "10*gameRank", **dic_name
+)
+ERDataCleansing(data_class=data_class)
+print(len(data_class.conditions["mmrGainInGame"]))
+print(len(data_class.conditions["playTime"]))
 # figure
 from ER_fig.figure_datas import FigureType
 
 test = FigureType()
-test.scatterplot(data_class.team["domestic_team"],"mmrGainInGame","mmrBefore",titles="domestic_team",team_color="blue",figure_n=1)
-test.scatterplot(data_class.team["foreigner_team"],"mmrGainInGame","mmrBefore",titles="foreign_team",team_color="red",figure_n=1)
-for tier_name in data_class.team["domestic_team"]["tier"].tier:
-    test.bar_graph_n(
-        data_class.team["domestic_team"]["tier"].tier[tier_name],
-        bar_count=2,
-        bar_num=1,
-        team_color="blue",
-        figure_n=tier_name,
-    )
-    test.bar_graph_n(
-        data_class.team["foreigner_team"]["tier"].tier[tier_name],
-        bar_count=2,
-        bar_num=2,
-        team_color="red",
-        figure_n=tier_name,
-    )
-test.save()
-print("end")
+test.scatterplot(
+    data_class.conditions,
+    "playTime",
+    "mmrGainInGame",
+    titles="",
+    team_color="red",
+    figure_n=1,
+)
+test.scatterplot(
+    data_class.conditions,
+    "playTime",
+    "gameRank10",
+    titles="",
+    team_color="red",
+    figure_n=2,
+)
+test.save_show()
+# test.barplot(data=data_class.conditions,x="playTime",y="gameRank",figure_n=1)
+# test.barplot(data=data_class.conditions,x="playTime",y="mmrGainInGame",figure_n=2)
+# test.save_show()
 
-
-# import pprint
-
-# emoticon_class = EmoticonMMRClass(split_range=1000)
-# pprint.pprint(ERDataCleansing(30386977, 30386977, emoticon_class))
 
 """ 2
 character_console_class=CharacterClass("")

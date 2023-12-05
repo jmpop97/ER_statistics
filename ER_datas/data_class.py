@@ -3,9 +3,16 @@ from .tier_mmr import Tier
 import numpy as np
 from read_txt import LoadCharacter
 import json
+import re
+
+calculater = ["/", "*", "+", "-", "(", ")"]
+re_caculater = "([(|-|+|*|/|)])"
 
 
 class DataClass:
+    def __init__(self, *conditions):
+        self.conditions = conditions
+
     def add_data(self, user_data):
         print("not add_data")
 
@@ -16,7 +23,7 @@ class DataClass:
         print("not last_calculate")
 
 
-class FilterData(DataClass):
+class DicCharacterFilterData(DataClass):
     def __init__(self, *condition):
         self.dic_characterNum_datas = {}
         self.condition = condition
@@ -30,6 +37,37 @@ class FilterData(DataClass):
             self.dic_characterNum_datas[characterNum] = self.dic_characterNum_datas.get(
                 characterNum, []
             ) + [datas]
+
+
+class ListFilterData(DataClass):
+    def __init__(self, *conditions, **name_dic):
+        """1.must name_dic.value not in conditions
+        2. only */+-()
+        """
+        self.name_dic = name_dic
+        self.conditions = {}
+        for condition in conditions:
+            self.conditions[name_dic.get(condition, condition)] = []
+
+    def add_data(self, user_data):
+        filter_name = list(self.name_dic.values())
+        for condition in self.conditions:
+            if condition not in filter_name:
+                self.conditions[condition] += [user_data.get(condition, 0)]
+        for condition_caculate in self.name_dic:
+            condition_list = re.split(re_caculater, condition_caculate)
+            for i, index in enumerate(condition_list):
+                if index.isdigit():
+                    pass
+                elif index in calculater:
+                    pass
+                else:
+                    condition_list[i] = str(user_data[index])
+            condition_list = "".join(condition_list)
+            self.conditions[self.name_dic[condition_caculate]] += [eval(condition_list)]
+        # for key,value in self.conditions.items():
+        #     print(key,value)
+        # print("~~~~~~~~~~~~~~~~")
 
 
 class ForeignTeam(DataClass):

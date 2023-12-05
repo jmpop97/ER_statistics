@@ -2,6 +2,8 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import numpy as np
+import seaborn as sns
+
 
 from ER_datas.id_characterName import LoadCharacter
 
@@ -69,14 +71,16 @@ class FigureType:
         self.bool_save = bool_save
         self.bool_show = bool_show
 
-    def scatterplot(self, db, x_type, y_type, titles="", team_color="red", figure_n=1):
+    def scatterplot(
+        self, db, x_type, y_type, titles="", team_color="red", figure_n=1, s=1
+    ):
         plts = self.plt
         plts.figure(figure_n)
         plts.title(titles)
         plts.xlabel(x_type)
         plts.ylabel(y_type)
         plts.scatter(
-            db[x_type], db[y_type], color=team_color
+            db[x_type], db[y_type], color=team_color, s=s
         )  # 산포도 그래프 호출: scatter(x, y)
 
     def bar_graph_n(
@@ -108,9 +112,24 @@ class FigureType:
         self.plt.clf()  # clear the current figure
         self.plt.close()  # closes the current figure
 
-    def save_show(self, name="error"):
-        if self.bool_save:
+    def save_show(self, name="error", save=None, show=None):
+        if save != None:
+            self.bool_save = save
+        if show != None:
+            self.bool_show = show
+
+        if self.bool_show:
             self.show()
         if self.bool_save:
             self.save(name)
         self.clear()
+
+    def lineplot(self, figure_n=1, **coditions):
+        plts = self.plt
+        plts.figure(figure_n)
+        sns.lineplot(**coditions)
+
+    def barplot(self, figure_n=1, **coditions):
+        plts = self.plt
+        plts.figure(figure_n)
+        sns.barplot(**coditions)

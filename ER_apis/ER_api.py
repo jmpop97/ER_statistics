@@ -44,4 +44,4 @@ def save_games(start_game, n=1, second=1):
         print(game_id)
         game_id += 1
         time.sleep(second)
-    print("end")
+    print("end save game")
