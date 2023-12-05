@@ -26,7 +26,8 @@ def game_api(game_id, str_game_type_list):
     responce_datas = requestDataWithHeader.json()
     time.sleep(1)
     if responce_datas.get("code", 0) == 200:
-        if responce_datas["userGames"]["matchingMode"] in game_type:
+        mode = responce_datas["userGames"][0]["matchingMode"]
+        if mode in game_type_list:
             save_game(game_id, responce_datas)
     return True
 

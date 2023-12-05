@@ -1,8 +1,8 @@
 # save api datas
 from ER_apis.ER_api import save_games
 
-# save_games(30769613, 3000)
-
+save_games(start_game=31077018, n=1, second=1, game_type=["Normal"])
+exit()
 # sort data
 from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.data_class import *
