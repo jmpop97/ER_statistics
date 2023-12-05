@@ -2,6 +2,7 @@ certifi==2023.7.22
 charset-normalizer==3.2.0
 contourpy==1.1.0
 cycler==0.11.0
+dnspython==2.4.2
 fonttools==4.42.1
 idna==3.4
 kiwisolver==1.4.5
@@ -9,6 +10,8 @@ matplotlib==3.7.2
 numpy==1.25.2
 packaging==23.1
 Pillow==10.0.0
+pycryptodomex==3.19.0
+pymongo==4.6.1
 pyparsing==3.0.9
 python-dateutil==2.8.2
 requests==2.31.0
