@@ -6,7 +6,7 @@ from .cryption_secret import AESCipher
 
 
 def getAccount():
-    with open("secret_db.json", "r", encoding="utf-8") as f:
+    with open("settting/secret_db.json", "r", encoding="utf-8") as f:
         db_url = json.load(f)
     CRYPTION_KEY = "KEYFORDB"
     aes = AESCipher(CRYPTION_KEY)

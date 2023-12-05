@@ -4,7 +4,7 @@ import os
 import time
 
 # Setting Header
-with open("secret.json", "r", encoding="utf-8") as f:
+with open("/setting/secret.json", "r", encoding="utf-8") as f:
     token = json.load(f)
 headerDict = {}
 headerDict.setdefault("x-api-key", token["token"])
