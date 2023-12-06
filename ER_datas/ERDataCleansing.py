@@ -5,6 +5,10 @@ from ER_datas.data_class import DataClass
 from .rank_mmr import mmr_charges
 from .tier_mmr import Tier
 
+# 캐릭터 이름
+CURRENT_GAME_MAJOR_VERSION = 9
+CURRENT_GAME_MINOR_VERSION = 0
+
 """
 dic_characterNum_characterName[characterNum] = 캐릭터명
 dic_characterNum_characterCount[characterNum] = 캐릭터별 빈도
@@ -27,31 +31,11 @@ from glob import glob
 # game_mode ["Rank", "Normal"]
 # "Rank"
 #
-
-
-def load_lastest_version():
-    game_list = sorted(glob("./datas/Ver*.json"))
-    last_game = (game_list[-1].split("Ver")[1]).split("._")[0]
-    lastest_version = last_game.split("_")[0]
-    print(lastest_version)
-    return lastest_version.split(".")[0], lastest_version.split(".")[1]
-
-
-def load_lastest_verson_from_file():
-    file_name = "./base_datas/game_version.json"
-    with open(file_name, "r", encoding="utf-8") as f:
-        lastest_version = json.load(f)
-    return (
-        lastest_version["CURRENT_GAME_MAJOR_VERSION"],
-        lastest_version["CURRENT_GAME_MINOR_VERSION"],
-    )
-
-
 def ERDataCleansing(
+    major_version=CURRENT_GAME_MAJOR_VERSION,
+    minor_version=CURRENT_GAME_MINOR_VERSION,
     data_class=DataClass(),
     game_mode=["Rank"],
-    major_version=-1,
-    minor_version=-1,
 ):
     if major_version == -1 and minor_version == -1:
         major_version, minor_version = load_lastest_verson_from_file()
@@ -139,17 +123,33 @@ class FilterType:
         dic_characterNum_datas.split_tier(user_data["mmrBefore"], user_data["mmrGain"])
         self.dic_characterNum_datas[characterNum] = dic_characterNum_datas
 
+    def camera_init(self):
+        self.addSurveillanceCamera = []
+        self.addTelephotoCamera = []
+        self.mmrGain = []
+        self.mmrBefore = []
+        self.gameRank = []
+
+    def camera(self, user_data):
+        self.addSurveillanceCamera += [user_data["addSurveillanceCamera"]]
+        self.addTelephotoCamera += [user_data["addTelephotoCamera"]]
+        self.mmrGain += [user_data["mmrGain"]]
+        self.mmrBefore += [user_data["mmrBefore"]]
+        self.gameRank += [user_data["gameRank"]]
+
     dic_type_init = {
         "filter": filter_data_init,
         "data_cleansing": data_cleansing_init,
         "mmrGain_option": mmrGain_option_init,
         "split_mmr": split_mmr_init,
+        "camera_init": camera_init,
     }
     dic_type_add_data = {
         "filter": filter_data,
         "data_cleansing": data_cleansing,
         "mmrGain_option": mmrGain_option,
         "split_mmr": split_mmr,
+        "camera": camera,
     }
 
     dic_type_last_calculate = {}
