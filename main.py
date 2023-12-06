@@ -1,34 +1,58 @@
-#save api datas
-#from ER_apis.ER_api import save_games
-#save_games(27721413,27721414)
+# save api datas
+# from ER_apis.ER_api import save_games
+# save_games(27721413,27721414)
 
-
-
-#doc string
-dic_dataType_figureType={
-    "data_type":{"figure_type":{"data_condition":[]}}
-    ,
-
-    "filter": {"!*":{"condition:datas"}},
-    "data_cleansing":{
-        "plot":{"condition":["*","*"]},
-        "plot_mmrcharge":{"condition":["mmrBefore","mmrGain"]}},
-    "mmrGain_option": {
-        "plot":{"condition":["*"]},
-        "plot_mmrcharge":{"condition":["mmrBefore"]}
-    }
-           }
-#sort datas
-import os
-os.system("cls")
+# sort data
 from ER_datas.ERDataCleansing import ERDataCleansing
-data_type="test"
-list_request_datatype=["maxHp","gameRank"]
-dic_characterNum_datas=ERDataCleansing(29889463,29889463,data_type,list_request_datatype)
+from ER_datas.data_class import *
+
+dic_name = {"10*gameRank": "gameRank10"}
+data_class = ListFilterData(
+    "playTime", "mmrGainInGame", "gameRank", "10*gameRank", **dic_name
+)
+ERDataCleansing(data_class=data_class)
+print(len(data_class.conditions["mmrGainInGame"]))
+print(len(data_class.conditions["playTime"]))
+# figure
+from ER_fig.figure_datas import FigureType
+
+test = FigureType()
+test.scatterplot(
+    data_class.conditions,
+    "playTime",
+    "mmrGainInGame",
+    titles="",
+    team_color="red",
+    figure_n=1,
+)
+test.scatterplot(
+    data_class.conditions,
+    "playTime",
+    "gameRank10",
+    titles="",
+    team_color="red",
+    figure_n=2,
+)
+test.save_show()
+# test.barplot(data=data_class.conditions,x="playTime",y="gameRank",figure_n=1)
+# test.barplot(data=data_class.conditions,x="playTime",y="mmrGainInGame",figure_n=2)
+# test.save_show()
+
+
+""" 2
+character_console_class=CharacterClass("")
+print(ERDataCleansing(character_console_class, ["Rank", "Normal"]))
+print(character_console_class.get_data())
+'''
+import pprint
+emoticon_class=EmoticonMMRClass(split_range=1000)
+pprint.pprint(ERDataCleansing(30386977,30386977,emoticon_class))
+'''
+'''
+>>>>>>> 8af2bbb34e4756ec3cc131349d5892ea24c07bac
 #figure 
 # from ER_fig.figure_datas import figure_save
-# figure_type="plot_mmrcharge"
+# figure_type="range_split_mmr"
 # list_request_datatype=["mmrBefore","mmrGain"]
-# figure_save(dic_characterNum_datas,figure_type,list_request_datatype)
-
-
+# # figure_save(dic_characterNum_datas,figure_type,list_request_datatype)
+2 """
