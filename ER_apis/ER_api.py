@@ -17,7 +17,7 @@ def game_api(game_id, str_game_type_list):
         if game_type == "Normal":
             game_type_list.append(2)
         elif game_type == "Rank":
-            game_type_list.append(2)
+            game_type_list.append(3)
         elif game_type == "Cobalt":
             game_type_list.append(6)
 
@@ -29,10 +29,10 @@ def game_api(game_id, str_game_type_list):
     if responce_datas.get("code", 0) == 200:
         mode = responce_datas["userGames"][0]["matchingMode"]
         if mode in game_type_list:
-            save_game(game_id, responce_datas)
+            _save_game(game_id, responce_datas)
 
 
-def save_game(game_id, responce_datas):
+def _save_game(game_id, responce_datas):
     user_data = responce_datas["userGames"][0]
     game_major_version = user_data["versionMajor"]
     game_minor_version = user_data["versionMinor"]
@@ -60,10 +60,10 @@ def save_game(game_id, responce_datas):
 def save_games(start_game, n=1, second=1, game_type=["Rank", "Normal", "Cobalt"]):
     game_id = start_game
     while game_id < start_game + n:
-        clear_terminal()
-        print("game_id: ", game_id, "({0}/{1})".format(game_id - start_game + 1, n))
         game_api(game_id, game_type)
+        print("game_id: ", game_id, "({0}/{1})".format(game_id - start_game + 1, n))
         game_id += 1
         time.sleep(second)
-    clear_terminal()
+        clear_terminal()
+    # clear_terminal()
     print("end save_games")
