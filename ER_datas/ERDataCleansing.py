@@ -4,11 +4,13 @@ os.system("cls")
 from ER_datas.data_class import DataClass
 from .rank_mmr import mmr_charges
 from .tier_mmr import Tier
+
 # game_data 가져오기
 
 
 import json
 from glob import glob
+
 
 def load_lastest_version():
     game_list = sorted(glob("./datas/Ver*.json"))
@@ -26,6 +28,7 @@ def load_lastest_verson_from_file():
         lastest_version["CURRENT_GAME_MAJOR_VERSION"],
         lastest_version["CURRENT_GAME_MINOR_VERSION"],
     )
+
 
 # game_mode ["Rank", "Normal"]
 # "Rank"

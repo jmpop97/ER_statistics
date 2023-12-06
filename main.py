@@ -1,7 +1,7 @@
 # save api datas
-from ER_apis.ER_api import save_games
+# from ER_apis.ER_api import save_games
 
-save_games(30784252,10)
+# save_games(30784252,10)
 
 # # sort data
 # from ER_datas.ERDataCleansing import ERDataCleansing
@@ -54,7 +54,7 @@ save_games(30784252,10)
 # # pprint.pprint(ERDataCleansing(30386977, 30386977, emoticon_class))
 
 # """
-# #figure 
+# #figure
 # # from ER_fig.figure_datas import figure_save
 # # figure_type="range_split_mmr"
 # # list_request_datatype=["mmrBefore","mmrGain"]

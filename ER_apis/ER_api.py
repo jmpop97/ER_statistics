@@ -36,11 +36,11 @@ def save_game(game_id, responce_datas):
     user_data = responce_datas["userGames"][0]
     game_major_version = user_data["versionMajor"]
     game_minor_version = user_data["versionMinor"]
-    ''' game_mode
+    """ game_mode
     2 normal
     3 rank
     6 cobalt
-    '''
+    """
     game_mode = "Normal"
     if user_data["matchingMode"] == 3:
         game_mode = "Rank"
@@ -57,10 +57,10 @@ def save_game(game_id, responce_datas):
         json.dump(responce_datas, outfile, indent="\t", ensure_ascii=False)
 
 
-def save_games(start_game, n=1, second=1, game_type=["Rank","Normal","Cobalt"]):
+def save_games(start_game, n=1, second=1, game_type=["Rank", "Normal", "Cobalt"]):
     game_id = start_game
     while game_id < start_game + n:
-        clear_terminal()   
+        clear_terminal()
         print("game_id: ", game_id, "({0}/{1})".format(game_id - start_game + 1, n))
         game_api(game_id, game_type)
         game_id += 1
