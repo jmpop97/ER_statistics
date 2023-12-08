@@ -19,3 +19,9 @@ if test.count_last_calculate != 1:
     raise Exception("last_calculate")
 if test.user_data["userNum"] != 71183:
     raise Exception("add_user_data")
+
+
+test = DicCharacterFilterData("mmrBefore")
+ERDataCleansing(data_class=test, test=True)
+if test.dic_characterNum_datas[1] != [{"mmrBefore": 4895}, {"mmrBefore": 5087}]:
+    raise Exception("add_user_data")
