@@ -65,5 +65,4 @@ def save_games(start_game, n=1, second=1, game_type=["Rank", "Normal", "Cobalt"]
         game_id += 1
         time.sleep(second)
         clear_terminal()
-    # clear_terminal()
     print("end save_games")

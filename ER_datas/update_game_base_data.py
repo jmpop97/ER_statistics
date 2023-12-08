@@ -2,6 +2,32 @@ import json
 import requests
 import os
 
+
+SECRET_FILE_PATH = "./secret.json"
+BASE_DATAS_PATH = "./base_datas/"
+TXT_GAME_BASE_DATA_FILE_NAME = "game_base_data2.txt"
+JSON_GAME_BASE_DATA_FILE_NAME = "game_base_data2.json"
+
+
+def put_in_dictionary(list, d):
+    """
+    리스트가 존재할 때
+    첫번째 인덱스일때에는 dictionary에 list[0]에 해당하는 딕셔너리 추가하기
+    점차 재귀로 들어가야한다.
+    """
+    try:
+        if d.get(list[0]) == None:
+            if len(list) == 2:
+                d[list[0]] = list[1]
+            else:
+                d[list[0]] = {}
+                d[list[0]] = put_in_dictionary(list[1:], d[list[0]])
+        else:
+            if len(list) == 2:
+                d[list[0]] = list[1]
+            else:
+                d[list[0]] = put_in_dictionary(list[1:], d[list[0]])
+
 SECRET_FILE_PATH = "./setting/secret.json"
 BASE_DATAS_PATH = "./base_datas"
 ORIGIN_DATAS_PATH = "./origin_datas"
@@ -27,6 +53,7 @@ def put_in_dictionary(input_list, d):
                 d[input_list[0]] = input_list[1]
             else:
                 d[input_list[0]] = put_in_dictionary(input_list[1:], d[input_list[0]])
+>>>>>>> 26ac35a5675a04298a1e466984a4a5b6bd8ee3de
     except AttributeError as e:
         # input_list
         if len(input_list) == 2:
@@ -43,6 +70,13 @@ def put_in_dictionary(input_list, d):
                 d[key] = temp_dictionary
             else:
                 d.append(temp_dictionary)
+
+
+
+def change_txt_to_json():
+    game_data = {}
+    with open(
+        BASE_DATAS_PATH + TXT_GAME_BASE_DATA_FILE_NAME, "r", encoding="utf-8"
 
             # except AttributeError as e2:
             #    d[input_list[0]].append()
@@ -70,6 +104,7 @@ def change_txt_to_json():
     game_data = {}
     with open(
         ORIGIN_DATAS_PATH + TXT_GAME_BASE_DATA_FILE_PATH, "r", encoding="utf-8"
+
     ) as f:
         while True:
             line = f.readline()
@@ -142,6 +177,7 @@ def writeDataTojsonFile(filename, data):
     with open(filename, "w", encoding="UTF-8-sig") as target_file:
         json.dump(data, target_file, indent=4, ensure_ascii=False)
     target_file.close()
+
 
 
 def save_updated_game_base_data(language="Korean"):
@@ -228,7 +264,6 @@ def write_dictionary_to_file(base_dict, other_data):
     # write other data.json file
     other_data = dict(other_data)
     writeDataTojsonFile(BASE_DATAS_PATH + "/others.json", other_data)
-
 
 def update_game_base_data(language="Korean"):
     save_updated_game_base_data(language)
