@@ -24,6 +24,24 @@ class DataClass:
         print("not last_calculate")
 
 
+class TestClass(DataClass):
+    def __init__(self):
+        self.count_add_data = 0
+        self.count_add_data_game_id = 0
+        self.count_last_calculate = 0
+        self.user_data = []
+
+    def add_data(self, user_data):
+        self.count_add_data += 1
+        self.user_data = user_data
+
+    def add_data_game_id(self):
+        self.count_add_data_game_id += 1
+
+    def last_calculate(self):
+        self.count_last_calculate += 1
+
+
 class DicCharacterFilterData(DataClass):
     def __init__(self, *condition):
         self.dic_characterNum_datas = {}
