@@ -208,7 +208,7 @@ class CharacterClass(DataClass):
         self.dic_characterNum_datas = {"tanker": 0, "dealer": 0, "support": 0}
         self.dic_character_class = {}
         self.dic_characterNum_datas_list = {"tanker": [], "dealer": [], "support": []}
-        with open("class.json", "r", encoding="utf-8") as class_json_file:
+        with open("setting/class.json", "r", encoding="utf-8") as class_json_file:
             self.dic_character_class = json.load(class_json_file)
         self.condition = condition
 
@@ -223,15 +223,25 @@ class CharacterClass(DataClass):
             str_user_character_class = "support"
         used_security_console = user_data["useSecurityConsole"]
         datas = used_security_console
-
+        self.dic_characterNum_datas[str_user_character_class] = self.dic_characterNum_datas[str_user_character_class]+datas
         self.dic_characterNum_datas_list[str_user_character_class].append(datas)
 
     def last_calculate(self):
         datas = {}
         for class_key in self.dic_characterNum_datas_list:
             datas[class_key] = np.mean(self.dic_characterNum_datas_list[class_key])
+        self.dic_characterNum_mean_datas = datas
+        self.dic_characterNum_percentage_datas = {"tanker": self.dic_characterNum_datas['tanker']/int(sum(self.dic_characterNum_datas.values())),
+                                                  "dealder": self.dic_characterNum_datas['dealer']/int(sum(self.dic_characterNum_datas.values())),
+                                                  "support": self.dic_characterNum_datas['support']/int(sum(self.dic_characterNum_datas.values()))}
         return datas
-
+    
+    def get_percentage(self):
+        return self.dic_characterNum_percentage_datas
+    
+    def get_mean(self):
+        return self.dic_characterNum_mean_datas
+    
     def get_data(self):
         return self.dic_characterNum_datas_list
 
