@@ -1,6 +1,5 @@
-INSERT_DOCUMENT_NUMBER = 1000
+INSERT_DOCUMENT_NUMBER=1000;
 DISK_LIMIT=90;
-DOCUMENT_DELETE_NUMBER=1000;
 
 # get disk_used by df command
 disk_used=$(df / | grep ^/ | awk '{print $5}');
