@@ -1,6 +1,6 @@
 # ER_statstics
 Eternalreturn game data analyze <br/>
-[분석 방법](#class-유형-모두보기)
+[분석 방법-data_class.py](#mainpy)
 # Notion
 [notion 주소](https://dent-crocodile-dde.notion.site/ER-project-3db7e6843eab4906b915b37df5c938c1?pvs=4)
 # 참가자
@@ -16,6 +16,7 @@ Eternalreturn game data analyze <br/>
 프로젝트 코드
 > ER_apis<br/>
 >> ER_api<br/>
+<br/>
 > ER_datas<br/>
 >> ERDataCleansing.py<br/>
 >> [data_class.py](https://dent-crocodile-dde.notion.site/14c22c9f7cd9498c875bdb1d9db6fac2?pvs=4)<br/>
