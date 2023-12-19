@@ -1,1 +1,2 @@
-python ./insert_mongoDB.py
+INSERT_DOCUMENT_NUMBER = 1000
+python ./insert_mongoDB.py --n $INSERT_DOCUMENT_NUMBER
