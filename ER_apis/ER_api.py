@@ -16,7 +16,8 @@ headerDict = {}
 headerDict.setdefault("x-api-key", token["token"])
 paramDict = {}
 
-
+# translate string list to integer list
+# ["Normal", "Normal", "Cobalt"] -> [2, 3, 6]
 def translate_game_mode_str_to_int(input_game_mode_list: list) -> list:
     game_mode_num_list = []
     for game_mode in input_game_mode_list:
@@ -28,7 +29,8 @@ def translate_game_mode_str_to_int(input_game_mode_list: list) -> list:
             game_mode_num_list.append(COBALT_MODE_NUMBER)
     return game_mode_num_list
 
-
+# translate integer list to String list
+# [2, 3, 6] -> ["Normal", "Normal", "Cobalt"]
 def translate_game_mode_int_to_str(input_game_mode_list: list) -> list:
     game_mode_num_list = []
     for game_mode in input_game_mode_list:
@@ -40,7 +42,7 @@ def translate_game_mode_int_to_str(input_game_mode_list: list) -> list:
             game_mode_num_list.append("Cobalt")
     return game_mode_num_list
 
-
+# request api datas
 def request_to_ER_api(
     request_url: str, header_dict: dict = None, param_dict: dict = None
 ) -> dict:
