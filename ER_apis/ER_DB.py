@@ -12,6 +12,7 @@ COBALT_MODE_NUMBER = 6
 OK_RESPONSE = 200
 SEASON_ID = 21
 
+
 def get_mongoDB_connection_string():
     with open("setting/secret_db.json", "r", encoding="utf-8") as f:
         db_url = json.load(f)
@@ -54,19 +55,25 @@ def insert_game_play_datas_local_to_mongoDB() -> None:
         )
     client.close()
 
-def get_recent_game_id_from_ranker()->int:
+
+def get_recent_game_id_from_ranker() -> int:
     recent_game_id = None
-    responced_current_ranker_data = request_to_ER_api(request_url=f"https://open-api.bser.io/v1/rank/top/{SEASON_ID}/{RANK_MODE_NUMBER}")
-    if responced_current_ranker_data==None:
-        print('error')
+    responced_current_ranker_data = request_to_ER_api(
+        request_url=f"https://open-api.bser.io/v1/rank/top/{SEASON_ID}/{RANK_MODE_NUMBER}"
+    )
+    if responced_current_ranker_data == None:
+        print("error")
         return None
     ranker_user_num = responced_current_ranker_data["userGames"][0]["userNum"]
-    responced_ranker_game_match_data = request_to_ER_api(request_url=f"https://open-api.bser.io/v1/user/games/{ranker_user_num}")
-    if responced_ranker_game_match_data==None:
+    responced_ranker_game_match_data = request_to_ER_api(
+        request_url=f"https://open-api.bser.io/v1/user/games/{ranker_user_num}"
+    )
+    if responced_ranker_game_match_data == None:
         print("error from no game id")
         return None
-    recent_game_id =  responced_ranker_game_match_data['userGames'][0]['gameId']
+    recent_game_id = responced_ranker_game_match_data["userGames"][0]["gameId"]
     return recent_game_id
+
 
 # insert game_match_data document to mongoDB directly by using ER API
 def insert_game_play_datas_mongoDB(

@@ -51,7 +51,7 @@ def ERDataCleansing(data_class=DataClass(), game_mode=["Rank"], fromDB=False):
                 minorVersion=minor_version,
                 game_mode=game_mode,
             )
-            game_list = query_mongoDB(query_list=query, fromEC2=True)
+            game_list = query_mongoDB(query_list=query)
             for game_datas in game_list:
                 for user_data in game_datas["userGames"]:
                     """유저 정보"""

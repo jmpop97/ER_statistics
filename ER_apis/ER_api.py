@@ -17,44 +17,59 @@ headerDict.setdefault("x-api-key", token["token"])
 paramDict = {}
 
 
-def request_to_ER_api(request_url:str, header_dict:dict=None, param_dict:dict=None)->dict:
-    if header_dict==None:
+def translate_game_mode_str_to_int(input_game_mode_list: list) -> list:
+    game_mode_num_list = []
+    for game_mode in input_game_mode_list:
+        if game_mode == "Normal":
+            game_mode_num_list.append(NORMAL_MODE_NUMBER)
+        elif game_mode == "Rank":
+            game_mode_num_list.append(RANK_MODE_NUMBER)
+        elif game_mode == "Cobalt":
+            game_mode_num_list.append(COBALT_MODE_NUMBER)
+    return game_mode_num_list
+
+
+def translate_game_mode_int_to_str(input_game_mode_list: list) -> list:
+    game_mode_num_list = []
+    for game_mode in input_game_mode_list:
+        if game_mode == NORMAL_MODE_NUMBER:
+            game_mode_num_list.append("Normal")
+        elif game_mode == RANK_MODE_NUMBER:
+            game_mode_num_list.append("Rank")
+        elif game_mode == COBALT_MODE_NUMBER:
+            game_mode_num_list.append("Cobalt")
+    return game_mode_num_list
+
+
+def request_to_ER_api(
+    request_url: str, header_dict: dict = None, param_dict: dict = None
+) -> dict:
+    if header_dict == None:
         with open("setting/secret.json", "r", encoding="utf-8") as f:
             token = json.load(f)
         header_dict = {}
         header_dict.setdefault("x-api-key", token["token"])
-    if param_dict==None:
+    if param_dict == None:
         param_dict = {}
-    requestDataWithHeader = requests.get(
-        request_url, headers=header_dict
-    )
+    requestDataWithHeader = requests.get(request_url, headers=header_dict)
     responced_datas = requestDataWithHeader.json()
-    if responced_datas.get("code", 0)!=OK_RESPONSE:
-        responced_datas=None
-    return responced_datas    
+    if responced_datas.get("code", 0) != OK_RESPONSE:
+        responced_datas = None
+    return responced_datas
 
-def game_api(game_id, str_game_type_list):
-    game_type_list = []
-    for game_type in str_game_type_list:
-        if game_type == "Normal":
-            game_type_list.append(2)
-        elif game_type == "Rank":
-            game_type_list.append(3)
-        elif game_type == "Cobalt":
-            game_type_list.append(6)
 
-    requestDataWithHeader = requests.get(
-        f"https://open-api.bser.io/v1/games/{game_id}", headers=headerDict
+def game_api(game_id: int, str_game_type_list: list) -> None:
+    integer_game_type_list = translate_game_mode_str_to_int(str_game_type_list)
+
+    responced_game_match_data = request_to_ER_api(
+        request_url=f"https://open-api.bser.io/v1/games/{game_id}"
     )
-
-    responce_datas = requestDataWithHeader.json()
-    if responce_datas.get("code", 0) == 200:
-        mode = responce_datas["userGames"][0]["matchingMode"]
-        if mode in game_type_list:
-            _save_game(game_id, responce_datas)
+    mode = responced_game_match_data["userGames"][0]["matchingMode"]
+    if mode in integer_game_type_list:
+        _save_game(game_id, responced_game_match_data)
 
 
-def _save_game(game_id, responce_datas):
+def _save_game(game_id: int, responce_datas: dict) -> None:
     user_data = responce_datas["userGames"][0]
     game_major_version = user_data["versionMajor"]
     game_minor_version = user_data["versionMinor"]
@@ -79,7 +94,12 @@ def _save_game(game_id, responce_datas):
         json.dump(responce_datas, outfile, indent="\t", ensure_ascii=False)
 
 
-def save_games(start_game, n=1, second=1, game_type=["Rank", "Normal", "Cobalt"]):
+def save_games(
+    start_game: int,
+    n: int = 1,
+    second: int = 1,
+    game_type: list = ["Rank", "Normal", "Cobalt"],
+):
     game_id = start_game
     while game_id < start_game + n:
         game_api(game_id, game_type)
