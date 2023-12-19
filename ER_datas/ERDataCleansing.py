@@ -36,7 +36,7 @@ def load_lastest_verson_from_file():
 # game_mode ["Rank", "Normal"]
 # "Rank"
 #
-def ERDataCleansing(data_class=DataClass(), game_mode=["Rank"], fromDB=False):
+def ERDataCleansing(data_class=DataClass(), game_mode:list=["Rank"], fromDB:bool=False)->None:
     if not fromDB:
         if major_version == -1 and minor_version == -1:
             major_version, minor_version = load_lastest_verson_from_file()
