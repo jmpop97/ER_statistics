@@ -18,6 +18,7 @@ Eternalreturn game data analyze
 >>ER_api
 > ER_datas
 >> ERDataCleansing.py
->> [data_class.py](#https://dent-crocodile-dde.notion.site/14c22c9f7cd9498c875bdb1d9db6fac2?pvs=4)
+>> data_class.py
+[data_class.py](#https://dent-crocodile-dde.notion.site/14c22c9f7cd9498c875bdb1d9db6fac2?pvs=4)
 # test.py
 테스트 코드 실행
