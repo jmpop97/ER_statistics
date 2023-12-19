@@ -119,12 +119,13 @@ def insert_game_play_datas_mongoDB(
 
 
 def get_lowest_id() -> int:
-    client = access_read_mongoDB()
+    client = access_RW_mongoDB()
     collection = client["ERDB"]["game_play_datas"]
-    lowest_id_document = collection.find_one({}, sort=[("_id", 1)])
+    lowest_id_document = collection.find().sort({"_id": 1}).limit(1)
+    document = lowest_id_document.__getitem__(0)
     client.close()
-    if lowest_id_document:
-        return lowest_id_document["_id"]
+    if document:
+        return document["_id"]
     else:
         return None
 
@@ -132,10 +133,11 @@ def get_lowest_id() -> int:
 def get_highest_id() -> int:
     client = access_RW_mongoDB()
     collection = client["ERDB"]["game_play_datas"]
-    highest_id_document = collection.find_one({}, sort=[("_id", -1)])
+    highest_id_document = collection.find().sort({"_id": -1}).limit(1)
+    document = highest_id_document.__getitem__(0)
     client.close()
-    if highest_id_document:
-        return highest_id_document["_id"]
+    if document:
+        return document["_id"]
     else:
         return None
 

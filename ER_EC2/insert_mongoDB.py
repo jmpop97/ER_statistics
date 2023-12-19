@@ -20,12 +20,16 @@ if __name__ == "__main__":
     from_game_id = recent_game_id_from_top_ranker
     game_numbers_to_save = argument_parser.parse_args().n
     # don't use added value
-    # highest_game_id_in_DB <=
+    # have to prevent duplicated key(game id) error
     if highest_game_id_in_DB >= recent_game_id_from_top_ranker - game_numbers_to_save:
         # here
         game_numbers_to_save = (
             recent_game_id_from_top_ranker - highest_game_id_in_DB + 1
         )
+    # same value not refreshed then.
+    # just kill
+    if highest_game_id_in_DB ==recent_game_id_from_top_ranker:
+        exit(0)
     insert_game_play_datas_mongoDB(
         from_game_id=from_game_id, game_numbers_to_save=game_numbers_to_save
     )
