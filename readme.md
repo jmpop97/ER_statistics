@@ -19,6 +19,6 @@ api 받기
 ## ER_datas
 ### ERDataCleansing.py
 ### data_class.py
-[Class 유형 모두보기] (https://dent-crocodile-dde.notion.site/14c22c9f7cd9498c875bdb1d9db6fac2?pvs=4)
+[Class 유형 모두보기](#https://dent-crocodile-dde.notion.site/14c22c9f7cd9498c875bdb1d9db6fac2?pvs=4)
 # test.py
 테스트 코드 실행
