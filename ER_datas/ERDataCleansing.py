@@ -36,15 +36,15 @@ def load_lastest_verson_from_file():
 # game_mode ["Rank", "Normal"]
 # "Rank"
 #
-def ERDataCleansing(data_class=DataClass(), game_mode=["Rank"], fromDB=False):
-    if not fromDB:
+def ERDataCleansing(data_class=DataClass(), game_mode=["Rank"], DB_type:str="")->None:
+    if not DB_type:
         if major_version == -1 and minor_version == -1:
             major_version, minor_version = load_lastest_verson_from_file()
         elif major_version == -1 or minor_version == -1:
             print("version error,used base Version")
 
     for mode in game_mode:
-        if fromDB:
+        if DB_type=="EC2":
             major_version, minor_version = load_lastest_verson_from_file()
             query = create_query_version(
                 majorVersion=major_version,
@@ -57,6 +57,11 @@ def ERDataCleansing(data_class=DataClass(), game_mode=["Rank"], fromDB=False):
                     """유저 정보"""
                     data_class.add_data(user_data)
                 data_class.add_data_game_id()
+        elif DB_type=="test":
+            game_list = [
+                "./datas/Ver9.0_Rank_31130633.json",
+                "./datas/Ver9.0_Rank_31131392.json",
+            ]
         else:
             game_list = glob(
                 "./datas/Ver{0}.{1}_{2}_*.json".format(
