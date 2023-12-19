@@ -1,5 +1,5 @@
 # ER_statstics
-Eternalreturn game data analyze /n
+Eternalreturn game data analyze <br/>
 [분석 방법](#class-유형-모두보기)
 # Notion
 [notion 주소](https://dent-crocodile-dde.notion.site/ER-project-3db7e6843eab4906b915b37df5c938c1?pvs=4)
