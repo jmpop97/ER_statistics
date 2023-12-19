@@ -53,9 +53,9 @@ class DicCharacterFilterData(DataClass):
         list_request_datatype = self.condition
         for request_datatype in list_request_datatype:
             datas[request_datatype] = user_data[request_datatype]
-            self.dic_characterNum_datas[characterNum] = self.dic_characterNum_datas.get(
-                characterNum, []
-            ) + [datas]
+        self.dic_characterNum_datas[characterNum] = self.dic_characterNum_datas.get(
+            characterNum, []
+        ) + [datas]
 
 
 class ListFilterData(DataClass):
