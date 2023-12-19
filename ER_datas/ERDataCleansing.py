@@ -37,7 +37,7 @@ def load_lastest_verson_from_file():
 # "Rank"
 #
 def ERDataCleansing(
-    data_class=DataClass(), game_mode:list=["Rank"], DB_type: str = ""
+    data_class=DataClass(), game_mode: list = ["Rank"], DB_type: str = ""
 ) -> None:
     if not DB_type:
         if major_version == -1 and minor_version == -1:
