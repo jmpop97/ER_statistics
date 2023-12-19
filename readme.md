@@ -14,12 +14,11 @@ Eternalreturn game data analyze <br/>
 프로젝트 설치
 # main.py
 프로젝트 코드
-> ER_apis<br/>
->> ER_api<br/>
-<br/>
-> ER_datas<br/>
->> ERDataCleansing.py<br/>
->> [data_class.py](https://dent-crocodile-dde.notion.site/14c22c9f7cd9498c875bdb1d9db6fac2?pvs=4)<br/>
+* ER_apis<br/>
+    * ER_api.py<br/>
+* ER_datas<br/>
+    * ERDataCleansing.py<br/>
+    * [data_class.py](https://dent-crocodile-dde.notion.site/14c22c9f7cd9498c875bdb1d9db6fac2?pvs=4)<br/>
 
 # test.py
 테스트 코드 실행
