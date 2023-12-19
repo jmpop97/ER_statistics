@@ -1,9 +1,9 @@
 import json
 
+CHARACTER_FILE_NAME = "./base_datas/Character/Name.json"
+
 
 def LoadCharacter():
-    file_name = "./base_datas/game_base_data.json"
-    with open(file_name, "rt", encoding="utf-8-sig") as f:
-        file_data = json.load(f)
-    character_name = file_data["Character"]["Name"]
+    with open(CHARACTER_FILE_NAME, "rt", encoding="utf-8-sig") as f:
+        character_name = json.load(f)
     return character_name

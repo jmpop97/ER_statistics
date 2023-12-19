@@ -4,12 +4,15 @@ os.system("cls")
 from ER_datas.data_class import DataClass
 from .rank_mmr import mmr_charges
 from .tier_mmr import Tier
+from ER_apis.ER_DB import query_mongoDB, create_query_version
 
 # game_data 가져오기
 
 
 import json
 from glob import glob
+
+major_version, minor_version = -1, -1
 
 
 def load_lastest_version():
@@ -21,7 +24,7 @@ def load_lastest_version():
 
 
 def load_lastest_verson_from_file():
-    file_name = "./base_datas/game_version.json"
+    file_name = "./setting/game_version.json"
     with open(file_name, "r", encoding="utf-8") as f:
         lastest_version = json.load(f)
     return (
@@ -33,15 +36,30 @@ def load_lastest_verson_from_file():
 # game_mode ["Rank", "Normal"]
 # "Rank"
 #
-def ERDataCleansing(data_class=DataClass(), game_mode=["Rank"], test=False):
-    if not test:
+def ERDataCleansing(
+    data_class=DataClass(), game_mode=["Rank"], DB_type: str = ""
+) -> None:
+    if not DB_type:
         if major_version == -1 and minor_version == -1:
             major_version, minor_version = load_lastest_verson_from_file()
         elif major_version == -1 or minor_version == -1:
             print("version error,used base Version")
 
     for mode in game_mode:
-        if test:
+        if DB_type == "EC2":
+            major_version, minor_version = load_lastest_verson_from_file()
+            query = create_query_version(
+                majorVersion=major_version,
+                minorVersion=minor_version,
+                game_mode=game_mode,
+            )
+            game_list = query_mongoDB(query_list=query)
+            for game_datas in game_list:
+                for user_data in game_datas["userGames"]:
+                    """유저 정보"""
+                    data_class.add_data(user_data)
+                data_class.add_data_game_id()
+        elif DB_type == "test":
             game_list = [
                 "./datas/Ver9.0_Rank_31130633.json",
                 "./datas/Ver9.0_Rank_31131392.json",
@@ -61,4 +79,4 @@ def ERDataCleansing(data_class=DataClass(), game_mode=["Rank"], test=False):
                 """유저 정보"""
                 data_class.add_data(user_data)
             data_class.add_data_game_id()
-    data_class.last_calculate()
+        data_class.last_calculate()

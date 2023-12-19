@@ -6,3 +6,6 @@ __pycache__
 datas/
 .vscode
 fig/
+ER_data.xlsx
+ignore/
+main.py
