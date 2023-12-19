@@ -1,17 +1,30 @@
 # save api datas
-# from ER_apis.ER_api import save_games
+from ER_apis.ER_api import save_games
 
-# save_games(30784252,10)
+# save_games(31171664, 10000)
+
+from ER_apis.ER_DB import (
+    insert_game_play_datas_local_to_mongoDB,
+    insert_game_play_datas_mongoDB,
+    show_all_match_datas_from_mongoDB,
+)
+
+# show_all_match_datas_from_mongoDB()
+insert_game_play_datas_local_to_mongoDB()
+insert_game_play_datas_mongoDB(fromGameId=31422763, savingGameNumber=1000)
+# show_all_match_datas_from_mongoDB()
+exit()
 # sort data
 from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.data_class import *
 from ER_fig.figure_datas import FigureType
 
+"""
 dic_name = {"10*gameRank": "gameRank10"}
 data_class = ListFilterData(
     "playTime", "mmrGainInGame", "gameRank", "10*gameRank", **dic_name
 )
-ERDataCleansing(data_class=data_class)
+ERDataCleansing(data_class=data_class, fromDB=True)
 print(len(data_class.conditions["mmrGainInGame"]))
 print(len(data_class.conditions["playTime"]))
 # figure
@@ -34,15 +47,15 @@ test.scatterplot(
     team_color="red",
     figure_n=2,
 )
-test.save_show()
+#test.save_show()
 # test.barplot(data=data_class.conditions,x="playTime",y="gameRank",figure_n=1)
 # test.barplot(data=data_class.conditions,x="playTime",y="mmrGainInGame",figure_n=2)
 # test.save_show()
-
+"""
 
 character_console_class = CharacterClass("")
-print(ERDataCleansing(character_console_class, ["Rank", "Normal"]))
-print(character_console_class.get_data())
+print(ERDataCleansing(character_console_class, ["Rank", "Normal"], fromDB=True))
+print(character_console_class.get_mean(), character_console_class.get_percentage())
 
 """0
 data_class=FilterData("mmrBefore","mmrGain")
