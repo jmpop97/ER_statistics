@@ -10,7 +10,7 @@ from .ERDataCleansing import ERDataCleansing
 from .data_class import *
 
 test = TestClass()
-ERDataCleansing(data_class=test, test=True)
+ERDataCleansing(data_class=test, DB_type="test")
 if test.count_add_data != 48:
     raise Exception("add_data")
 if test.count_add_data_game_id != 2:
@@ -22,7 +22,7 @@ if test.user_data["userNum"] != 71183:
 
 
 test = DicCharacterFilterData("mmrBefore", "gameRank")
-ERDataCleansing(data_class=test, test=True)
+ERDataCleansing(data_class=test, DB_type="test")
 if test.dic_characterNum_datas[42][1] != {"mmrBefore": 5085, "gameRank": 3}:
     raise Exception("add_user_data")
 
@@ -30,7 +30,7 @@ dic_name = {"10*gameRank": "gameRank10"}
 test = ListFilterData(
     "playTime", "mmrGainInGame", "gameRank", "10*gameRank", **dic_name
 )
-ERDataCleansing(test, test=True)
+ERDataCleansing(test, DB_type="test")
 if test.conditions["playTime"] != [
     245,
     301,

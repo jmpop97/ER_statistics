@@ -7,3 +7,5 @@ datas/
 .vscode
 fig/
 ER_data.xlsx
+ignore/
+main.py

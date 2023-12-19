@@ -68,13 +68,13 @@ def ERDataCleansing(data_class=DataClass(), game_mode=["Rank"], DB_type:str="")-
                     major_version, minor_version, mode
                 )
             )
-            for file_name in game_list:
-                with open(file_name, "r", encoding="utf-8") as f:
-                    game_datas = json.load(f)
-                # file_index = str(file_name.split("_")[2]).split(".")[0]
-                # print("Add {0}.json".format(file_index))
-                for user_data in game_datas["userGames"]:
-                    """유저 정보"""
-                    data_class.add_data(user_data)
-                data_class.add_data_game_id()
+        for file_name in game_list:
+            with open(file_name, "r", encoding="utf-8") as f:
+                game_datas = json.load(f)
+            # file_index = str(file_name.split("_")[2]).split(".")[0]
+            # print("Add {0}.json".format(file_index))
+            for user_data in game_datas["userGames"]:
+                """유저 정보"""
+                data_class.add_data(user_data)
+            data_class.add_data_game_id()
         data_class.last_calculate()

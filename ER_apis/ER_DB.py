@@ -4,7 +4,7 @@ import json
 from .cryption_secret import AESCipher
 import requests
 import time
-from ..ER_apis.ER_api import request_to_ER_api
+from ER_apis.ER_api import request_to_ER_api
 
 NORMAL_MODE_NUMBER = 2
 RANK_MODE_NUMBER = 3
