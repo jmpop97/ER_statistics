@@ -2,7 +2,7 @@
 Eternalreturn game data analyze
 [분석 방법](#mainpy)
 # Notion
-[notion 주소]https://dent-crocodile-dde.notion.site/ER-project-3db7e6843eab4906b915b37df5c938c1?pvs=4
+[notion 주소](#https://dent-crocodile-dde.notion.site/ER-project-3db7e6843eab4906b915b37df5c938c1?pvs=4)
 # 참가자
 이름|이메일|깃 주소|블로그|
 ---|---|---|---|
