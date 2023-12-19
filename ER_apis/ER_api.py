@@ -3,6 +3,12 @@ import json
 from function.public_function import clear_terminal
 import time
 
+NORMAL_MODE_NUMBER = 2
+RANK_MODE_NUMBER = 3
+COBALT_MODE_NUMBER = 6
+OK_RESPONSE = 200
+SEASON_ID = 21
+
 # Setting Header
 with open("setting/secret.json", "r", encoding="utf-8") as f:
     token = json.load(f)
@@ -10,6 +16,22 @@ headerDict = {}
 headerDict.setdefault("x-api-key", token["token"])
 paramDict = {}
 
+
+def request_to_ER_api(request_url:str, header_dict:dict=None, param_dict:dict=None)->dict:
+    if header_dict==None:
+        with open("setting/secret.json", "r", encoding="utf-8") as f:
+            token = json.load(f)
+        header_dict = {}
+        header_dict.setdefault("x-api-key", token["token"])
+    if param_dict==None:
+        param_dict = {}
+    requestDataWithHeader = requests.get(
+        request_url, headers=header_dict
+    )
+    responced_datas = requestDataWithHeader.json()
+    if responced_datas.get("code", 0)!=OK_RESPONSE:
+        responced_datas=None
+    return responced_datas    
 
 def game_api(game_id, str_game_type_list):
     game_type_list = []

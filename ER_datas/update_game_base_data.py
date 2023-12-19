@@ -27,6 +27,9 @@ def put_in_dictionary(list, d):
                 d[list[0]] = list[1]
             else:
                 d[list[0]] = put_in_dictionary(list[1:], d[list[0]])
+    except AttributeError as e:
+        print(e)
+
 
 SECRET_FILE_PATH = "./setting/secret.json"
 BASE_DATAS_PATH = "./base_datas"
@@ -179,7 +182,6 @@ def writeDataTojsonFile(filename, data):
     target_file.close()
 
 
-
 def save_updated_game_base_data(language="Korean"):
     url = "https://open-api.bser.io/v1/l10n/Korean/"
     with open(SECRET_FILE_PATH, "r", encoding="utf-8") as f:
@@ -264,6 +266,7 @@ def write_dictionary_to_file(base_dict, other_data):
     # write other data.json file
     other_data = dict(other_data)
     writeDataTojsonFile(BASE_DATAS_PATH + "/others.json", other_data)
+
 
 def update_game_base_data(language="Korean"):
     save_updated_game_base_data(language)

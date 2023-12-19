@@ -5,12 +5,15 @@ from ER_datas.data_class import DataClass
 from .rank_mmr import mmr_charges
 from .tier_mmr import Tier
 from ER_apis.ER_DB import query_mongoDB, create_query_version
+
 # game_data 가져오기
 
 
 import json
 from glob import glob
+
 major_version, minor_version = -1, -1
+
 
 def load_lastest_version():
     game_list = sorted(glob("./datas/Ver*.json"))
@@ -43,7 +46,11 @@ def ERDataCleansing(data_class=DataClass(), game_mode=["Rank"], fromDB=False):
     for mode in game_mode:
         if fromDB:
             major_version, minor_version = load_lastest_verson_from_file()
-            query = create_query_version(majorVersion=major_version, minorVersion=minor_version, game_mode=game_mode)
+            query = create_query_version(
+                majorVersion=major_version,
+                minorVersion=minor_version,
+                game_mode=game_mode,
+            )
             game_list = query_mongoDB(query_list=query, fromEC2=True)
             for game_datas in game_list:
                 for user_data in game_datas["userGames"]:
