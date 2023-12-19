@@ -1,11 +1,19 @@
+from typing import Any
 from function.public_function import emty_list
 from .tier_mmr import Tier
 import numpy as np
 from read_txt import LoadCharacter
 import json
+import re
+
+calculater = ["/", "*", "+", "-", "(", ")"]
+re_caculater = "([(|-|+|*|/|)])"
 
 
 class DataClass:
+    def __init__(self, *conditions):
+        self.conditions = conditions
+
     def add_data(self, user_data):
         print("not add_data")
 
@@ -16,7 +24,25 @@ class DataClass:
         print("not last_calculate")
 
 
-class FilterData(DataClass):
+class TestClass(DataClass):
+    def __init__(self):
+        self.count_add_data = 0
+        self.count_add_data_game_id = 0
+        self.count_last_calculate = 0
+        self.user_data = []
+
+    def add_data(self, user_data):
+        self.count_add_data += 1
+        self.user_data = user_data
+
+    def add_data_game_id(self):
+        self.count_add_data_game_id += 1
+
+    def last_calculate(self):
+        self.count_last_calculate += 1
+
+
+class DicCharacterFilterData(DataClass):
     def __init__(self, *condition):
         self.dic_characterNum_datas = {}
         self.condition = condition
@@ -27,9 +53,40 @@ class FilterData(DataClass):
         list_request_datatype = self.condition
         for request_datatype in list_request_datatype:
             datas[request_datatype] = user_data[request_datatype]
-            self.dic_characterNum_datas[characterNum] = self.dic_characterNum_datas.get(
-                characterNum, []
-            ) + [datas]
+        self.dic_characterNum_datas[characterNum] = self.dic_characterNum_datas.get(
+            characterNum, []
+        ) + [datas]
+
+
+class ListFilterData(DataClass):
+    def __init__(self, *conditions, **name_dic):
+        """1.must name_dic.value not in conditions
+        2. only */+-()
+        """
+        self.name_dic = name_dic
+        self.conditions = {}
+        for condition in conditions:
+            self.conditions[name_dic.get(condition, condition)] = []
+
+    def add_data(self, user_data):
+        filter_name = list(self.name_dic.values())
+        for condition in self.conditions:
+            if condition not in filter_name:
+                self.conditions[condition] += [user_data.get(condition, 0)]
+        for condition_caculate in self.name_dic:
+            condition_list = re.split(re_caculater, condition_caculate)
+            for i, index in enumerate(condition_list):
+                if index.isdigit():
+                    pass
+                elif index in calculater:
+                    pass
+                else:
+                    condition_list[i] = str(user_data[index])
+            condition_list = "".join(condition_list)
+            self.conditions[self.name_dic[condition_caculate]] += [eval(condition_list)]
+        # for key,value in self.conditions.items():
+        #     print(key,value)
+        # print("~~~~~~~~~~~~~~~~")
 
 
 class ForeignTeam(DataClass):
@@ -93,7 +150,7 @@ class ForeignTeam(DataClass):
                 memory["mmrBefore"][team_mate], memory["mmrGainInGame"][team_mate]
             )
         for condition in self.conditions:
-            team[condition] += [memory[condition]]
+            team[condition] += [*memory[condition]]
 
     def last_calculate(self):
         print("last_calcu")
@@ -179,13 +236,116 @@ class CharacterClass(DataClass):
         return self.dic_characterNum_datas_list
 
 
-# 크레딧으로 빌드업 템 만드는것과 후반 보면서 빌드하는 것에 차이(gainMMR)
-class CreditBuildUpMMR(DataClass):
-    def __init__(self) -> None:
-        super().__init__()
+# #카메라 통합
+class Camera_All(DataClass):
+    def __init__(self, *condition):
+        self.condition = condition
+        self.dic_cameraGroup_mmr = {}
+        self.dic_cameraGroup_tier = {}
+        self.dic_cameraGroup_Rank = {}
+        self.dic_cameraGroup_LukeMai = {"나머지": []}
+        self.tier_range = {}
+        self.tier_range[0] = "아이언"
+        self.tier_range[1000] = "브론즈"
+        self.tier_range[2000] = "실버"
+        self.tier_range[3000] = "골드"
+        self.tier_range[4000] = "플레티넘"
+        self.tier_range[5000] = "다이아"
+        self.tier_range[6000] = "데미갓"
+        self.tier_range["all"] = "all"
 
     def add_data(self, user_data):
-        return super().add_data(user_data)
+        # #총 카메라 수
+        addScamera = user_data["addSurveillanceCamera"]
+        addTcamera = user_data["addTelephotoCamera"]
+        addCamera = addTcamera + addScamera
+        # #카메라 설치 수에 따른 mmr 증가량
+        mmrGainIngame = user_data["mmrGainInGame"]
+        self.dic_cameraGroup_mmr[addCamera] = self.dic_cameraGroup_mmr.get(
+            addCamera, []
+        ) + [mmrGainIngame]
+
+        # #티어 별 카메라 설치 평균
+        mmrBefore = user_data["mmrBefore"]
+        if mmrBefore > 6000:
+            mmrBefore = 6000
+        mmrBefore_thousand = (mmrBefore % 10000 // 1000) * 1000
+        tier = self.tier_range[mmrBefore_thousand]
+        self.dic_cameraGroup_tier[tier] = self.dic_cameraGroup_tier.get(tier, []) + [
+            addCamera
+        ]
+
+        # #등수 별 카메라 설치 평균
+        gameRank = user_data["gameRank"]
+        self.dic_cameraGroup_Rank[gameRank] = self.dic_cameraGroup_Rank.get(
+            gameRank, []
+        ) + [addCamera]
+
+        # #루크/마이의 카메라 설치 평균
+        character_name = LoadCharacter()
+        characterNum = user_data["characterNum"]
+        str_characterNum = str(characterNum)
+        if characterNum == 22:
+            self.dic_cameraGroup_LukeMai[
+                character_name[str_characterNum]
+            ] = self.dic_cameraGroup_LukeMai.get(
+                character_name[str_characterNum], []
+            ) + [
+                addCamera
+            ]
+        elif characterNum == 45:
+            self.dic_cameraGroup_LukeMai[
+                character_name[str_characterNum]
+            ] = self.dic_cameraGroup_LukeMai.get(
+                character_name[str_characterNum], []
+            ) + [
+                addCamera
+            ]
+        else:
+            self.dic_cameraGroup_LukeMai["나머지"].append(addCamera)
 
     def last_calculate(self):
-        return super().last_calculate()
+        # #카메라 설치 수에 따른 mmr 증가량
+        for key in self.dic_cameraGroup_mmr:
+            self.dic_cameraGroup_mmr[key] = np.mean(self.dic_cameraGroup_mmr[key])
+        self.dic_cameraGroup_mmr = dict(
+            sorted(self.dic_cameraGroup_mmr.items(), key=lambda x: x[0])
+        )
+
+        # #티어 별 카메라 설치 평균
+        for tier in self.dic_cameraGroup_tier:
+            self.dic_cameraGroup_tier[tier] = np.mean(self.dic_cameraGroup_tier[tier])
+        rank_order = ["아이언", "브론즈", "실버", "골드", "플레티넘", "다이아", "데미갓"]
+        self.dic_cameraGroup_tier = {
+            key: value
+            for key, value in sorted(
+                self.dic_cameraGroup_tier.items(), key=lambda x: rank_order.index(x[0])
+            )
+        }
+
+        # #등수 별 카메라 설치 평균
+        for gameRank in self.dic_cameraGroup_Rank:
+            self.dic_cameraGroup_Rank[gameRank] = np.mean(
+                self.dic_cameraGroup_Rank[gameRank]
+            )
+        self.dic_cameraGroup_Rank = dict(
+            sorted(self.dic_cameraGroup_Rank.items(), key=lambda x: x[0])
+        )
+
+        # #루크/마이의 카메라 설치 평균 수
+        for character in self.dic_cameraGroup_LukeMai:
+            self.dic_cameraGroup_LukeMai[character] = np.mean(
+                self.dic_cameraGroup_LukeMai[character]
+            )
+
+
+# #크레딧으로 빌드업 템 만드는것과 후반 보면서 빌드하는 것에 차이(gainMMR)
+# class CreditBuildUpMMR(DataClass):
+#     def __init__(self) -> None:
+#         super().__init__()
+
+#     def add_data(self, user_data):
+#         return super().add_data(user_data)
+
+#     def last_calculate(self):
+#         return super().last_calculate()
