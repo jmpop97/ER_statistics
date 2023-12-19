@@ -2,7 +2,7 @@ from typing import Any
 from function.public_function import emty_list
 from .tier_mmr import Tier
 import numpy as np
-from read_txt import LoadCharacter
+from ER_datas.id_characterName import LoadCharacter
 import json
 import re
 
@@ -53,9 +53,9 @@ class DicCharacterFilterData(DataClass):
         list_request_datatype = self.condition
         for request_datatype in list_request_datatype:
             datas[request_datatype] = user_data[request_datatype]
-            self.dic_characterNum_datas[characterNum] = self.dic_characterNum_datas.get(
-                characterNum, []
-            ) + [datas]
+        self.dic_characterNum_datas[characterNum] = self.dic_characterNum_datas.get(
+            characterNum, []
+        ) + [datas]
 
 
 class ListFilterData(DataClass):
