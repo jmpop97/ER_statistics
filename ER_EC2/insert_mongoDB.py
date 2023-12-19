@@ -25,10 +25,10 @@ if __name__ == "__main__":
     print("recent_game_id_from_top_ranker: ", recent_game_id_from_top_ranker)
     from_game_id = recent_game_id_from_top_ranker
     game_numbers_to_save = argument_parser.parse_args().n
-    
+
     # don't use added value
     # have to prevent duplicated key(game id) error
-    
+
     if highest_game_id_in_DB >= recent_game_id_from_top_ranker - game_numbers_to_save:
         # here
         game_numbers_to_save = (
@@ -36,9 +36,9 @@ if __name__ == "__main__":
         )
     # same value not refreshed then.
     # just kill
-    if highest_game_id_in_DB ==recent_game_id_from_top_ranker:
+    if highest_game_id_in_DB == recent_game_id_from_top_ranker:
         exit(0)
-    
+
     # what if recent_game_id_from_top_ranker value is too much higher than highest_game_id_in_DB ?
     # then average value of both values?
     insert_game_play_datas_mongoDB(
