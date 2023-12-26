@@ -66,6 +66,4 @@ class TestForeignTeam(unittest.TestCase):
 
     def test_tier(self):
         check = self.test.team["domestic_team"]["tier"]
-        print(check.tier["골드"])
-        print(check.total["골드"])
         self.assertTrue(check.tier["골드"][75] == 2 / check.total["골드"])

@@ -30,7 +30,7 @@ def access_RW_mongoDB() -> MongoClient:
 
 
 def access_read_mongoDB() -> MongoClient:
-    READ_DB_CONNECTION_STRING = get_mongoDB_connection_string()[3]
+    READ_DB_CONNECTION_STRING = get_mongoDB_connection_string()[1]
     client = MongoClient(READ_DB_CONNECTION_STRING, port=27017)
     return client
 
@@ -64,7 +64,7 @@ def get_recent_game_id_from_ranker() -> int:
     if responced_current_ranker_data == None:
         print("error")
         return None
-    ranker_user_num = responced_current_ranker_data["userGames"][0]["userNum"]
+    ranker_user_num = responced_current_ranker_data["topRanks"][0]["userNum"]
     responced_ranker_game_match_data = request_to_ER_api(
         request_url=f"https://open-api.bser.io/v1/user/games/{ranker_user_num}"
     )
@@ -119,23 +119,25 @@ def insert_game_play_datas_mongoDB(
 
 
 def get_lowest_id() -> int:
-    client = access_read_mongoDB()
+    client = access_RW_mongoDB()
     collection = client["ERDB"]["game_play_datas"]
-    lowest_id_document = collection.find_one({}, sort=[("_id", 1)])
+    lowest_id_document = collection.find().sort({"_id": 1}).limit(1)
+    document = lowest_id_document.__getitem__(0)
     client.close()
-    if lowest_id_document:
-        return lowest_id_document["_id"]
+    if document:
+        return document["_id"]
     else:
         return None
 
 
 def get_highest_id() -> int:
-    client = access_read_mongoDB()
+    client = access_RW_mongoDB()
     collection = client["ERDB"]["game_play_datas"]
-    highest_id_document = collection.find_one({}, sort=[("_id", -1)])
+    highest_id_document = collection.find().sort({"_id": -1}).limit(1)
+    document = highest_id_document.__getitem__(0)
     client.close()
-    if highest_id_document:
-        return highest_id_document["_id"]
+    if document:
+        return document["_id"]
     else:
         return None
 
