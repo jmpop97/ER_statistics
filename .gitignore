@@ -1,6 +1,11 @@
-secret.json
-base_datas/game_version.json
+setting/
+origin_datas/
+base_datas/
 venv/
 __pycache__
 datas/
 .vscode
+fig/
+ER_data.xlsx
+ignore/
+main.py

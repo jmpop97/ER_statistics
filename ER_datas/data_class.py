@@ -2,11 +2,18 @@ from typing import Any
 from function.public_function import emty_list
 from .tier_mmr import Tier
 import numpy as np
-from read_txt import LoadCharacter
+from ER_datas.id_characterName import LoadCharacter
 import json
+import re
+
+calculater = ["/", "*", "+", "-", "(", ")"]
+re_caculater = "([(|-|+|*|/|)])"
 
 
 class DataClass:
+    def __init__(self, *conditions):
+        self.conditions = conditions
+
     def add_data(self, user_data):
         print("not add_data")
 
@@ -17,7 +24,25 @@ class DataClass:
         print("not last_calculate")
 
 
-class FilterData(DataClass):
+class TestClass(DataClass):
+    def __init__(self):
+        self.count_add_data = 0
+        self.count_add_data_game_id = 0
+        self.count_last_calculate = 0
+        self.user_data = []
+
+    def add_data(self, user_data):
+        self.count_add_data += 1
+        self.user_data = user_data
+
+    def add_data_game_id(self):
+        self.count_add_data_game_id += 1
+
+    def last_calculate(self):
+        self.count_last_calculate += 1
+
+
+class DicCharacterFilterData(DataClass):
     def __init__(self, *condition):
         self.dic_characterNum_datas = {}
         self.condition = condition
@@ -28,9 +53,40 @@ class FilterData(DataClass):
         list_request_datatype = self.condition
         for request_datatype in list_request_datatype:
             datas[request_datatype] = user_data[request_datatype]
-            self.dic_characterNum_datas[characterNum] = self.dic_characterNum_datas.get(
-                characterNum, []
-            ) + [datas]
+        self.dic_characterNum_datas[characterNum] = self.dic_characterNum_datas.get(
+            characterNum, []
+        ) + [datas]
+
+
+class ListFilterData(DataClass):
+    def __init__(self, *conditions, **name_dic):
+        """1.must name_dic.value not in conditions
+        2. only */+-()
+        """
+        self.name_dic = name_dic
+        self.conditions = {}
+        for condition in conditions:
+            self.conditions[name_dic.get(condition, condition)] = []
+
+    def add_data(self, user_data):
+        filter_name = list(self.name_dic.values())
+        for condition in self.conditions:
+            if condition not in filter_name:
+                self.conditions[condition] += [user_data.get(condition, 0)]
+        for condition_caculate in self.name_dic:
+            condition_list = re.split(re_caculater, condition_caculate)
+            for i, index in enumerate(condition_list):
+                if index.isdigit():
+                    pass
+                elif index in calculater:
+                    pass
+                else:
+                    condition_list[i] = str(user_data[index])
+            condition_list = "".join(condition_list)
+            self.conditions[self.name_dic[condition_caculate]] += [eval(condition_list)]
+        # for key,value in self.conditions.items():
+        #     print(key,value)
+        # print("~~~~~~~~~~~~~~~~")
 
 
 class ForeignTeam(DataClass):
@@ -94,7 +150,7 @@ class ForeignTeam(DataClass):
                 memory["mmrBefore"][team_mate], memory["mmrGainInGame"][team_mate]
             )
         for condition in self.conditions:
-            team[condition] += [memory[condition]]
+            team[condition] += [*memory[condition]]
 
     def last_calculate(self):
         print("last_calcu")
@@ -152,7 +208,7 @@ class CharacterClass(DataClass):
         self.dic_characterNum_datas = {"tanker": 0, "dealer": 0, "support": 0}
         self.dic_character_class = {}
         self.dic_characterNum_datas_list = {"tanker": [], "dealer": [], "support": []}
-        with open("class.json", "r", encoding="utf-8") as class_json_file:
+        with open("setting/class.json", "r", encoding="utf-8") as class_json_file:
             self.dic_character_class = json.load(class_json_file)
         self.condition = condition
 
@@ -167,14 +223,31 @@ class CharacterClass(DataClass):
             str_user_character_class = "support"
         used_security_console = user_data["useSecurityConsole"]
         datas = used_security_console
-
+        self.dic_characterNum_datas[str_user_character_class] = (
+            self.dic_characterNum_datas[str_user_character_class] + datas
+        )
         self.dic_characterNum_datas_list[str_user_character_class].append(datas)
 
     def last_calculate(self):
         datas = {}
         for class_key in self.dic_characterNum_datas_list:
             datas[class_key] = np.mean(self.dic_characterNum_datas_list[class_key])
+        self.dic_characterNum_mean_datas = datas
+        self.dic_characterNum_percentage_datas = {
+            "tanker": self.dic_characterNum_datas["tanker"]
+            / int(sum(self.dic_characterNum_datas.values())),
+            "dealder": self.dic_characterNum_datas["dealer"]
+            / int(sum(self.dic_characterNum_datas.values())),
+            "support": self.dic_characterNum_datas["support"]
+            / int(sum(self.dic_characterNum_datas.values())),
+        }
         return datas
+
+    def get_percentage(self):
+        return self.dic_characterNum_percentage_datas
+
+    def get_mean(self):
+        return self.dic_characterNum_mean_datas
 
     def get_data(self):
         return self.dic_characterNum_datas_list
@@ -260,7 +333,8 @@ class Camera_All(DataClass):
         for tier in self.dic_cameraGroup_tier:
             self.dic_cameraGroup_tier[tier] = np.mean(self.dic_cameraGroup_tier[tier])
         rank_order = ["아이언", "브론즈", "실버", "골드", "플레티넘", "다이아", "데미갓"]
-        self.dic_cameraGroup_tier = {key: value
+        self.dic_cameraGroup_tier = {
+            key: value
             for key, value in sorted(
                 self.dic_cameraGroup_tier.items(), key=lambda x: rank_order.index(x[0])
             )
