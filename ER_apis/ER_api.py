@@ -4,12 +4,11 @@ import os
 import time
 
 # Setting Header
-with open("secret.json", "r", encoding="utf-8") as f:
+with open("setting/secret.json", "r", encoding="utf-8") as f:
     token = json.load(f)
 headerDict = {}
 headerDict.setdefault("x-api-key", token["token"])
 paramDict = {}
-
 
 def game_api(game_id):
     requestDataWithHeader = requests.get(
@@ -17,6 +16,7 @@ def game_api(game_id):
     )
     responce_datas = requestDataWithHeader.json()
     time.sleep(1)
+    print(headerDict)
     if responce_datas.get("code", 0) == 200:
         save_game(game_id, responce_datas)
     return True

@@ -1,7 +1,7 @@
 # save api datas
-# from ER_apis.ER_api import save_games
+from ER_apis.ER_api import save_games
 
-# save_games(31008171,4000)
+save_games(31460173,1)
 
 # sort data
 from ER_datas.ERDataCleansing import ERDataCleansing
@@ -52,7 +52,6 @@ test.show()
 
 # emoticon_class = EmoticonMMRClass(split_range=1000)
 # pprint.pprint(ERDataCleansing(30386977, 30386977, emoticon_class))
-
 """
 #figure 
 # from ER_fig.figure_datas import figure_save

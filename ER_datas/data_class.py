@@ -260,8 +260,7 @@ class Camera_All(DataClass):
         for tier in self.dic_cameraGroup_tier:
             self.dic_cameraGroup_tier[tier] = np.mean(self.dic_cameraGroup_tier[tier])
         rank_order = ["아이언", "브론즈", "실버", "골드", "플레티넘", "다이아", "데미갓"]
-        self.dic_cameraGroup_tier = {
-            key: value
+        self.dic_cameraGroup_tier = {key: value
             for key, value in sorted(
                 self.dic_cameraGroup_tier.items(), key=lambda x: rank_order.index(x[0])
             )
