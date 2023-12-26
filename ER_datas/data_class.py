@@ -91,7 +91,7 @@ class ListFilterData(DataClass):
 
 class ForeignTeam(DataClass):
     def __init__(self, *conditions):
-        self.conditions = conditions
+        self.conditions = set([*conditions, "mmrBefore", "mmrGainInGame"])
         self.team = {
             "domestic_team": self._team_db_setting(),
             "foreigner_team": self._team_db_setting(),
@@ -104,6 +104,7 @@ class ForeignTeam(DataClass):
         db["tier"] = Tier()
         for condition in self.conditions:
             db[condition] = []
+
         return db
 
     def _memory_reset(self):
