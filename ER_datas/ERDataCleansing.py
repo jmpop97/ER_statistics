@@ -12,8 +12,6 @@ from ER_apis.ER_DB import query_mongoDB, create_query_version
 import json
 from glob import glob
 
-major_version, minor_version = -1, -1
-
 
 def load_lastest_version():
     game_list = sorted(glob("./datas/Ver*.json"))
@@ -24,7 +22,7 @@ def load_lastest_version():
 
 
 def load_lastest_verson_from_file():
-    file_name = "./setting/game_version.json"
+    file_name = "setting/game_version.json"
     with open(file_name, "r", encoding="utf-8") as f:
         lastest_version = json.load(f)
     return (
@@ -37,7 +35,11 @@ def load_lastest_verson_from_file():
 # "Rank"
 #
 def ERDataCleansing(
-    data_class=DataClass(), game_mode=["Rank"], DB_type: str = ""
+    data_class=DataClass(),
+    game_mode=["Rank"],
+    DB_type: str = "",
+    major_version: int = -1,
+    minor_version: int = -1,
 ) -> None:
     if not DB_type:
         if major_version == -1 and minor_version == -1:
