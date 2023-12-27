@@ -1,4 +1,4 @@
-CURRENT_PATH=$(pwd)
+#!/bin/bash
 INSERT_DOCUMENT_NUMBER=1000
 DISK_LIMIT=90;
 
@@ -8,4 +8,4 @@ disk_used=$(df / | grep ^/ | awk '{print $5}');
 disk_used=${disk_used::-1};
 # if DISK_LIMIT > disk_used
 # then execute python ./insert_mongoDB.py $INSERT_DOCUMENT_NUMBER to save game match datas.
-test $DISK_LIMIT -gt $disk_used && nohup python ${CURRENT_PATH}/insert_mongoDB.py --n $INSERT_DOCUMENT_NUMBER &
+test $DISK_LIMIT -gt $disk_used && nohup python ${ER_DIR_PATH}/insert_mongoDB.py --n $INSERT_DOCUMENT_NUMBER &
