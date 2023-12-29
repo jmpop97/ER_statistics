@@ -64,6 +64,7 @@ this manual is recommended for aws ec2 ubuntu instance
 1. create user in mongoDB to access
 &nbsp;
 2. make setting directory and files to acces to DB
+&nbsp;
     (0) move files in ER_EC2
     ```
     cp -r ./ER_EC2 ./
