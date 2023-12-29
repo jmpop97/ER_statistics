@@ -1,5 +1,6 @@
 import os
 import sys
+from datetime import datetime
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from ER_apis.ER_DB import get_lowest_id, delete_old_documents
@@ -18,3 +19,5 @@ if __name__ == "__main__":
     delete_old_documents(
         from_game_id=lowest_id_in_mongoDB, delete_number=argument_parser.parse_args().n
     )
+    now = datetime.now()
+    print("deleted at time: ", now)
