@@ -1,4 +1,6 @@
-after git clone
+##After git clone
+
+this manual is recommended for aws ec2 ubuntu instance
 
 0. need install mongoDB to make EC2 as DB
     1) easily install by install_mongoDB.sh
