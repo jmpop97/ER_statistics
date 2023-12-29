@@ -1,7 +1,15 @@
 after git clone
 
 0. need install mongoDB to make EC2 as DB
-    1) install python
+    1) easily install by install_mongoDB.sh
+        ```
+        sudo chmod +x install_mongoDB.sh init_scheduler.sh
+        ./install_mongoDB.sh
+        ```
+
+        if worked succesfully, then will print mongod service active
+        jump to [v.setting mongoDB configuration](#setting-mongoDB-configuration)
+    2) install python
         ```
         # python3 -> python
         sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
@@ -12,18 +20,14 @@ after git clone
         pip3 --version
         sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
         ```
-    2) install mongoDB
+    3) install mongoDB
         ```
-        # UTC to KST
+        # UTC to KST(Option)
         sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
-    
-        # port forwarding
-        sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 5000
-        
+            
         # Import the public key used by the package management system
         sudo apt-get install gnupg
-        curl -fsSL https://pgp.mongodb.com/server-6.0.asc | \
-        sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg \ --dearmor
+        curl -fsSL https://pgp.mongodb.com/server-6.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg --dearmor
         
         # Create a list file for MongoDB
         echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
@@ -34,15 +38,14 @@ after git clone
         # Install the MongoDB packages.
         sudo apt-get install -y mongodb
         ```
-        start mongodb service
+    4) start mongodb service
         ```
         sudo service mongod start
         sudo service mongod status
         ```
-        setting mongoDB configuration
-        ```
-        sudo vim /etc/mongod.conf
-        ```
+    5) ###### setting mongoDB configuration
+        ```sudo vim /etc/mongod.conf```
+        /etc/mongod.conf
         ```
         # network interfaces
         net:
@@ -52,23 +55,34 @@ after git clone
         security:
         authorization: enabled # enable security
         ```
-    3) install requirements.txt
-        ```pip install -r requirements.txt```
+    6) edit EC2 inbound rule to connect to DB
+        &nbsp;
 
-
-1. need to start as root
-	```
-    sudo su
-	```    
-
-2. create user in mongoDB to access
-
-3. make setting directory and fiels to acces to DB
+1. create user in mongoDB to access
+&nbsp;
+2. make setting directory and files to acces to DB
+    (0) move files in ER_EC2
     ```
-    mkdir setting
-    sudo cp secret_db.json ER_statistics_path/setting
+    cp -r ./ER_EC2 ./
     ```
-    ex) secrete_db.json file 
+    (1) make setting folder
+    ```
+    mkdir /path/to/ER_statistics/setting # don't expose
+    ```
+    (1) secrete.json file
+    secrete.json file is for request ER api to server
+    ```
+    {
+        "token":"your_ER_api_token"
+    }
+    ```
+    
+    (2) secrete_db.json file
+    secrete_db.json file is used to access your mongoDB
+    encrypt_connection_url.sh can encrypt your db connection url to make ER_statistics/setting/secret_db.json
+    ```
+    encrypt_connection_url.sh mongodb://<role1_read_write>:<ROLE1_PASSWORD>@<EC2_public_IPv4_DNS> mongodb://<role2_read>:<ROLE2_PASSWORD>@<EC2_public_IPv4_DNS>
+    ``` 
     ```
     {
     "EC2_DB_CONNECTION_STRING" : "encrypted_db_connection_string_read_write",
@@ -76,11 +90,10 @@ after git clone
     }
     ```
 
-4. copy files in /ER_statistics/ER_EC2 to /ER_statistics/
+3. execute init_schduler.sh to use crontab to request apis everyday
    	```
-    cp -r ./ER_EC2 ./
-    chmod +x init.sh
+    chmod +x init_scheduler.sh
     # Automately add insert_to_mongoDB.sh and storage_check.sh to scheduler
-    ./init.sh
+    ./init_scheduler.sh
    	```    
     
