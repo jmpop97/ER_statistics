@@ -1,4 +1,4 @@
-##After git clone
+## After git clone
 
 this manual is recommended for aws ec2 ubuntu instance
 

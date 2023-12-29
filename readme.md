@@ -25,4 +25,5 @@ Eternalreturn game data analyze <br/>
 
 # EC2
 aws ec2 인스턴스를 ER api 저장하는 mongoDB로 설정하는 관련 코드
+
 [Link to manual readme.md](./ER_EC2/readme.md)
