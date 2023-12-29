@@ -47,7 +47,8 @@ this manual is recommended for aws ec2 ubuntu instance
         ```
     5) ###### setting mongoDB configuration
         ```sudo vim /etc/mongod.conf```
-        /etc/mongod.conf
+        &nbsp;
+        in /etc/mongod.conf
         ```
         # network interfaces
         net:
