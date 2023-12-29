@@ -64,16 +64,15 @@ this manual is recommended for aws ec2 ubuntu instance
 1. create user in mongoDB to access
 &nbsp;
 2. make setting directory and files to acces to DB
-&nbsp;
-    (0) move files in ER_EC2
+    1) move files in ER_EC2
     ```
     cp -r ./ER_EC2 ./
     ```
-    (1) make setting folder
+    2) make setting folder
     ```
     mkdir /path/to/ER_statistics/setting # don't expose
     ```
-    (1) secrete.json file
+    3) secrete.json file
     secrete.json file is for request ER api to server
     ```
     {
@@ -81,7 +80,7 @@ this manual is recommended for aws ec2 ubuntu instance
     }
     ```
     
-    (2) secrete_db.json file
+    4) secrete_db.json file
     secrete_db.json file is used to access your mongoDB
     encrypt_connection_url.sh can encrypt your db connection url to make ER_statistics/setting/secret_db.json
     ```
