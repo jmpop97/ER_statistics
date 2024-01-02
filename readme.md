@@ -7,7 +7,7 @@ Eternalreturn game data analyze <br/>
 이름|이메일|깃 주소|블로그|
 ---|---|---|---|
 박종민|pjm970128@gmail.com|https://github.com/jmpop97|https://jmpop.tistory.com/|
-유동국|---|https://github.com/dbehdrnr0202|---|
+유동국|bb06001@naver.com|https://github.com/dbehdrnr0202|---|
 안수호|---|---|---|
 
 # projectsetting.py
@@ -22,3 +22,8 @@ Eternalreturn game data analyze <br/>
 
 # test.py
 테스트 코드 실행
+
+# EC2
+aws ec2 인스턴스를 ER api 저장하는 mongoDB로 설정하는 관련 코드
+
+[Link to manual readme.md](./ER_EC2/readme.md)
