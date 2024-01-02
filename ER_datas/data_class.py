@@ -58,9 +58,24 @@ class DicCharacterFilterData(DataClass):
         ) + [datas]
 
 
+class DicCharacterData(DataClass):
+    def __init__(self, *condition):
+        self.dic_characterNum_datas = {}
+        self.condition = condition
+
+    def add_data(self, user_data):
+        characterNum = user_data["characterNum"]
+        datas = {}
+        conditions = self.condition
+        db= self.dic_characterNum_datas.get(
+            characterNum, {})
+        for condition in conditions:
+            db[condition]=db.get(condition,[])+[user_data[condition]]
+        self.dic_characterNum_datas[characterNum]=db
 class ListFilterData(DataClass):
     def __init__(self, *conditions, **name_dic):
-        """1.must name_dic.value not in conditions
+        """
+        1.must name_dic.value not in conditions
         2. only */+-()
         """
         self.name_dic = name_dic
@@ -70,9 +85,11 @@ class ListFilterData(DataClass):
 
     def add_data(self, user_data):
         filter_name = list(self.name_dic.values())
+        #기본 condition
         for condition in self.conditions:
             if condition not in filter_name:
                 self.conditions[condition] += [user_data.get(condition, 0)]
+        #계산 condition
         for condition_caculate in self.name_dic:
             condition_list = re.split(re_caculater, condition_caculate)
             for i, index in enumerate(condition_list):
@@ -84,9 +101,7 @@ class ListFilterData(DataClass):
                     condition_list[i] = str(user_data[index])
             condition_list = "".join(condition_list)
             self.conditions[self.name_dic[condition_caculate]] += [eval(condition_list)]
-        # for key,value in self.conditions.items():
-        #     print(key,value)
-        # print("~~~~~~~~~~~~~~~~")
+
 
 
 class ForeignTeam(DataClass):
@@ -159,7 +174,6 @@ class ForeignTeam(DataClass):
         for team in teams:
             print("team", team)
             teams[team]["tier"].mean()
-
 
 # 이모티콘 소통의 유의미 한가?(현 mmr, 획득 mmr)
 class EmoticonMMRClass(DataClass):

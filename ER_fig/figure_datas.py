@@ -170,9 +170,13 @@ class FigureType:
     def lineplot(self, figure_n=1, **coditions):
         plts = self.plt
         plts.figure(figure_n)
+        plts.set_facecolor("white")
         sns.lineplot(**coditions)
 
     def barplot(self, figure_n=1, **coditions):
         plts = self.plt
         plts.figure(figure_n)
         sns.barplot(**coditions)
+
+    def title(self,condition):
+        self.plt.title(condition)
