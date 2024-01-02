@@ -251,7 +251,7 @@ class CharacterClass(DataClass):
         self.dic_characterNum_percentage_datas = {
             "tanker": self.dic_characterNum_datas["tanker"]
             / int(sum(self.dic_characterNum_datas.values())),
-            "dealder": self.dic_characterNum_datas["dealer"]
+            "dealer": self.dic_characterNum_datas["dealer"]
             / int(sum(self.dic_characterNum_datas.values())),
             "support": self.dic_characterNum_datas["support"]
             / int(sum(self.dic_characterNum_datas.values())),
