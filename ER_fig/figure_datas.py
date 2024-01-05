@@ -178,5 +178,5 @@ class FigureType:
         plts.figure(figure_n)
         sns.barplot(**coditions)
 
-    def title(self,condition):
+    def title(self, condition):
         self.plt.title(condition)

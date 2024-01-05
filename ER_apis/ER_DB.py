@@ -98,6 +98,8 @@ def insert_game_play_datas_mongoDB(
             responced_game_match_data["_id"] = responced_game_match_data["userGames"][
                 0
             ]["gameId"]
+            # Fix 필요.
+            # 아래 부분에서 insert_one을 수행할 때 이미 있는 _id값을 넣으려고 수행할 경우 에러가 뜬다
             inserted_id = collection.insert_one(responced_game_match_data).inserted_id
             inserted_file_cnt += 1
             print(
