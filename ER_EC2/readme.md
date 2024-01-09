@@ -66,7 +66,7 @@ this manual is recommended for aws ec2 ubuntu instance
 2. make setting directory and files to acces to DB
     1) move files in ER_EC2
     ```
-    cp -r ./ER_EC2 ./
+    cp -r ./ER_EC2/. ./
     ```
     2) make setting folder
     ```
