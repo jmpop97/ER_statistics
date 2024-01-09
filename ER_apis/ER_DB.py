@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from pymongo.errors import DuplicateKeyError
 from glob import glob
 import json
 from .cryption_secret import AESCipher
@@ -30,7 +31,7 @@ def access_RW_mongoDB() -> MongoClient:
 
 
 def access_read_mongoDB() -> MongoClient:
-    READ_DB_CONNECTION_STRING = get_mongoDB_connection_string()[3]
+    READ_DB_CONNECTION_STRING = get_mongoDB_connection_string()[1]
     client = MongoClient(READ_DB_CONNECTION_STRING, port=27017)
     return client
 
@@ -64,7 +65,7 @@ def get_recent_game_id_from_ranker() -> int:
     if responced_current_ranker_data == None:
         print("error")
         return None
-    ranker_user_num = responced_current_ranker_data["userGames"][0]["userNum"]
+    ranker_user_num = responced_current_ranker_data["topRanks"][0]["userNum"]
     responced_ranker_game_match_data = request_to_ER_api(
         request_url=f"https://open-api.bser.io/v1/user/games/{ranker_user_num}"
     )
@@ -77,8 +78,8 @@ def get_recent_game_id_from_ranker() -> int:
 
 # insert game_match_data document to mongoDB directly by using ER API
 def insert_game_play_datas_mongoDB(
-    from_game_id: int, game_numbers_to_save: int
-) -> None:
+    from_game_id: int, game_numbers_to_save: int, error_stop: bool = True
+) -> bool:
     client = access_RW_mongoDB()
     access_db = client["ERDB"]
     collection = access_db["game_play_datas"]
@@ -86,56 +87,73 @@ def insert_game_play_datas_mongoDB(
         token = json.load(f)
     headerDict = {}
     headerDict.setdefault("x-api-key", token["token"])
-    inserted_file_cnt = 0
-    to_game_id = from_game_id + game_numbers_to_save
-    to_save_game_id_list = range(from_game_id, to_game_id)
-    for game_id in to_save_game_id_list:
+    # Fix 필요
+    current_game_id = from_game_id
+    current_saved_count = 0
+    while current_saved_count < game_numbers_to_save:
         requestDataWithHeader = requests.get(
-            f"https://open-api.bser.io/v1/games/{game_id}", headers=headerDict
+            f"https://open-api.bser.io/v1/games/{current_game_id}", headers=headerDict
         )
         responced_game_match_data = requestDataWithHeader.json()
         if responced_game_match_data.get("code", 0) == OK_RESPONSE:
             responced_game_match_data["_id"] = responced_game_match_data["userGames"][
                 0
             ]["gameId"]
-            inserted_id = collection.insert_one(responced_game_match_data).inserted_id
-            inserted_file_cnt += 1
-            print(
-                "id: {0} ({1}/{2})".format(
-                    inserted_id, inserted_file_cnt, len(to_save_game_id_list)
+            try:
+                result = collection.insert_one(responced_game_match_data)
+                print(f"Document inserted with _id: {result.inserted_id}")
+                current_saved_count += 1
+                current_game_id += 1
+                print(
+                    "id: {0} ({1}/{2})".format(
+                        result.inserted_id, current_saved_count, game_numbers_to_save
+                    )
                 )
-            )
-            time.sleep(1)
+                time.sleep(1)
+            except DuplicateKeyError as e:
+                print(f"Document with the same _id already exists.: {current_game_id}")
+                if error_stop:
+                    return False
+                current_game_id += 1
+            except Exception as e:
+                print(f"Error: {e}")
+                if error_stop:
+                    return False
+                current_game_id += 1
         else:
             print("ERROR: responced code not 200")
             print(
                 "game_id: {0}\tcode: {1}".format(
-                    game_id, responced_game_match_data.get("code")
+                    current_game_id, responced_game_match_data.get("code")
                 )
             )
+            current_game_id += 1
             continue
     client.close()
     print("[[insert end]]")
+    return True
 
 
 def get_lowest_id() -> int:
-    client = access_read_mongoDB()
+    client = access_RW_mongoDB()
     collection = client["ERDB"]["game_play_datas"]
-    lowest_id_document = collection.find_one({}, sort=[("_id", 1)])
+    lowest_id_document = collection.find().sort({"_id": 1}).limit(1)
+    document = lowest_id_document.__getitem__(0)
     client.close()
-    if lowest_id_document:
-        return lowest_id_document["_id"]
+    if document:
+        return document["_id"]
     else:
         return None
 
 
 def get_highest_id() -> int:
-    client = access_read_mongoDB()
+    client = access_RW_mongoDB()
     collection = client["ERDB"]["game_play_datas"]
-    highest_id_document = collection.find_one({}, sort=[("_id", -1)])
+    highest_id_document = collection.find().sort({"_id": -1}).limit(1)
+    document = highest_id_document.__getitem__(0)
     client.close()
-    if highest_id_document:
-        return highest_id_document["_id"]
+    if document:
+        return document["_id"]
     else:
         return None
 
