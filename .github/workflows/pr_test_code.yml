@@ -1,8 +1,9 @@
 name: pr_test_code
 on:
   push:
-    branches:
-      - main
+      branches: [main] 
+  pull_request:
+      branches: [main] 
 jobs:
   python-hello-world:
     runs-on: ubuntu-latest
