@@ -1,4 +1,4 @@
-name: learn-github-actions
+name: pr_test_code
 on:
   push:
     branches:
