@@ -193,6 +193,8 @@ def save_updated_game_base_data(language="Korean"):
     if response_datas.get("code", 0) == 200:
         file_url = response_datas["data"]["l10Path"]
         file = requests.get(file_url)
+        if not os.path.exists(BASE_DATAS_PATH):
+            os.mkdir(BASE_DATAS_PATH)
         open(TXT_GAME_BASE_DATA_FILE_PATH, "wb").write(file.content)
 
 
