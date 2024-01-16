@@ -83,4 +83,4 @@ class TestCamera(unittest.TestCase):
         self.assertTrue(check_rank[1]==15.5)
     def test_camera_Lukemai(self):
         check_Lukemai=self.test.dic_cameraGroup_LukeMai
-        self.assertTrue(check_Lukemai)
+        self.assertTrue(check_Lukemai['마이']==1.0)
