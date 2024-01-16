@@ -1,26 +1,60 @@
 import json
 import os
-import importlib
-import ER_apis.ER_api
+from ER_apis.ER_api import save_games
+from ER_apis.ER_api import game_api
+from ER_datas.update_game_base_data import update_game_base_data
+update_game_base_data()
+# Model
+class Apimodel:
+    def save_Api_key(self, key):
+        api_key_dic = {"token": key}
+        with open("setting\secret.json", "w") as file:
+            json.dump(api_key_dic, file)
 
-if os.path.exists("setting") == False:
-    os.mkdir("setting")
-i = 0
-while i == 0:
-    Api_key = input("키를 입력하시오:")
-    Api_key_dic = {"token": Api_key}
-    with open("setting\secret.json", "w") as file:
-        json.dump(Api_key_dic, file)
-    print(Api_key_dic)
+    def test_Api_key(self):
+        if game_api:
+            save_games(31460173,1)
+            return os.path.isfile("./datas/Ver10.0_Rank_31460173.json")
+        else:
+            return False
 
-    # 테스트용 데이터 하나 받기
+# View
+class Apiview:
+    @staticmethod
+    def get_Api_key():
+        return input("키를 입력하시오:")
 
-    importlib.reload(ER_apis.ER_api)
-    ER_apis.ER_api.save_games(31460173, 1)
-    # 데이터가 받아졌는지로 키가 맞는지 아닌지 확인
-    if os.path.isfile("./datas/Ver10.0_Rank_31460173.json") == False:
-        print("잘못된 키가 입력되었습니다.")
-    else:
-        i += 1
-        os.remove("./datas/Ver10.0_Rank_31460173.json")
-        print("입력되었습니다.")
+    @staticmethod
+    def show_result(result):
+        print(result)
+
+# Controller
+class Apicontroller:
+    def __init__(self, model, view):
+        self.model = model
+        self.view = view
+
+    def get_api(self):
+        if os.path.exists("setting")==False:
+            os.mkdir("setting")
+
+        while True:
+            Api_key = self.view.get_Api_key()
+            self.model.save_Api_key(Api_key)
+
+            if self.model.test_Api_key():
+                os.remove("./datas/Ver10.0_Rank_31460173.json")
+                self.view.show_result("입력되었습니다.")
+                break
+            else:
+                self.view.show_result("잘못된 키가 입력되었습니다.")
+    def get_test_case(self):
+        save_games(31131392,1)
+        save_games(31130633,1)
+
+
+model = Apimodel()
+view = Apiview()
+controller = Apicontroller(model, view)
+controller.get_api()
+controller.get_test_case()
