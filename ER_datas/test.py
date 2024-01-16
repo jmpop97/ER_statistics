@@ -67,3 +67,20 @@ class TestForeignTeam(unittest.TestCase):
     def test_tier(self):
         check = self.test.team["domestic_team"]["tier"]
         self.assertTrue(check.tier["골드"][75] == 2 / check.total["골드"])
+
+class TestCamera(unittest.TestCase):
+    test=Camera_All("addSurveillanceCamera","addTelephotoCamera","mmrGainInGame","mmrBefore","gameRank","characterNum")
+    ERDataCleansing(test, DB_type= "test")
+    
+    def test_camera_mmr(self):
+        check_mmr = self.test.dic_cameraGroup_mmr
+        self.assertTrue(check_mmr[1]==4.8)
+    def test_camera_tier(self):
+        check_tier=self.test.dic_cameraGroup_tier
+        self.assertTrue(check_tier['브론즈']==3.0)
+    def test_camera_rank(self):
+        check_rank=self.test.dic_cameraGroup_Rank
+        self.assertTrue(check_rank[1]==15.5)
+    def test_camera_Lukemai(self):
+        check_Lukemai=self.test.dic_cameraGroup_LukeMai
+        self.assertTrue(check_Lukemai)
