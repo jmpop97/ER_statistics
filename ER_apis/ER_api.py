@@ -116,3 +116,11 @@ def save_games(
         time.sleep(second)
         clear_terminal()
     print("end save_games")
+
+def request_free_characters(matchingMode:str=NORMAL_MODE_NUMBER)->bool:
+    responced_datas = request_to_ER_api(
+        request_url=f"https://open-api.bser.io/v1/freeCharacters/{matchingMode}"
+    )
+    if responced_datas.get("code", 0) != OK_RESPONSE:
+        return False
+    return True
