@@ -1,5 +1,7 @@
 # ER statstics
 <br> Eternalreturn game data analyze <br/>
+[분석 방법-data_class.py](#mainpy)
+
 
 # Used skills
 ### 📋 Languages
@@ -15,7 +17,7 @@ ps://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&l
 ### 💾 Databases
 <img src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white">
 
-[분석 방법-data_class.py](#mainpy)
+
 # Notion
 [notion 주소](https://dent-crocodile-dde.notion.site/ER-project-3db7e6843eab4906b915b37df5c938c1?pvs=4)
 # 참가자
