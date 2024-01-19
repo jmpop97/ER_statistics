@@ -37,6 +37,7 @@ ORIGIN_DATAS_PATH = "./origin_datas"
 TXT_GAME_BASE_DATA_FILE_PATH = "./origin_datas/game_base_data.txt"
 TXT_GAME_BASE_DATA_FILE_NAME = "game_base_data.txt"
 
+
 def writeDataTojsonFile(filename, data):
     with open(filename, "w", encoding="UTF-8-sig") as target_file:
         json.dump(data, target_file, indent=4, ensure_ascii=False)
