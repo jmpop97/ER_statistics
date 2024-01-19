@@ -212,9 +212,7 @@ class TestEmoticonMMRClass(unittest.TestCase):
         )
 
         check = [self.test_list[0].dic_mmr_emoticon, self.test_list[1].dic_mmr_emoticon]
-        print()
-        print(check)
-        print(self.CHECK_EMOTION_USED_LIST)
+        
         self.assertEqual(check, self.CHECK_EMOTION_USED_LIST)
 
     """
