@@ -92,7 +92,7 @@ class ListFilterData(DataClass):
     def __init__(self, *conditions, **name_dic):
         """
         1.must name_dic.value not in conditions
-        2. only */+-()
+        2. only */+-()//
         """
         self.name_dic = name_dic
         self.conditions = {}
