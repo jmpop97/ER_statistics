@@ -69,9 +69,12 @@ def game_api(game_id: int, str_game_type_list: list) -> None:
     responced_game_match_data = request_to_ER_api(
         request_url=f"https://open-api.bser.io/v1/games/{game_id}"
     )
-    mode = responced_game_match_data["userGames"][0]["matchingMode"]
-    if mode in integer_game_type_list:
-        _save_game(game_id, responced_game_match_data)
+    if responced_game_match_data == None:
+        return False
+    else:
+        mode = responced_game_match_data["userGames"][0]["matchingMode"]
+        if mode in integer_game_type_list:
+            _save_game(game_id, responced_game_match_data)
 
 
 def _save_game(game_id: int, responce_datas: dict) -> None:
