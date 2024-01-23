@@ -221,7 +221,8 @@ class TestEmoticonMMRClass(unittest.TestCase):
         self.assertTrue([len(check[:])]==self.CHECK_VALUE/check.total[""])
     """
 
-'''
+
+"""
 class TestCharacterClass(unittest.TestCase):
     test = CharacterClass()
 
@@ -256,7 +257,8 @@ class TestCharacterClass(unittest.TestCase):
         self.assertEqual(check["tanker"][4], 2)
         self.assertEqual(check["dealer"][1], 1)
         self.assertEqual(check["support"][0], 0)
-'''
+"""
+
 
 class TestCamera(unittest.TestCase):
     test = Camera_All(

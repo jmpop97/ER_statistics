@@ -54,9 +54,7 @@ def translate_game_mode_int_to_str(input_game_mode_list: list) -> list:
 
 
 # request api datas
-def request_to_ER_api(
-    request_url: str, header_dict: dict = None
-) -> dict:
+def request_to_ER_api(request_url: str, header_dict: dict = None) -> dict:
     if header_dict == None:
         header_dict, _ = setting_header()
     requestDataWithHeader = requests.get(request_url, headers=header_dict)
