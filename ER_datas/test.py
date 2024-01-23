@@ -212,9 +212,7 @@ class TestEmoticonMMRClass(unittest.TestCase):
         )
 
         check = [self.test_list[0].dic_mmr_emoticon, self.test_list[1].dic_mmr_emoticon]
-        print()
-        print(check)
-        print(self.CHECK_EMOTION_USED_LIST)
+
         self.assertEqual(check, self.CHECK_EMOTION_USED_LIST)
 
     """
@@ -224,6 +222,7 @@ class TestEmoticonMMRClass(unittest.TestCase):
     """
 
 
+"""
 class TestCharacterClass(unittest.TestCase):
     test = CharacterClass()
 
@@ -252,20 +251,38 @@ class TestCharacterClass(unittest.TestCase):
         self.assertEqual(check["tanker"][4], 2)
         self.assertEqual(check["dealer"][1], 1)
         self.assertEqual(check["support"][0], 0)
+    def test_data(self):
+        check = self.test.dic_characterNum_datas_list
+        self.assertEqual(check["tanker"][2], 9)
+        self.assertEqual(check["tanker"][4], 2)
+        self.assertEqual(check["dealer"][1], 1)
+        self.assertEqual(check["support"][0], 0)
+"""
+
 
 class TestCamera(unittest.TestCase):
-    test=Camera_All("addSurveillanceCamera","addTelephotoCamera","mmrGainInGame","mmrBefore","gameRank","characterNum")
-    ERDataCleansing(test, DB_type= "test")
-    
+    test = Camera_All(
+        "addSurveillanceCamera",
+        "addTelephotoCamera",
+        "mmrGainInGame",
+        "mmrBefore",
+        "gameRank",
+        "characterNum",
+    )
+    ERDataCleansing(test, DB_type="test")
+
     def test_camera_mmr(self):
         check_mmr = self.test.dic_cameraGroup_mmr
-        self.assertTrue(check_mmr[1]==4.8)
+        self.assertTrue(check_mmr[1] == 4.8)
+
     def test_camera_tier(self):
-        check_tier=self.test.dic_cameraGroup_tier
-        self.assertTrue(check_tier['브론즈']==3.0)
+        check_tier = self.test.dic_cameraGroup_tier
+        self.assertTrue(check_tier["브론즈"] == 3.0)
+
     def test_camera_rank(self):
-        check_rank=self.test.dic_cameraGroup_Rank
-        self.assertTrue(check_rank[1]==15.5)
+        check_rank = self.test.dic_cameraGroup_Rank
+        self.assertTrue(check_rank[1] == 15.5)
+
     def test_camera_Lukemai(self):
-        check_Lukemai=self.test.dic_cameraGroup_LukeMai
-        self.assertTrue(check_Lukemai['마이']==1.0)
+        check_Lukemai = self.test.dic_cameraGroup_LukeMai
+        self.assertTrue(check_Lukemai["마이"] == 1.0)

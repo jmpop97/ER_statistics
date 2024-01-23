@@ -14,10 +14,11 @@ class Apimodel:
 
     def test_Api_key(self):
         if game_api:
-            save_games(31460173,1)
+            save_games(31460173, 1)
             return os.path.isfile("./datas/Ver10.0_Rank_31460173.json")
         else:
             return False
+
 
 # View
 class Apiview:
@@ -35,6 +36,7 @@ class Apiview:
     def show_result(result):
         print(result)
 
+
 # Controller
 class Apicontroller:
     def __init__(self, model, view):
@@ -42,7 +44,7 @@ class Apicontroller:
         self.view = view
 
     def get_api(self):
-        if os.path.exists("setting")==False:
+        if os.path.exists("setting") == False:
             os.mkdir("setting")
 
         while True:
@@ -58,8 +60,8 @@ class Apicontroller:
                 sys.exit()
 
     def get_test_case(self):
-        save_games(31131392,1)
-        save_games(31130633,1)
+        save_games(31131392, 1)
+        save_games(31130633, 1)
 
     def make_main_py(self):
         main=open('main.py', 'w')

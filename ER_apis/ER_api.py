@@ -17,6 +17,14 @@ headerDict.setdefault("x-api-key", token["token"])
 paramDict = {}
 
 
+def setting_header(param_dict: dict = {}) -> (dict, dict):
+    with open("setting/secret.json", "r", encoding="utf-8") as f:
+        token = json.load(f)
+    header_dict = {}
+    header_dict.setdefault("x-api-key", token["token"])
+    return header_dict, param_dict
+
+
 # translate string list to integer list
 # ["Normal", "Normal", "Cobalt"] -> [2, 3, 6]
 def translate_game_mode_str_to_int(input_game_mode_list: list) -> list:
@@ -46,16 +54,9 @@ def translate_game_mode_int_to_str(input_game_mode_list: list) -> list:
 
 
 # request api datas
-def request_to_ER_api(
-    request_url: str, header_dict: dict = None, param_dict: dict = None
-) -> dict:
+def request_to_ER_api(request_url: str, header_dict: dict = None) -> dict:
     if header_dict == None:
-        with open("setting/secret.json", "r", encoding="utf-8") as f:
-            token = json.load(f)
-        header_dict = {}
-        header_dict.setdefault("x-api-key", token["token"])
-    if param_dict == None:
-        param_dict = {}
+        header_dict, _ = setting_header()
     requestDataWithHeader = requests.get(request_url, headers=header_dict)
     responced_datas = requestDataWithHeader.json()
     if responced_datas.get("code", 0) != OK_RESPONSE:
@@ -63,7 +64,7 @@ def request_to_ER_api(
     return responced_datas
 
 
-def game_api(game_id: int, str_game_type_list: list) -> None:
+def game_api(game_id: int, str_game_type_list: list) -> bool:
     integer_game_type_list = translate_game_mode_str_to_int(str_game_type_list)
 
     responced_game_match_data = request_to_ER_api(
@@ -75,6 +76,7 @@ def game_api(game_id: int, str_game_type_list: list) -> None:
         mode = responced_game_match_data["userGames"][0]["matchingMode"]
         if mode in integer_game_type_list:
             _save_game(game_id, responced_game_match_data)
+
 
 
 def _save_game(game_id: int, responce_datas: dict) -> None:
@@ -107,12 +109,23 @@ def save_games(
     n: int = 1,
     second: int = 1,
     game_type: list = ["Rank", "Normal", "Cobalt"],
-):
+) -> bool:
     game_id = start_game
     while game_id < start_game + n:
-        game_api(game_id, game_type)
+        if not game_api(game_id, game_type):
+            return False
         print("game_id: ", game_id, "({0}/{1})".format(game_id - start_game + 1, n))
         game_id += 1
         time.sleep(second)
         clear_terminal()
     print("end save_games")
+    return True
+
+
+def request_free_characters(matchingMode: str = NORMAL_MODE_NUMBER) -> bool:
+    responced_datas = request_to_ER_api(
+        request_url=f"https://open-api.bser.io/v1/freeCharacters/{matchingMode}"
+    )
+    if responced_datas.get("code", 0) != OK_RESPONSE:
+        return False
+    return True
