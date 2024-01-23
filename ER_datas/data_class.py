@@ -192,7 +192,7 @@ class ForeignTeam(DataClass):
 
 # 이모티콘 소통의 유의미 한가?(현 mmr, 획득 mmr)
 class EmoticonMMRClass(DataClass):
-    def __init__(self, split_range, *condition):
+    def __init__(self, split_range: int, *condition):
         self.dic_mmr_emoticon = {}
         self.split_range = split_range
         self.condition = condition
@@ -232,7 +232,9 @@ class EmoticonMMRClass(DataClass):
         return self.dic_mmr_emoticon
 
     # 보안 콘솔을 자주 키는 험체(탱커, 딜러)
-    # class CharacterClass(DataClass):
+
+
+class CharacterClass(DataClass):
     def __init__(self, *condition):
         self.dic_characterNum_datas = {"tanker": 0, "dealer": 0, "support": 0}
         self.dic_character_class = {}
@@ -383,6 +385,7 @@ class Camera_All(DataClass):
             self.dic_cameraGroup_LukeMai[character] = np.mean(
                 self.dic_cameraGroup_LukeMai[character]
             )
+
 
 # #크레딧으로 빌드업 템 만드는것과 후반 보면서 빌드하는 것에 차이(gainMMR)
 # class CreditBuildUpMMR(DataClass):
