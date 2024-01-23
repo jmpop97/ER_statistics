@@ -72,10 +72,11 @@ def game_api(game_id: int, str_game_type_list: list) -> bool:
     )
     if responced_game_match_data == None:
         return False
-    mode = responced_game_match_data["userGames"][0]["matchingMode"]
-    if mode in integer_game_type_list:
-        _save_game(game_id, responced_game_match_data)
-    return True
+    else:
+        mode = responced_game_match_data["userGames"][0]["matchingMode"]
+        if mode in integer_game_type_list:
+            _save_game(game_id, responced_game_match_data)
+
 
 
 def _save_game(game_id: int, responce_datas: dict) -> None:
