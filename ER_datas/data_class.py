@@ -6,8 +6,23 @@ from ER_datas.id_characterName import LoadCharacter
 import json
 import re
 
-calculater = ["/", "*", "+", "-", "(", ")"]
-re_caculater = "([(|-|+|*|/|)])"
+calculater = ["/", "*", "+", "-", "(", ")", "%", "//"]
+
+
+def _split_caclulater(name: str = "") -> list:
+    _dic = {}
+    _n = 0
+    _change = 0
+    for i in name:
+        if i in calculater:
+            _changed = 1
+        else:
+            _changed = 2
+        if _change != _changed:
+            _n += 1
+            _change = _changed
+        _dic[_n] = _dic.get(_n, "") + i
+    return _dic
 
 
 class DataClass:
@@ -77,7 +92,7 @@ class ListFilterData(DataClass):
     def __init__(self, *conditions, **name_dic):
         """
         1.must name_dic.value not in conditions
-        2. only */+-()
+        2. only */+-()//
         """
         self.name_dic = name_dic
         self.conditions = {}
@@ -92,16 +107,15 @@ class ListFilterData(DataClass):
                 self.conditions[condition] += [user_data.get(condition, 0)]
         # 계산 condition
         for condition_caculate in self.name_dic:
-            condition_list = re.split(re_caculater, condition_caculate)
-            for i, index in enumerate(condition_list):
-                if index.isdigit():
-                    pass
-                elif index in calculater:
-                    pass
+            # condition_list = re.split(re_caculater, condition_caculate)
+            condition_dic = _split_caclulater(condition_caculate)
+            condition_str = ""
+            for index in condition_dic.values():
+                if index.isdigit() or index in calculater:
+                    condition_str += index
                 else:
-                    condition_list[i] = str(user_data[index])
-            condition_list = "".join(condition_list)
-            self.conditions[self.name_dic[condition_caculate]] += [eval(condition_list)]
+                    condition_str += str(user_data[index])
+            self.conditions[self.name_dic[condition_caculate]] += [eval(condition_str)]
 
 
 class ForeignTeam(DataClass):
@@ -217,9 +231,8 @@ class EmoticonMMRClass(DataClass):
     def get_data(self):
         return self.dic_mmr_emoticon
 
-
-# 보안 콘솔을 자주 키는 험체(탱커, 딜러)
-class CharacterClass(DataClass):
+    # 보안 콘솔을 자주 키는 험체(탱커, 딜러)
+    # class CharacterClass(DataClass):
     def __init__(self, *condition):
         self.dic_characterNum_datas = {"tanker": 0, "dealer": 0, "support": 0}
         self.dic_character_class = {}
