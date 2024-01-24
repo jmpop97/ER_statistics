@@ -9,8 +9,9 @@ import sys
 class Apimodel:
     def save_Api_key(self, key):
         api_key_dic = {"token": key}
-        with open("setting\secret.json", "w") as file:
+        with open(".\setting\secret.json", "w") as file:
             json.dump(api_key_dic, file)
+        print(os.path.isfile(".\setting\secret.json"))
 
     def test_Api_key(self):
         if game_api:
@@ -18,12 +19,17 @@ class Apimodel:
             return os.path.isfile("./datas/Ver10.0_Rank_31460173.json")
         else:
             return False
-
+    def create_folders(self):
+        if os.path.exists("setting") == False:
+            os.mkdir("setting")
+        if os.path.exists("datas") == False:
+            os.mkdir("datas")
+        if os.path.exists("origin_datas") == False:
+            os.mkdir("origin_datas")
 
 # View
 class Apiview:
-    @staticmethod
-    def get_Api_key():
+    def get_Api_key(self):
         if len(sys.argv)==2:
             return sys.argv[1]
         elif len(sys.argv)>2:
@@ -32,8 +38,7 @@ class Apiview:
         else:
             return input("키를 입력해주세요:")
 
-    @staticmethod
-    def show_result(result):
+    def show_result(self,result):
         print(result)
 
 
@@ -43,9 +48,10 @@ class Apicontroller:
         self.model = model
         self.view = view
 
+    def create_folders(self):
+        self.model.create_folders()
+
     def get_api(self):
-        if os.path.exists("setting") == False:
-            os.mkdir("setting")
 
         while True:
             Api_key = self.view.get_Api_key()
@@ -66,11 +72,12 @@ class Apicontroller:
     def make_main_py(self):
         main=open('main.py', 'w')
         main.close()
-
-update_game_base_data()
 model = Apimodel()
 view = Apiview()
 controller = Apicontroller(model, view)
+controller.create_folders()
+print("1")
 controller.get_api()
 controller.get_test_case()
 controller.make_main_py()
+update_game_base_data()
