@@ -8,9 +8,9 @@ import sys
 class Apimodel:
     def save_Api_key(self, key):
         api_key_dic = {"token": key}
-        with open(".\setting\secret.json", "w") as file:
+        with open("setting/secret.json", "w") as file:
             json.dump(api_key_dic, file)
-        print(os.path.isfile(".\setting\secret.json"))
+        print(os.path.isfile("setting/secret.json"))
 
     def test_Api_key(self):
         if game_api:
@@ -55,13 +55,9 @@ class Apicontroller:
         while True:
             Api_key = self.view.get_Api_key()
             self.model.save_Api_key(Api_key)
-            print("=====secret file saved")
-            if request_free_characters():
-                '''
-                self.model.test_Api_key():
+            if self.model.test_Api_key():
                 os.remove("./datas/Ver10.0_Rank_31460173.json")
                 self.view.show_result("입력되었습니다.")
-                '''
                 break
             else:
                 self.view.show_result("잘못된 키가 입력되었습니다.")
