@@ -28,7 +28,7 @@ jobs:
       #- name: running test code
       #  run: python test.py
       - name: running project setting
-        run: python project_setting.py ${ER_API_KEY}
+        run: python project_setting.py ${{secrets.ER_API_KEY}}
       - name: show directory after setting
         run: ls -al
   build:
