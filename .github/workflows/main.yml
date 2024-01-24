@@ -21,6 +21,8 @@ jobs:
           python-version: "3.10.6"
       - name: running test code
         run: python test.py
+      - name: running project setting
+        run: python project_setting.py
   
 
   build:
