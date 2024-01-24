@@ -5,20 +5,14 @@ on:
       types: [labeled]
 jobs:
   build:
-    name: testing
+    name: test
     runs-on: ubuntu-latest
     if: contains(github.event.pull_request.labels.*.name, 'safe to test')
     steps:
       - uses: actions/checkout@v2
         with:
           ref: ${{github.event.pull_request.base.sha}}
-          
       - uses: actions/setup-python@v2
         with:
           python-version: "3.10.6"
-          
-      - name: running project setting
-        run: python project_setting.py ${{ ER_API_KEY }}
-        
-      - name: running test code
-        run: python test.py
+      - run: python test.py
