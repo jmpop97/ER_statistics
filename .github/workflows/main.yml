@@ -23,14 +23,14 @@ jobs:
         run: sudo chmod +x project_setting.py
       - name: pip installation
         run: pip install -r requirements.txt
-      - name: show directory
+      - name: show directory before setting
         run: ls -al
       #- name: running test code
       #  run: python test.py
       - name: running project setting
         run: python project_setting.py
-  
-
+      - name: show directory after setting
+        run: ls -al
   build:
     name: test
     runs-on: ubuntu-latest
