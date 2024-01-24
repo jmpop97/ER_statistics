@@ -1,7 +1,6 @@
 import json
 import os
-from ER_apis.ER_api import save_games
-from ER_apis.ER_api import game_api
+from ER_apis.ER_api import save_games, game_api, request_free_characters
 from ER_datas.update_game_base_data import update_game_base_data
 import sys
 
@@ -57,9 +56,12 @@ class Apicontroller:
             Api_key = self.view.get_Api_key()
             self.model.save_Api_key(Api_key)
             print("=====secret file saved")
-            if self.model.test_Api_key():
+            if request_free_characters():
+                '''
+                self.model.test_Api_key():
                 os.remove("./datas/Ver10.0_Rank_31460173.json")
                 self.view.show_result("입력되었습니다.")
+                '''
                 break
             else:
                 self.view.show_result("잘못된 키가 입력되었습니다.")
