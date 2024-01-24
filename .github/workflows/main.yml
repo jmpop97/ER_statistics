@@ -9,7 +9,9 @@ on:
 # jobs
 jobs:
   test:
+    name: From Bug Branch
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/heads/bug')
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -27,7 +29,7 @@ jobs:
         run: python project_setting.py ${{secrets.ER_API_KEY}}
 
   build:
-    name: test
+    name: Pull Request(safe to test) Label
     runs-on: ubuntu-latest
     if: contains(github.event.pull_request.labels.*.name, 'safe to test')
     steps:
