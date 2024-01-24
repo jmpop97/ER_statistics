@@ -10,7 +10,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'test')
     steps:
       - name: Checkout
         uses: actions/checkout@v2
