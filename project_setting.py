@@ -56,7 +56,7 @@ class Apicontroller:
         while True:
             Api_key = self.view.get_Api_key()
             self.model.save_Api_key(Api_key)
-
+            print("=====secret file saved")
             if self.model.test_Api_key():
                 os.remove("./datas/Ver10.0_Rank_31460173.json")
                 self.view.show_result("입력되었습니다.")
@@ -77,7 +77,7 @@ view = Apiview()
 controller = Apicontroller(model, view)
 controller.create_folders()
 print("1")
-#controller.get_api()
-#controller.get_test_case()
-#controller.make_main_py()
+controller.get_api()
+controller.get_test_case()
+controller.make_main_py()
 #update_game_base_data()
