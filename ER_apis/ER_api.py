@@ -9,14 +9,6 @@ COBALT_MODE_NUMBER = 6
 OK_RESPONSE = 200
 SEASON_ID = 21
 
-# Setting Header
-with open("setting/secret.json", "r", encoding="utf-8") as f:
-    token = json.load(f)
-headerDict = {}
-headerDict.setdefault("x-api-key", token["token"])
-paramDict = {}
-
-
 def setting_header(param_dict: dict = {}) -> (dict, dict):
     with open("setting/secret.json", "r", encoding="utf-8") as f:
         token = json.load(f)
