@@ -9,13 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     if: contains(github.event.pull_request.labels.*.name, 'safe to test')
     steps:
-      - name: Check out Repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
           ref: ${{github.event.pull_request.base.sha}}
           
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - uses: actions/setup-python@v2
         with:
           python-version: "3.10.6"
           
