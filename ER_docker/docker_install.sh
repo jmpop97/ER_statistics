@@ -15,7 +15,6 @@ then
                 echo "==== Problem From Running Docker"
                 exit(2)
         fi
-
 else
         echo "==== Problem From Installing Docker"
         exit(1)
