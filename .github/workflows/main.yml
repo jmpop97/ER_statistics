@@ -2,7 +2,7 @@ name: ER Statistics CI
 # trigger
 on:
   push:
-    branches: [bug*]
+    branches: [bug*, feature_EC2]
   pull_request_target:
     branches: [main,develop]
     types: [labeled]
