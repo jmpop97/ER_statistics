@@ -5,10 +5,19 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubun
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 sudo systemctl status docker
 status=$(sudo systemctl status docker | grep "Active" | awk '{print $2}')
-echo "status: $status"
 if [ $status == 'active'  ]
 then
-        sudo docker run hello-world
+        docker_result=$(sudo docker run hello-world | grep "Hello" | awk '{print $1}')
+        if [ $docker_result == "Hello" ]
+        then
+                echo "==== Installing & Running Docker processed normally"
+        else
+                echo "==== Problem From Running Docker"
+                exit(2)
+        fi
+
 else
-        echo "Retry Installing"
+        echo "==== Problem From Installing Docker"
+        exit(1)
 fi
+
