@@ -107,6 +107,7 @@ jobs:
           port: ${{ secrets.EC2_SSH_PORT }}
           timeout: 60s
           script: |
-            sudo docker stop docker-test-dev
-            sudo docker rm docker-test-dev
-            sudo docker run -it -d -p 8080:8080 --name docker-test-dev ${{ secrets.DOCKER_USERNAME }}/docker-test-dev
+            ls -al
+            # sudo docker stop docker-test-dev
+            # sudo docker rm docker-test-dev
+            # sudo docker run -it -d -p 8080:8080 --name docker-test-dev ${{ secrets.DOCKER_USERNAME }}/docker-test-dev
