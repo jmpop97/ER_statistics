@@ -46,7 +46,7 @@ jobs:
       - name: running project setting
         run: python project_setting.py ${{secrets.ER_API_KEY}}
 
-  CI-CD:
+  EC2-CI-CD:
     runs-on: ubuntu-latest
     if: contains(github.ref, 'feature_EC2')
     steps:
@@ -66,8 +66,8 @@ jobs:
         id: ip
         uses: haythem/public-ip@v1.2      
 
-      # - name: pip installation
-      #   run: pip install -r requirements.txt
+      - name: pip installation
+        run: pip install -r requirements.txt
       
       # # docker build & push to main
       # - name: Docker build & push to main
@@ -111,3 +111,8 @@ jobs:
             # sudo docker stop docker-test-dev
             # sudo docker rm docker-test-dev
             # sudo docker run -it -d -p 8080:8080 --name docker-test-dev ${{ secrets.DOCKER_USERNAME }}/docker-test-dev
+
+      # Remove github ip to AWS Security groups
+      - name: Remove Github Actions IP From Security Group
+        run: |
+          aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32            
