@@ -8,7 +8,25 @@ on:
     types: [labeled]
 # jobs
 jobs:
-  # 자신이 push를 해서 test.py를 실행시킨 후에 정상적으로 작동햇을 때만 push 되도록
+  # Pull request 받았을 때만 작동
+  PR:
+    name: Pull Request(safe to test) Label
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'safe to test')
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{github.event.pull_request.base.sha}}
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.10.6"
+      - name: pip installation
+        run: pip install -r requirements.txt
+      - name: running test code
+        run: python test.py
+      - name: running project setting
+        run: python project_setting.py ${{secrets.ER_API_KEY}}
+    # 자신이 push를 해서 test.py를 실행시킨 후에 정상적으로 작동햇을 때만 push 되도록
   bug:
     name: From Bug Branch
     runs-on: ubuntu-latest
@@ -28,25 +46,6 @@ jobs:
         run: python test.py
       - name: running project setting
         run: python project_setting.py ${{secrets.ER_API_KEY}}
-  # Pull request 받았을 때만 작동
-  PR:
-    name: Pull Request(safe to test) Label
-    runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'safe to test')
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{github.event.pull_request.base.sha}}
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.10.6"
-      - name: pip installation
-        run: pip install -r requirements.txt
-      - name: running test code
-        run: python test.py
-      - name: running project setting
-        run: python project_setting.py ${{secrets.ER_API_KEY}}
-
   EC2-CI-CD:
     runs-on: ubuntu-latest
     if: contains(github.ref, 'feature_EC2')
