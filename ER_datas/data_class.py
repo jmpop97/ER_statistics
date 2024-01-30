@@ -385,6 +385,8 @@ class Camera_All(DataClass):
             self.dic_cameraGroup_LukeMai[character] = np.mean(
                 self.dic_cameraGroup_LukeMai[character]
             )
+
+
 # #티어별 하이퍼루프
 class Hyperloop(DataClass):
     def __init__(self, *condition):
@@ -399,6 +401,7 @@ class Hyperloop(DataClass):
         self.tier_range[5000] = "다이아"
         self.tier_range[6000] = "데미갓"
         self.tier_range["all"] = "all"
+
     def add_data(self, user_data):
         useHyperLoop = user_data["useHyperLoop"]
         mmrBefore = user_data["mmrBefore"]
@@ -409,6 +412,7 @@ class Hyperloop(DataClass):
         self.dic_Hyperloop_tier[tier] = self.dic_Hyperloop_tier.get(tier, []) + [
             useHyperLoop
         ]
+
     def last_calculate(self):
         for tier in self.dic_Hyperloop_tier:
             self.dic_Hyperloop_tier[tier] = np.mean(self.dic_Hyperloop_tier[tier])
@@ -419,6 +423,7 @@ class Hyperloop(DataClass):
                 self.dic_Hyperloop_tier.items(), key=lambda x: rank_order.index(x[0])
             )
         }
+
 
 # #크레딧으로 빌드업 템 만드는것과 후반 보면서 빌드하는 것에 차이(gainMMR)
 # class CreditBuildUpMMR(DataClass):

@@ -78,7 +78,6 @@ def game_api(game_id: int, str_game_type_list: list) -> bool:
             _save_game(game_id, responced_game_match_data)
 
 
-
 def _save_game(game_id: int, responce_datas: dict) -> None:
     user_data = responce_datas["userGames"][0]
     game_major_version = user_data["versionMajor"]
