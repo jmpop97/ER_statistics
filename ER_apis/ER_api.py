@@ -69,6 +69,7 @@ def game_api(game_id: int, str_game_type_list: list) -> bool:
         mode = responced_game_match_data["userGames"][0]["matchingMode"]
         if mode in integer_game_type_list:
             _save_game(game_id, responced_game_match_data)
+        return True
 
 
 def _save_game(game_id: int, responce_datas: dict) -> None:
@@ -102,16 +103,17 @@ def save_games(
     second: int = 1,
     game_type: list = ["Rank", "Normal", "Cobalt"],
 ) -> bool:
+    bool_value = True
     game_id = start_game
     while game_id < start_game + n:
-        if not game_api(game_id, game_type):
-            return False
-        print("game_id: ", game_id, "({0}/{1})".format(game_id - start_game + 1, n))
+        bool_value = game_api(game_id, game_type)
+        if bool_value:
+            print("game_id: ", game_id, "({0}/{1})".format(game_id - start_game + 1, n))
         game_id += 1
         time.sleep(second)
         clear_terminal()
     print("end save_games")
-    return True
+    return bool_value
 
 
 def request_free_characters(matchingMode: str = NORMAL_MODE_NUMBER) -> bool:
