@@ -9,6 +9,7 @@ COBALT_MODE_NUMBER = 6
 OK_RESPONSE = 200
 SEASON_ID = 21
 
+
 def setting_header(param_dict: dict = {}) -> (dict, dict):
     with open("setting/secret.json", "r", encoding="utf-8") as f:
         token = json.load(f)
@@ -68,7 +69,6 @@ def game_api(game_id: int, str_game_type_list: list) -> bool:
         mode = responced_game_match_data["userGames"][0]["matchingMode"]
         if mode in integer_game_type_list:
             _save_game(game_id, responced_game_match_data)
-
 
 
 def _save_game(game_id: int, responce_datas: dict) -> None:
