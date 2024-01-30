@@ -1,7 +1,7 @@
 # ER statstics
 <br> Eternalreturn game data analyze <br/>
 [분석 방법-data_class.py](#mainpy)
-123
+
 
 # Used skills
 ### 📋 Languages
