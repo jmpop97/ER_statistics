@@ -12,7 +12,7 @@ jobs:
   bug:
     name: From Bug Branch
     runs-on: ubuntu-latest
-    # 이부분이 bug로 시작하는 branch 일 경우에만
+    # 이부분이 bug로 시작하는 branch 일
     if: startsWith(github.ref, 'refs/heads/bug')
     steps:
       - name: Checkout
