@@ -7,11 +7,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-NORMAL_MODE_NUMBER = int(os.environ.get('NORMAL_MODE_NUMBER'))
-RANK_MODE_NUMBER = int(os.environ.get('RANK_MODE_NUMBER'))
-COBALT_MODE_NUMBER = int(os.environ.get('COBALT_MODE_NUMBER'))
-OK_RESPONSE = int(os.environ.get('OK_RESPONSE'))
-SEASON_ID = int(os.environ.get('SEASON_ID'))
+NORMAL_MODE_NUMBER = int(os.environ.get("NORMAL_MODE_NUMBER"))
+RANK_MODE_NUMBER = int(os.environ.get("RANK_MODE_NUMBER"))
+COBALT_MODE_NUMBER = int(os.environ.get("COBALT_MODE_NUMBER"))
+OK_RESPONSE = int(os.environ.get("OK_RESPONSE"))
+SEASON_ID = int(os.environ.get("SEASON_ID"))
 
 
 def setting_header(param_dict: dict = {}) -> (dict, dict):
@@ -62,7 +62,6 @@ def request_to_ER_api(request_url: str, header_dict: dict = None) -> dict:
 
 
 def game_api(game_id: int, str_game_type_list: list) -> bool:
-
     integer_game_type_list = translate_game_mode_str_to_int(str_game_type_list)
 
     responced_game_match_data = request_to_ER_api(
@@ -74,6 +73,7 @@ def game_api(game_id: int, str_game_type_list: list) -> bool:
         mode = responced_game_match_data["userGames"][0]["matchingMode"]
         if mode in integer_game_type_list:
             _save_game(game_id, responced_game_match_data)
+        return True
 
 
 def _save_game(game_id: int, responce_datas: dict) -> None:
@@ -107,16 +107,18 @@ def save_games(
     second: int = 1,
     game_type: list = ["Rank", "Normal", "Cobalt"],
 ) -> bool:
+    bool_value = True
     game_id = start_game
     while game_id < start_game + n:
-        if not game_api(game_id, game_type):
-            return False
-        print("game_id: ", game_id, "({0}/{1})".format(game_id - start_game + 1, n))
+        bool_value = game_api(game_id, game_type)
+        if bool_value:
+            print("game_id: ", game_id, "({0}/{1})".format(game_id - start_game + 1, n))
         game_id += 1
         time.sleep(second)
         clear_terminal()
     print("end save_games")
-    return True
+    return bool_value
+
 
 def request_free_characters(matchingMode: str = NORMAL_MODE_NUMBER) -> bool:
     responced_datas = request_to_ER_api(
