@@ -2,7 +2,6 @@ import json
 import requests
 import os
 
-
 SECRET_FILE_PATH = "./secret.json"
 BASE_DATAS_PATH = "./base_datas/"
 TXT_GAME_BASE_DATA_FILE_NAME = "game_base_data2.txt"
