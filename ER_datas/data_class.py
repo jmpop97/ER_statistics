@@ -32,8 +32,20 @@ class DataClass:
     def add_data(self, user_data):
         print("not add_data")
 
+    def user_count(self):
+        try:
+            self.user_count_num += 1
+        except:
+            self.user_count_num = 0
+
     def add_data_game_id(self):
         print("not add_data_game_id")
+
+    def game_count(self):
+        try:
+            self.game_count_num += 1
+        except:
+            self.game_count_num = 0
 
     def last_calculate(self):
         print("not last_calculate")

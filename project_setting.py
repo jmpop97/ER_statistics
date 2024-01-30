@@ -4,6 +4,7 @@ from ER_apis.ER_api import save_games, game_api, request_free_characters
 from ER_datas.update_game_base_data import update_game_base_data
 import sys
 
+
 # Model
 class Apimodel:
     def save_Api_key(self, key):
@@ -18,6 +19,7 @@ class Apimodel:
             return os.path.isfile("./datas/Ver10.0_Rank_31460173.json")
         else:
             return False
+
     def create_folders(self):
         if os.path.exists("setting") == False:
             os.mkdir("setting")
@@ -26,18 +28,19 @@ class Apimodel:
         if os.path.exists("origin_datas") == False:
             os.mkdir("origin_datas")
 
+
 # View
 class Apiview:
     def get_Api_key(self):
-        if len(sys.argv)==2:
+        if len(sys.argv) == 2:
             return sys.argv[1]
-        elif len(sys.argv)>2:
+        elif len(sys.argv) > 2:
             print("다시 입력해주세요.")
             sys.exit()
         else:
             return input("키를 입력해주세요:")
 
-    def show_result(self,result):
+    def show_result(self, result):
         print(result)
 
 
@@ -51,7 +54,6 @@ class Apicontroller:
         self.model.create_folders()
 
     def get_api(self):
-
         while True:
             Api_key = self.view.get_Api_key()
             self.model.save_Api_key(Api_key)
@@ -68,8 +70,10 @@ class Apicontroller:
         save_games(31130633, 1)
 
     def make_main_py(self):
-        main=open('main.py', 'w')
+        main = open("main.py", "w")
         main.close()
+
+
 model = Apimodel()
 view = Apiview()
 controller = Apicontroller(model, view)

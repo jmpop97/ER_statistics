@@ -12,6 +12,7 @@ ORIGIN_DATAS_PATH = "./origin_datas"
 TXT_GAME_BASE_DATA_FILE_PATH = "origin_datas/game_base_data.txt"
 TXT_GAME_BASE_DATA_FILE_NAME = "game_base_data.txt"
 
+
 def put_in_dictionary(list, d):
     """
     리스트가 존재할 때

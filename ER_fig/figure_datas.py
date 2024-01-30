@@ -3,12 +3,14 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import numpy as np
 import seaborn as sns
-
+from ER_datas.data_class import *
+from ER_datas.ERDataCleansing import ERDataCleansing
+from ER_datas.id_characterName import LoadCharacter
+import json
 
 plt.rcParams["font.family"] = "Malgun Gothic"
 plt.rcParams["axes.unicode_minus"] = False
 
-from ER_datas.id_characterName import LoadCharacter
 
 dic_characterNum_Name = LoadCharacter()
 
@@ -180,3 +182,54 @@ class FigureType:
 
     def title(self, condition):
         self.plt.title(condition)
+
+
+class TierGetMMr:
+    fig_size_x = 13
+    fig_zise_y = 6
+    font_size = 6
+
+    def __init__(self) -> None:
+        dic_name = {"mmrBefore//250": "Tier"}
+        self.db = ListFilterData(
+            "gameRank", "mmrGainInGame", "mmrBefore//250", **dic_name
+        )
+        ERDataCleansing(self.db)
+
+        self.tier_cost = []
+        self.tier = []
+
+    def plt(self):
+        self._tier_get_mmr()
+        self._tier_cost_red_line()
+        self._tier_line()
+        self._countplot()
+        self._tier_line()
+        plt.show()
+
+    def _tier_get_mmr(self):
+        plt.figure(1, figsize=(self.fig_size_x, self.fig_zise_y))
+        ax = sns.barplot(data=self.db.conditions, y="mmrGainInGame", x="Tier")
+        ax.bar_label(ax.containers[0], fontsize=self.font_size)
+
+    def _tier_cost_red_line(self):
+        self._tier_cost()
+        plt.plot(self.tier, self.tier_cost, "r")
+
+    def _tier_line(self):
+        line = 3.5
+        while line < self.tier[-1]:
+            plt.axvline(x=line, color="r", linestyle="--", linewidth=1)
+            line += 4
+
+    def _tier_cost(self):
+        with open("./base_datas/TierMMRCost/TierMMRCost.json", "r") as f:
+            tier_cost = json.load(f)
+        for tier in sorted(set(self.db.conditions["Tier"])):
+            self.tier_cost.append(tier_cost.get(str(tier), 2 * tier + 5))
+            self.tier.append(tier)
+
+    def _countplot(self):
+        plt.figure(2, figsize=(self.fig_size_x, self.fig_zise_y))
+        ax = sns.countplot(data=self.db.conditions, x="Tier")
+        ax.bar_label(ax.containers[0], fontsize=10)

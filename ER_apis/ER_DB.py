@@ -11,12 +11,11 @@ import os
 
 load_dotenv()
 
-NORMAL_MODE_NUMBER = int(os.environ.get('NORMAL_MODE_NUMBER'))
-RANK_MODE_NUMBER = int(os.environ.get('RANK_MODE_NUMBER'))
-COBALT_MODE_NUMBER = int(os.environ.get('COBALT_MODE_NUMBER'))
-OK_RESPONSE = int(os.environ.get('OK_RESPONSE'))
-SEASON_ID = int(os.environ.get('SEASON_ID'))
-
+NORMAL_MODE_NUMBER = int(os.environ.get("NORMAL_MODE_NUMBER"))
+RANK_MODE_NUMBER = int(os.environ.get("RANK_MODE_NUMBER"))
+COBALT_MODE_NUMBER = int(os.environ.get("COBALT_MODE_NUMBER"))
+OK_RESPONSE = int(os.environ.get("OK_RESPONSE"))
+SEASON_ID = int(os.environ.get("SEASON_ID"))
 
 
 def get_mongoDB_connection_string():
