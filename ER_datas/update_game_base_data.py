@@ -7,6 +7,11 @@ SECRET_FILE_PATH = "./secret.json"
 BASE_DATAS_PATH = "./base_datas/"
 TXT_GAME_BASE_DATA_FILE_NAME = "game_base_data2.txt"
 JSON_GAME_BASE_DATA_FILE_NAME = "game_base_data2.json"
+SECRET_FILE_PATH = "./setting/secret.json"
+BASE_DATAS_PATH = "./base_datas"
+ORIGIN_DATAS_PATH = "./origin_datas"
+TXT_GAME_BASE_DATA_FILE_PATH = "./origin_datas/game_base_data.txt"
+TXT_GAME_BASE_DATA_FILE_NAME = "game_base_data.txt"
 
 
 def put_in_dictionary(list, d):
@@ -29,13 +34,6 @@ def put_in_dictionary(list, d):
                 d[list[0]] = put_in_dictionary(list[1:], d[list[0]])
     except AttributeError as e:
         print(e)
-
-
-SECRET_FILE_PATH = "./setting/secret.json"
-BASE_DATAS_PATH = "./base_datas"
-ORIGIN_DATAS_PATH = "./origin_datas"
-TXT_GAME_BASE_DATA_FILE_PATH = "./origin_datas/game_base_data.txt"
-TXT_GAME_BASE_DATA_FILE_NAME = "game_base_data.txt"
 
 
 def writeDataTojsonFile(filename, data):

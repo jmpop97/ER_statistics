@@ -2,12 +2,16 @@ import requests
 import json
 from function.public_function import clear_terminal
 import time
+import os
+from dotenv import load_dotenv
 
-NORMAL_MODE_NUMBER = 2
-RANK_MODE_NUMBER = 3
-COBALT_MODE_NUMBER = 6
-OK_RESPONSE = 200
-SEASON_ID = 21
+load_dotenv()
+
+NORMAL_MODE_NUMBER = int(os.environ.get("NORMAL_MODE_NUMBER"))
+RANK_MODE_NUMBER = int(os.environ.get("RANK_MODE_NUMBER"))
+COBALT_MODE_NUMBER = int(os.environ.get("COBALT_MODE_NUMBER"))
+OK_RESPONSE = int(os.environ.get("OK_RESPONSE"))
+SEASON_ID = int(os.environ.get("SEASON_ID"))
 
 
 def setting_header(param_dict: dict = {}) -> (dict, dict):
@@ -82,9 +86,9 @@ def _save_game(game_id: int, responce_datas: dict) -> None:
     6 cobalt
     """
     game_mode = "Normal"
-    if user_data["matchingMode"] == 3:
+    if user_data["matchingMode"] == RANK_MODE_NUMBER:
         game_mode = "Rank"
-    elif user_data["matchingMode"] == 6:
+    elif user_data["matchingMode"] == COBALT_MODE_NUMBER:
         game_mode = "Cobalt"
     """
     이거 서버도 여러개다.(Ohio, Seoul, SaoPaulo)

@@ -2,32 +2,15 @@ name: ER Statistics CI
 # trigger
 on:
   push:
-    branches: [bug*]
+    branches: [bug*, feature_EC2, develop]
   pull_request_target:
     branches: [main,develop]
     types: [labeled]
 # jobs
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: ${{github.event.pull_request.base.sha}}
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.10.6"
-      - name: pip installation
-        run: pip install -r requirements.txt
-      - name: running test code
-        run: python test.py
-      - name: running project setting
-        run: python project_setting.py ${{secrets.ER_API_KEY}}
-
-  build:
-    name: test
+  # Pull request 받았을 때만 작동
+  PR:
+    name: Pull Request(safe to test) Label
     runs-on: ubuntu-latest
     if: contains(github.event.pull_request.labels.*.name, 'safe to test')
     steps:
@@ -37,9 +20,103 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: "3.10.6"
+      - name: Make .env File
+        run: |
+          touch .env
+          echo "${{ secrets.ENV }}" >> .env
       - name: pip installation
         run: pip install -r requirements.txt
-      - name: running test code
-        run: python test.py
       - name: running project setting
         run: python project_setting.py ${{secrets.ER_API_KEY}}
+      - name: running test code
+        run: python -m unittest
+  bug:
+    name: From Bug Branch
+    runs-on: ubuntu-latest
+    # 이부분이 bug로 시작하는 branch 일
+    if: startsWith(github.ref, 'refs/heads/bug')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+    
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10.6"
+      - name: pip installation
+        run: pip install -r requirements.txt
+      - name: running project setting
+        run: python project_setting.py ${{secrets.ER_API_KEY}}
+      - name: running test code
+        run: python -m unittest
+
+  EC2-CI-CD:
+    runs-on: ubuntu-latest
+    if: contains(github.ref, 'feature_EC2')
+    steps:
+      # - name: Create env file
+      #   run:  |
+      #     touch .env
+      #     echo "${{secrets.ENV_VARS }}" >> .env
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10.6"
+      
+      - name: Get git actions IP
+        id: ip
+        uses: haythem/public-ip@v1.2      
+
+      - name: pip installation
+        run: pip install -r requirements.txt
+      
+      # # docker build & push to main
+      # - name: Docker build & push to main
+      #   if: contains(github.ref, 'main')
+      #   run:  |
+      #     docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      #     docker build -t ${{ secrets.DOCKER_USERNAME }}/docker-test-main .
+      #     docker push ${{ secrets.DOCKER_USERNAME }}/docker-test-main
+      # # docker build & push to develop
+      # - name: Docker build & push to develop
+      #    if: contains(github.ref, 'develop')
+      #   run: |
+      #     docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      #     docker build -t ${{ secrets.DOCKER_USERNAME }}/docker-test-dev .
+      #     docker push ${{ secrets.DOCKER_USERNAME }}/docker-test-dev
+
+      # Configure AWS Credentials
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with: 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+      
+      # Add github ip to AWS
+      - name: Add GitHub IP to AWS
+        run: |
+          aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+      
+      # AWS EC2 Server Connect & Docker run
+      - name: AWS EC2 Connection
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER}}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT }}
+          timeout: 60s
+          script: |
+            ./test.sh
+            # sudo docker stop docker-test-dev
+            # sudo docker rm docker-test-dev
+            # sudo docker run -it -d -p 8080:8080 --name docker-test-dev ${{ secrets.DOCKER_USERNAME }}/docker-test-dev
+
+      # Remove github ip to AWS Security groups
+      - name: Remove Github Actions IP From Security Group
+        run: |
+          aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32            

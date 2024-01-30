@@ -44,3 +44,6 @@ ps://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&l
 aws ec2 인스턴스를 ER api 저장하는 mongoDB로 설정하는 관련 코드
 
 [Link to manual readme.md](./ER_EC2/readme.md)
+
+## TODO
+.env 설정하기

@@ -1,8 +1,11 @@
 import base64
 import hashlib
 from Cryptodome.Cipher import AES
+import os
+from dotenv import load_dotenv
 
-BS = 16
+load_dotenv()
+BS = int(os.environ.get("BS"))
 pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS).encode()
 unpad = lambda s: s[: -ord(s[len(s) - 1 :])]
 
