@@ -45,6 +45,10 @@ jobs:
           python-version: "3.10.6"
       - name: pip installation
         run: pip install -r requirements.txt
+      - name: Make .env File
+        run: |
+          touch .env
+          echo "${{ secrets.ENV }}" >> .env
       - name: running project setting
         run: python project_setting.py ${{secrets.ER_API_KEY}}
       - name: running test code
