@@ -9,3 +9,5 @@ fig/
 ER_data.xlsx
 ignore/
 main.py
+.env
+test.py

@@ -1,53 +1,14 @@
-name: ER Statistics CI
+name: EC2 / Docker CI
 # trigger
 on:
   push:
-    branches: [bug*, feature_EC2]
-  pull_request_target:
-    branches: [main,develop]
-    types: [labeled]
+    branches: [main, develop]
+permissions:
+  contents: read
+
 # jobs
 jobs:
-  # 자신이 push를 해서 test.py를 실행시킨 후에 정상적으로 작동햇을 때만 push 되도록
-  bug:
-    name: From Bug Branch
-    runs-on: ubuntu-latest
-    # 이부분이 bug로 시작하는 branch 일
-    if: startsWith(github.ref, 'refs/heads/bug')
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-    
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.10.6"
-      - name: pip installation
-        run: pip install -r requirements.txt
-      - name: running test code
-        run: python test.py
-      - name: running project setting
-        run: python project_setting.py ${{secrets.ER_API_KEY}}
-  # Pull request 받았을 때만 작동
-  PR:
-    name: Pull Request(safe to test) Label
-    runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'safe to test')
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{github.event.pull_request.base.sha}}
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.10.6"
-      - name: pip installation
-        run: pip install -r requirements.txt
-      - name: running test code
-        run: python test.py
-      - name: running project setting
-        run: python project_setting.py ${{secrets.ER_API_KEY}}
-
-  EC2-CI-CD:
+  CI-CD:
     runs-on: ubuntu-latest
     if: contains(github.ref, 'feature_EC2')
     steps:
@@ -67,8 +28,8 @@ jobs:
         id: ip
         uses: haythem/public-ip@v1.2      
 
-      - name: pip installation
-        run: pip install -r requirements.txt
+      # - name: pip installation
+      #   run: pip install -r requirements.txt
       
       # # docker build & push to main
       # - name: Docker build & push to main
@@ -108,12 +69,6 @@ jobs:
           port: ${{ secrets.EC2_SSH_PORT }}
           timeout: 60s
           script: |
-            ./test.sh
-            # sudo docker stop docker-test-dev
-            # sudo docker rm docker-test-dev
-            # sudo docker run -it -d -p 8080:8080 --name docker-test-dev ${{ secrets.DOCKER_USERNAME }}/docker-test-dev
-
-      # Remove github ip to AWS Security groups
-      - name: Remove Github Actions IP From Security Group
-        run: |
-          aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32            
+            sudo docker stop docker-test-dev
+            sudo docker rm docker-test-dev
+            sudo docker run -it -d -p 8080:8080 --name docker-test-dev ${{ secrets.DOCKER_USERNAME }}/docker-test-dev

@@ -2,19 +2,16 @@ import requests
 import json
 from function.public_function import clear_terminal
 import time
+import os
+from dotenv import load_dotenv
 
-NORMAL_MODE_NUMBER = 2
-RANK_MODE_NUMBER = 3
-COBALT_MODE_NUMBER = 6
-OK_RESPONSE = 200
-SEASON_ID = 21
+load_dotenv()
 
-# Setting Header
-with open("setting/secret.json", "r", encoding="utf-8") as f:
-    token = json.load(f)
-headerDict = {}
-headerDict.setdefault("x-api-key", token["token"])
-paramDict = {}
+NORMAL_MODE_NUMBER = int(os.environ.get('NORMAL_MODE_NUMBER'))
+RANK_MODE_NUMBER = int(os.environ.get('RANK_MODE_NUMBER'))
+COBALT_MODE_NUMBER = int(os.environ.get('COBALT_MODE_NUMBER'))
+OK_RESPONSE = int(os.environ.get('OK_RESPONSE'))
+SEASON_ID = int(os.environ.get('SEASON_ID'))
 
 
 def setting_header(param_dict: dict = {}) -> (dict, dict):
@@ -65,6 +62,7 @@ def request_to_ER_api(request_url: str, header_dict: dict = None) -> dict:
 
 
 def game_api(game_id: int, str_game_type_list: list) -> bool:
+
     integer_game_type_list = translate_game_mode_str_to_int(str_game_type_list)
 
     responced_game_match_data = request_to_ER_api(
@@ -78,7 +76,6 @@ def game_api(game_id: int, str_game_type_list: list) -> bool:
             _save_game(game_id, responced_game_match_data)
 
 
-
 def _save_game(game_id: int, responce_datas: dict) -> None:
     user_data = responce_datas["userGames"][0]
     game_major_version = user_data["versionMajor"]
@@ -89,9 +86,9 @@ def _save_game(game_id: int, responce_datas: dict) -> None:
     6 cobalt
     """
     game_mode = "Normal"
-    if user_data["matchingMode"] == 3:
+    if user_data["matchingMode"] == RANK_MODE_NUMBER:
         game_mode = "Rank"
-    elif user_data["matchingMode"] == 6:
+    elif user_data["matchingMode"] == COBALT_MODE_NUMBER:
         game_mode = "Cobalt"
     """
     이거 서버도 여러개다.(Ohio, Seoul, SaoPaulo)
@@ -120,7 +117,6 @@ def save_games(
         clear_terminal()
     print("end save_games")
     return True
-
 
 def request_free_characters(matchingMode: str = NORMAL_MODE_NUMBER) -> bool:
     responced_datas = request_to_ER_api(
