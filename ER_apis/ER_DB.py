@@ -6,12 +6,17 @@ from .cryption_secret import AESCipher
 import requests
 import time
 from ER_apis.ER_api import request_to_ER_api
+from dotenv import load_dotenv
+import os
 
-NORMAL_MODE_NUMBER = 2
-RANK_MODE_NUMBER = 3
-COBALT_MODE_NUMBER = 6
-OK_RESPONSE = 200
-SEASON_ID = 21
+load_dotenv()
+
+NORMAL_MODE_NUMBER = int(os.environ.get('NORMAL_MODE_NUMBER'))
+RANK_MODE_NUMBER = int(os.environ.get('RANK_MODE_NUMBER'))
+COBALT_MODE_NUMBER = int(os.environ.get('COBALT_MODE_NUMBER'))
+OK_RESPONSE = int(os.environ.get('OK_RESPONSE'))
+SEASON_ID = int(os.environ.get('SEASON_ID'))
+
 
 
 def get_mongoDB_connection_string():
