@@ -10,7 +10,7 @@ JSON_GAME_BASE_DATA_FILE_NAME = "game_base_data2.json"
 SECRET_FILE_PATH = "./setting/secret.json"
 BASE_DATAS_PATH = "./base_datas"
 ORIGIN_DATAS_PATH = "./origin_datas"
-TXT_GAME_BASE_DATA_FILE_PATH = "./origin_datas/game_base_data.txt"
+TXT_GAME_BASE_DATA_FILE_PATH = "origin_datas/game_base_data.txt"
 TXT_GAME_BASE_DATA_FILE_NAME = "game_base_data.txt"
 
 
