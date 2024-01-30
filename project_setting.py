@@ -4,6 +4,7 @@ from ER_apis.ER_api import save_games, game_api, request_free_characters
 from ER_datas.update_game_base_data import update_game_base_data
 import sys
 
+
 # Model
 class Apimodel:
     def save_Api_key(self, key):
@@ -31,7 +32,7 @@ class Apiview:
     def get_Api_key(self):
         if len(sys.argv)==2:
             return sys.argv[1]
-        elif len(sys.argv)>2:
+        elif len(sys.argv) > 2:
             print("다시 입력해주세요.")
             sys.exit()
         else:
@@ -68,7 +69,7 @@ class Apicontroller:
         save_games(31130633, 1)
 
     def make_main_py(self):
-        main=open('main.py', 'w')
+        main = open("main.py", "w")
         main.close()
 model = Apimodel()
 view = Apiview()
