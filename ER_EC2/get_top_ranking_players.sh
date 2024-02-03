@@ -1,0 +1,1 @@
+python insert_mongoDB.py --t 1
