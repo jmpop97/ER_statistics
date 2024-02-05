@@ -271,6 +271,7 @@ class TierGetMMRFromRank:
             self.tier_cost.append(tier_cost.get(str(real_tier), 2 * real_tier + 5))
             self.tier.append(self.db._tier[tier])
 
+
 class TierGetMMRByRank:
     def __init__(self) -> None:
         self.db = GetMMRFromRank()
@@ -290,9 +291,10 @@ class TierGetMMRByRank:
             y="mmrGainInGame",
             hue="Tier",
             estimator="mean",
-            order=[8,7,6,5,4,3,2,1],
-            hue_order=self.db._tier.values()
+            order=[8, 7, 6, 5, 4, 3, 2, 1],
+            hue_order=self.db._tier.values(),
         )
+
     # def _tier_cost_red_line(self):
     #     self._tier_cost()
     #     plt.plot(self.tier, self.tier_cost, "r")
