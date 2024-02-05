@@ -270,3 +270,37 @@ class TierGetMMRFromRank:
             real_tier = tier * 4 + 3
             self.tier_cost.append(tier_cost.get(str(real_tier), 2 * real_tier + 5))
             self.tier.append(self.db._tier[tier])
+
+class TierGetMMRByRank:
+    def __init__(self) -> None:
+        self.db = GetMMRFromRank()
+        ERDataCleansing(self.db)
+        self.tier_cost = []
+        self.tier = []
+
+    def plt(self):
+        self._barplot()
+        # self._tier_cost_red_line()
+        plt.show()
+
+    def _barplot(self):
+        ax = sns.barplot(
+            data=self.db.datas,
+            x="gameRank",
+            y="mmrGainInGame",
+            hue="Tier",
+            estimator="mean",
+            order=[8,7,6,5,4,3,2,1],
+            hue_order=self.db._tier.values()
+        )
+    # def _tier_cost_red_line(self):
+    #     self._tier_cost()
+    #     plt.plot(self.tier, self.tier_cost, "r")
+
+    # def _tier_cost(self):
+    #     with open("./base_datas/TierMMRCost/TierMMRCost.json", "r") as f:
+    #         tier_cost = json.load(f)
+    #     for tier in self.db._tier:
+    #         real_tier = tier * 4 + 3
+    #         self.tier_cost.append(tier_cost.get(str(real_tier), 2 * real_tier + 5))
+    #         self.tier.append(self.db._tier[tier])

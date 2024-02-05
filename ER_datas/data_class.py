@@ -469,10 +469,12 @@ class GetMMRFromRank(DataClass):
         self.datas["mmrRank"] = []
         self.datas["mmrGainInGame"] = []
         self.datas["Tier"] = []
-
+        self.datas["gameRank"] = []
     def add_data(self, user_data):
+        self.datas["gameRank"].append(user_data["gameRank"])
+        self.datas["mmrRank"].append(self._mmrRank.get(user_data["gameRank"], 0))
+        self.datas["mmrGainInGame"].append(user_data["mmrGainInGame"])
         self.datas["Tier"].append(
             self._tier.get(user_data["mmrBefore"] // 1000, "미스릴~")
         )
-        self.datas["mmrRank"].append(self._mmrRank.get(user_data["gameRank"], 0))
-        self.datas["mmrGainInGame"].append(user_data["mmrGainInGame"])
+
