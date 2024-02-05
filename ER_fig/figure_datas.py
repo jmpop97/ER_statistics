@@ -234,30 +234,39 @@ class TierGetMMR:
         ax = sns.countplot(data=self.db.conditions, x="Tier")
         ax.bar_label(ax.containers[0], fontsize=10)
 
+
 class TierGetMMRFromRank:
     def __init__(self) -> None:
         self.db = GetMMRFromRank()
         ERDataCleansing(self.db)
-        self.tier_cost=[]
-        self.tier=[]
+        self.tier_cost = []
+        self.tier = []
 
     def plt(self):
         self._barplot()
         self._tier_cost_red_line()
         plt.show()
+
     def _barplot(self):
-        ax=sns.barplot(data=self.db.datas,x="Tier",y="mmrGainInGame",estimator="mean",order=self.db._tier.values())
-        ax=sns.barplot(data=self.db.datas,x="Tier",y="mmrRank",estimator="mean")
-        ax.bar_label(ax.containers[0],label_type='center')
-        ax.bar_label(ax.containers[1],label_type='center')
+        ax = sns.barplot(
+            data=self.db.datas,
+            x="Tier",
+            y="mmrGainInGame",
+            estimator="mean",
+            order=self.db._tier.values(),
+        )
+        ax = sns.barplot(data=self.db.datas, x="Tier", y="mmrRank", estimator="mean")
+        ax.bar_label(ax.containers[0], label_type="center")
+        ax.bar_label(ax.containers[1], label_type="center")
+
     def _tier_cost_red_line(self):
         self._tier_cost()
         plt.plot(self.tier, self.tier_cost, "r")
+
     def _tier_cost(self):
         with open("./base_datas/TierMMRCost/TierMMRCost.json", "r") as f:
             tier_cost = json.load(f)
         for tier in self.db._tier:
-            real_tier=tier*4+3
+            real_tier = tier * 4 + 3
             self.tier_cost.append(tier_cost.get(str(real_tier), 2 * real_tier + 5))
             self.tier.append(self.db._tier[tier])
-
