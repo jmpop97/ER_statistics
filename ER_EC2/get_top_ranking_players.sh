@@ -1,1 +1,1 @@
-python insert_mongoDB.py --t 1
+nohup python insert_mongoDB.py --t 1 &
