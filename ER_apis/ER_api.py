@@ -135,3 +135,30 @@ def request_top_players(seasonId:str=SEASON_ID, matchingTeamMode:str=RANK_MODE_N
     if responced_datas.get("code", 0)!=OK_RESPONSE:
         return None
     return responced_datas
+
+def request_region_rankers_eternity_cut(seasonId:str=SEASON_ID, matchingTeamMode:str=RANK_MODE_NUMBER, region:str="KR")->dict|None:
+    responced_top_ranker_datas=request_top_players(seasonId, matchingTeamMode)
+    if responced_top_ranker_datas==None:
+        return None
+    ranker_datas = {responced_top_ranker_data['nickname']:{
+        'userNum':responced_top_ranker_data['userNum'],
+        'mmr':responced_top_ranker_data['mmr']
+        } 
+                    for responced_top_ranker_data in responced_top_ranker_datas['topRanks']}
+    region_ranker_counter=0
+    for ranker_nickname in ranker_datas.keys():
+        responced_top_ranker_datas = request_to_ER_api(
+            request_url=f"https://open-api.bser.io/v1/user/games/{ranker_datas[ranker_nickname]['userNum']}"
+        )
+        time.sleep(1)
+        if responced_top_ranker_datas==None:
+            continue
+        if responced_top_ranker_datas["userGames"][0]["serverName"]=="Seoul":
+            region_ranker_counter+=1
+        if region_ranker_counter>=200:
+            return ranker_datas[ranker_nickname]['mmr']
+    return None
+        # Korean, Seoul
+        # ChineseSimplified, Seoul
+        # English, Ohio
+        # English, 
