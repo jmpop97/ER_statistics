@@ -52,7 +52,7 @@ def translate_game_mode_int_to_str(input_game_mode_list: list) -> list:
 
 
 # request api datas
-def request_to_ER_api(request_url: str, header_dict: dict = None) -> dict:
+def request_to_ER_api(request_url: str, header_dict: dict = None, second:int=1) -> dict:
     if header_dict == None:
         header_dict, _ = setting_header()
     try:
@@ -63,8 +63,8 @@ def request_to_ER_api(request_url: str, header_dict: dict = None) -> dict:
             return responced_datas
         elif requestDataWithHeader.status_code == 429:
             print("Too many requests. Waiting and retrying...")
-            time.sleep(1)
-            return request_to_ER_api(request_url, header_dict)
+            time.sleep(second)
+            return request_to_ER_api(request_url, header_dict, second)
         else:
             print("Error: {0}".format(requestDataWithHeader.status_code))
             return None
@@ -162,7 +162,6 @@ def request_region_rankers_eternity_cut(seasonId:str=SEASON_ID, matchingTeamMode
         responced_top_ranker_datas = request_to_ER_api(
             request_url=f"https://open-api.bser.io/v1/user/games/{ranker_datas[ranker_nickname]['userNum']}"
         )
-        #time.sleep(1)
         if responced_top_ranker_datas==None:
             continue
         if responced_top_ranker_datas["userGames"][0]["serverName"]=="Seoul":
