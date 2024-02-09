@@ -148,6 +148,11 @@ def request_top_players(seasonId:str=SEASON_ID, matchingTeamMode:str=RANK_MODE_N
         return None
     return responced_datas
 
+# language, ServerName
+# 1. Korean, Seoul
+# 2. ChineseSimplified, Seoul
+# 3. English, Ohio
+# 4. English, 
 def request_region_rankers_eternity_cut(seasonId:str=SEASON_ID, matchingTeamMode:str=RANK_MODE_NUMBER, region:str="KR")->dict|None:
     responced_top_ranker_datas=request_top_players(seasonId, matchingTeamMode)
     if responced_top_ranker_datas==None:
@@ -171,7 +176,3 @@ def request_region_rankers_eternity_cut(seasonId:str=SEASON_ID, matchingTeamMode
                 "date":datetime.today().strftime("%Y%m%d"),
                 "mmr":ranker_datas[ranker_nickname]['mmr']}
     return None
-        # Korean, Seoul
-        # ChineseSimplified, Seoul
-        # English, Ohio
-        # English, 
