@@ -16,8 +16,9 @@ RANK_MODE_NUMBER = int(os.environ.get("RANK_MODE_NUMBER"))
 COBALT_MODE_NUMBER = int(os.environ.get("COBALT_MODE_NUMBER"))
 OK_RESPONSE = int(os.environ.get("OK_RESPONSE"))
 SEASON_ID = int(os.environ.get("SEASON_ID"))
-ETERNITY_CUT=199
-DEMIGOD_CUT=699
+ETERNITY_CUT = 199
+DEMIGOD_CUT = 699
+
 
 def get_mongoDB_connection_string():
     with open("setting/secret_db.json", "r", encoding="utf-8") as f:
@@ -34,13 +35,17 @@ def get_mongoDB_connection_string_from_env():
     READ_EC2_DB_CONNECTION_STRING = os.environ.get("READ_EC2_DB_CONNECTION_STRING")
     return RW_EC2_DB_CONNECTION_STRING, READ_EC2_DB_CONNECTION_STRING
 
+
 def access_RW_mongoDB() -> MongoClient:
     RW_DB_CONNECTION_STRING = get_mongoDB_connection_string_from_env()[0]
     client = MongoClient(RW_DB_CONNECTION_STRING, port=27017)
     return client
 
-def test_access_mongoDB()->MongoClient:
-    RW_EC2_DB_CONNECTION_STRING, READ_EC2_DB_CONNECTION_STRING=get_mongoDB_connection_string_from_env()
+
+def test_access_mongoDB() -> MongoClient:
+    RW_EC2_DB_CONNECTION_STRING, READ_EC2_DB_CONNECTION_STRING = (
+        get_mongoDB_connection_string_from_env()
+    )
     try:
         rw_client = MongoClient(RW_EC2_DB_CONNECTION_STRING, port=27017)
         rw_client.get_database("ERDB")
@@ -52,6 +57,7 @@ def test_access_mongoDB()->MongoClient:
         print("Error Occured From Test Connection to mongoDB")
         return False
     return True
+
 
 def access_read_mongoDB() -> MongoClient:
     READ_DB_CONNECTION_STRING = get_mongoDB_connection_string_from_env()[1]
@@ -156,14 +162,13 @@ def insert_game_play_datas_mongoDB(
     print("[[insert end]]")
     return True
 
-def insert_game_top_players_mmr_mongoDB(
-    error_stop: bool = True
-) -> bool:
+
+def insert_game_top_players_mmr_mongoDB(error_stop: bool = True) -> bool:
     client = access_RW_mongoDB()
     access_db = client["ERDB"]
     collection = access_db["top_rank_players"]
     responced_top_ranker_mmr_Data = request_region_rankers_eternity_cut()
-    if responced_top_ranker_mmr_Data==None:
+    if responced_top_ranker_mmr_Data == None:
         print("Responced Top Ranker's Data is empty")
         return False
     try:
@@ -171,9 +176,9 @@ def insert_game_top_players_mmr_mongoDB(
     except Exception as e:
         print(f"Error: {e}")
         if error_stop:
-            return False   
+            return False
     client.close()
-    return True    
+    return True
 
 
 def get_lowest_id() -> int:
@@ -199,10 +204,11 @@ def get_highest_id() -> int:
     else:
         return None
 
-def get_ranker_mmr(eternity:bool=True,demigod:bool=False)->list[int]:
+
+def get_ranker_mmr(eternity: bool = True, demigod: bool = False) -> list[int]:
     client = access_RW_mongoDB()
     collection = client["ERDB"]["top_rank_players"]
-    recent_document = collection.find().sort({"dateCreated":1}).limit(1).__getitem__(0)
+    recent_document = collection.find().sort({"dateCreated": 1}).limit(1).__getitem__(0)
     eternity_mmr = recent_document["topRanks"][ETERNITY_CUT]["mmr"]
     demigod_mmr = recent_document["topRanks"][DEMIGOD_CUT]["mmr"]
     mmr = []
@@ -211,6 +217,7 @@ def get_ranker_mmr(eternity:bool=True,demigod:bool=False)->list[int]:
     if demigod:
         mmr.append(demigod_mmr)
     return mmr
+
 
 def get_all_match_datas_from_mongoDB() -> list:
     client = access_read_mongoDB()

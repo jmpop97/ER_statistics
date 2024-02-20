@@ -7,6 +7,7 @@ from ER_datas.data_class import *
 from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.id_characterName import LoadCharacter
 import json
+import pandas as pd
 
 plt.rcParams["font.family"] = "Malgun Gothic"
 plt.rcParams["axes.unicode_minus"] = False
@@ -184,7 +185,7 @@ class FigureType:
         self.plt.title(condition)
 
 
-class TierGetMMr:
+class TierGetMMR:
     fig_size_x = 13
     fig_zise_y = 6
     font_size = 6
@@ -233,3 +234,86 @@ class TierGetMMr:
         plt.figure(2, figsize=(self.fig_size_x, self.fig_zise_y))
         ax = sns.countplot(data=self.db.conditions, x="Tier")
         ax.bar_label(ax.containers[0], fontsize=10)
+
+
+class TierGetMMRFromRank:
+    def __init__(self) -> None:
+        self.db = GetMMRFromRank()
+        ERDataCleansing(self.db)
+        self.tier_cost = []
+        self.tier = []
+
+    def plt(self):
+        self._barplot()
+        self._tier_cost_red_line()
+        plt.show()
+
+    def _barplot(self):
+        ax = sns.barplot(
+            data=self.db.datas,
+            x="Tier",
+            y="mmrGainInGame",
+            estimator="mean",
+            order=self.db._tier.values(),
+        )
+        ax = sns.barplot(data=self.db.datas, x="Tier", y="mmrRank", estimator="mean")
+        ax.bar_label(ax.containers[0], label_type="center")
+        ax.bar_label(ax.containers[1], label_type="center")
+
+    def _tier_cost_red_line(self):
+        self._tier_cost()
+        plt.plot(self.tier, self.tier_cost, "r")
+
+    def _tier_cost(self):
+        with open("./base_datas/TierMMRCost/TierMMRCost.json", "r") as f:
+            tier_cost = json.load(f)
+        for tier in self.db._tier:
+            real_tier = tier * 4 + 3
+            self.tier_cost.append(tier_cost.get(str(real_tier), 2 * real_tier + 5))
+            self.tier.append(self.db._tier[tier])
+
+
+class TierGetMMRByRank:
+    def __init__(self) -> None:
+        self.db = GetMMRFromRank()
+        ERDataCleansing(self.db)
+        self.tier_cost = []
+        self.tier = []
+
+    def plt(self):
+        self._barplot()
+        plt.show()
+
+    def _barplot(self):
+        ax = sns.barplot(
+            data=self.db.datas,
+            x="gameRank",
+            y="mmrGainInGame",
+            hue="Tier",
+            estimator="mean",
+            order=[8, 7, 6, 5, 4, 3, 2, 1],
+            hue_order=self.db._tier.values(),
+        )
+
+
+class FigRankPerTier:
+    def __init__(self) -> None:
+        self.db = GetMMRFromRank()
+        ERDataCleansing(self.db)
+
+    def plt(self):
+        self._barplot()
+        # self._tier_cost_red_line()
+        plt.show()
+
+    def _barplot(self):
+        self.db.datas["Tier"] = pd.Categorical(
+            self.db.datas["Tier"], categories=self.db._tier.values()
+        )
+        ax = sns.displot(
+            data=self.db.datas,
+            x="Tier",
+            hue="gameRank",
+            multiple="fill",
+        )
+        plt.show()

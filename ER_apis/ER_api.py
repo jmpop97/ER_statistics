@@ -52,12 +52,14 @@ def translate_game_mode_int_to_str(input_game_mode_list: list) -> list:
 
 
 # request api datas
-def request_to_ER_api(request_url: str, header_dict: dict = None, second:int=1) -> dict:
+def request_to_ER_api(
+    request_url: str, header_dict: dict = None, second: int = 1
+) -> dict:
     if header_dict == None:
         header_dict, _ = setting_header()
     try:
         requestDataWithHeader = requests.get(request_url, headers=header_dict)
-        
+
         if requestDataWithHeader.status_code == OK_RESPONSE:
             responced_datas = requestDataWithHeader.json()
             return responced_datas
@@ -140,39 +142,50 @@ def request_free_characters(matchingMode: str = NORMAL_MODE_NUMBER) -> bool:
         return False
     return True
 
-def request_top_players(seasonId:str=SEASON_ID, matchingTeamMode:str=RANK_MODE_NUMBER) -> dict | None:
+
+def request_top_players(
+    seasonId: str = SEASON_ID, matchingTeamMode: str = RANK_MODE_NUMBER
+) -> dict | None:
     responced_datas = request_to_ER_api(
         request_url=f"https://open-api.bser.io/v1/rank/top/{seasonId}/{matchingTeamMode}"
     )
-    if responced_datas.get("code", 0)!=OK_RESPONSE:
+    if responced_datas.get("code", 0) != OK_RESPONSE:
         return None
     return responced_datas
+
 
 # language, ServerName
 # 1. Korean, Seoul
 # 2. ChineseSimplified, Seoul
 # 3. English, Ohio
-# 4. English, 
-def request_region_rankers_eternity_cut(seasonId:str=SEASON_ID, matchingTeamMode:str=RANK_MODE_NUMBER, region:str="KR")->dict|None:
-    responced_top_ranker_datas=request_top_players(seasonId, matchingTeamMode)
-    if responced_top_ranker_datas==None:
+# 4. English,
+def request_region_rankers_eternity_cut(
+    seasonId: str = SEASON_ID,
+    matchingTeamMode: str = RANK_MODE_NUMBER,
+    region: str = "KR",
+) -> dict | None:
+    responced_top_ranker_datas = request_top_players(seasonId, matchingTeamMode)
+    if responced_top_ranker_datas == None:
         return None
-    ranker_datas = {responced_top_ranker_data['nickname']:{
-        'userNum':responced_top_ranker_data['userNum'],
-        'mmr':responced_top_ranker_data['mmr']
-        } 
-                    for responced_top_ranker_data in responced_top_ranker_datas['topRanks']}
-    region_ranker_counter=0
+    ranker_datas = {
+        responced_top_ranker_data["nickname"]: {
+            "userNum": responced_top_ranker_data["userNum"],
+            "mmr": responced_top_ranker_data["mmr"],
+        }
+        for responced_top_ranker_data in responced_top_ranker_datas["topRanks"]
+    }
+    region_ranker_counter = 0
     for ranker_nickname in ranker_datas.keys():
         responced_top_ranker_datas = request_to_ER_api(
             request_url=f"https://open-api.bser.io/v1/user/games/{ranker_datas[ranker_nickname]['userNum']}"
         )
-        if responced_top_ranker_datas==None:
+        if responced_top_ranker_datas == None:
             continue
-        if responced_top_ranker_datas["userGames"][0]["serverName"]=="Seoul":
-            region_ranker_counter+=1
-        if region_ranker_counter>=200:
+        if responced_top_ranker_datas["userGames"][0]["serverName"] == "Seoul":
+            region_ranker_counter += 1
+        if region_ranker_counter >= 200:
             return {
-                "date":datetime.today().strftime("%Y%m%d"),
-                "mmr":ranker_datas[ranker_nickname]['mmr']}
+                "date": datetime.today().strftime("%Y%m%d"),
+                "mmr": ranker_datas[ranker_nickname]["mmr"],
+            }
     return None

@@ -84,47 +84,63 @@ class Crawler:
         print("deleted")
 
 
-
 class DakPlayerCrawler:
     def __init__(self, player_name, season):
-        user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         options = webdriver.ChromeOptions()
-        options.add_argument('--start-maximized')
-        options.add_argument('headless')
-        options.add_argument('user-agent={0}'.format(user_agent))
-        options.add_argument('disable-gpu')
+        options.add_argument("--start-maximized")
+        options.add_argument("headless")
+        options.add_argument("user-agent={0}".format(user_agent))
+        options.add_argument("disable-gpu")
         self.driver = webdriver.Chrome(options=options)
-        self.base_url = 'https://dak.gg/er/players/'
+        self.base_url = "https://dak.gg/er/players/"
         self.player_name = player_name
-        self.season = "/matches?season=SEASON_"+str(season)+"&gameMode=RANK&page="
+        self.season = "/matches?season=SEASON_" + str(season) + "&gameMode=RANK&page="
         self.page_num = 1
         self.mmr_change = []
+
     def crawling_mmr_change(self):
-        crawling_url = self.base_url+self.player_name+self.season
+        crawling_url = self.base_url + self.player_name + self.season
         while True:
-            self.driver.get(url=crawling_url+str(self.page_num))
+            self.driver.get(url=crawling_url + str(self.page_num))
             try:
-                WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="content-container"]/div[2]/section[2]/div[1]')))
-                exchange_options = self.driver.find_element(By.XPATH, '//*[@id="content-container"]/div[2]/section[2]/div[1]').text
+                WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located(
+                        (
+                            By.XPATH,
+                            '//*[@id="content-container"]/div[2]/section[2]/div[1]',
+                        )
+                    )
+                )
+                exchange_options = self.driver.find_element(
+                    By.XPATH, '//*[@id="content-container"]/div[2]/section[2]/div[1]'
+                ).text
                 start_str = "\n딜량\n"
                 end_str = "\nRP"
                 mmr_change = []
                 start_index = exchange_options.find(start_str)
                 while start_index != -1:
-                    end_index = exchange_options.find(end_str, start_index + len(start_str))
+                    end_index = exchange_options.find(
+                        end_str, start_index + len(start_str)
+                    )
                     if end_index != -1:
-                        mmr = exchange_options[start_index + len(start_str):end_index].split("\n")[0]
+                        mmr = exchange_options[
+                            start_index + len(start_str) : end_index
+                        ].split("\n")[0]
                         mmr_change.append(int(mmr))
                     else:
                         break
-                    start_index = exchange_options.find(start_str, end_index + len(end_str))
-                if mmr_change==[]:
+                    start_index = exchange_options.find(
+                        start_str, end_index + len(end_str)
+                    )
+                if mmr_change == []:
                     break
-                self.mmr_change+=mmr_change
-                self.page_num+=1
+                self.mmr_change += mmr_change
+                self.page_num += 1
             except Exception as e:
                 break
         self.mmr_change.reverse()
         self.driver.quit()
+
     def get_mmr_change(self):
         return self.mmr_change
