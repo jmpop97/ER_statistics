@@ -233,3 +233,47 @@ class TierGetMMr:
         plt.figure(2, figsize=(self.fig_size_x, self.fig_zise_y))
         ax = sns.countplot(data=self.db.conditions, x="Tier")
         ax.bar_label(ax.containers[0], fontsize=10)
+
+
+class FigureAll:
+    def hyperloopfig(self):
+        hyper = Hyperloop("mmrBefore", "useHyperLoop")
+        ERDataCleansing(hyper)
+        fig = FigureType()
+        fig.bar_graph_one(db=hyper.dic_Hyperloop_tier)
+
+    def camerafig(self):
+        camera = Camera_All(
+            "addSurveillanceCamera",
+            "addTelephotoCamera",
+            "mmrGainInGame",
+            "mmrBefore",
+            "gameRank",
+            "characterNum",
+        )
+        ERDataCleansing(camera)
+        fig = FigureType()
+        fig.bar_graph_all(
+            db1=camera.dic_cameraGroup_tier,
+            db2=camera.dic_cameraGroup_Rank,
+            db3=camera.dic_cameraGroup_mmr,
+            db4=camera.dic_cameraGroup_LukeMai,
+        )
+
+    def CharacterClassfig(self):
+        Character = CharacterClass("characterNum")
+        ERDataCleansing(Character)
+        fig = FigureType()
+        fig.bar_graph_one(Character.dic_characterNum_percentage_datas)
+
+    def ForeignTeamFig(self):
+        Foreign = ForeignTeam("mmrBefore", "mmrGainInGame", "language")
+        ERDataCleansing(Foreign)
+        fig = FigureType()
+        fig.bar_graph_one(Foreign.team)
+
+    def EmoticonMMRFig(self):
+        EmoticonMMR = EmoticonMMRClass("mmrBefore", "useEmoticonCount", "mmrGain")
+        ERDataCleansing(EmoticonMMR)
+        fig = FigureType()
+        fig.bar_graph_one(EmoticonMMR.dic_mmr_emoticon)

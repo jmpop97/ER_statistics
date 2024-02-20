@@ -5,6 +5,11 @@ import numpy as np
 from ER_datas.id_characterName import LoadCharacter
 import json
 import re
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import sklearn
+from sklearn.linear_model import LinearRegression
 
 calculater = ["/", "*", "+", "-", "(", ")", "%", "//"]
 
@@ -435,6 +440,30 @@ class Hyperloop(DataClass):
                 self.dic_Hyperloop_tier.items(), key=lambda x: rank_order.index(x[0])
             )
         }
+
+
+# #mmr획득량을 통한 향후 티어 예측
+class Predict_Tier(DataClass):
+    def __init__(self, *condition):
+        self.condition = condition
+        self.list_mmrBefore = []
+        self.list_mmrGainInGame = []
+        self.list_mmrLossEntryCost = []
+
+    def add_data(self, user_data):
+        mmrBefore = user_data["mmrBefore"]
+        mmrGainInGame = user_data["mmrGainInGame"]
+        mmrLossEntryCost = user_data["mmrLossEntryCost"]
+        self.list_mmrBefore.append(mmrBefore)
+        self.list_mmrGainInGame.append(mmrGainInGame)
+        self.list_mmrLossEntryCost.append(mmrLossEntryCost)
+
+    def last_calculate(self):
+        linear_regression = LinearRegression()
+        list_mmrBefore = np.array(self.list_mmrBefore)
+        list_mmrGainInGame = np.array(self.list_mmrGainInGame)
+        list_mmrBefore = list_mmrBefore.reshape(-1, 1)
+        linear_regression.fit(list_mmrBefore, list_mmrGainInGame)
 
 
 # #크레딧으로 빌드업 템 만드는것과 후반 보면서 빌드하는 것에 차이(gainMMR)
