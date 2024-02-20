@@ -346,21 +346,15 @@ class Camera_All(DataClass):
         characterNum = user_data["characterNum"]
         str_characterNum = str(characterNum)
         if characterNum == 22:
-            self.dic_cameraGroup_LukeMai[
-                character_name[str_characterNum]
-            ] = self.dic_cameraGroup_LukeMai.get(
-                character_name[str_characterNum], []
-            ) + [
-                addCamera
-            ]
+            self.dic_cameraGroup_LukeMai[character_name[str_characterNum]] = (
+                self.dic_cameraGroup_LukeMai.get(character_name[str_characterNum], [])
+                + [addCamera]
+            )
         elif characterNum == 45:
-            self.dic_cameraGroup_LukeMai[
-                character_name[str_characterNum]
-            ] = self.dic_cameraGroup_LukeMai.get(
-                character_name[str_characterNum], []
-            ) + [
-                addCamera
-            ]
+            self.dic_cameraGroup_LukeMai[character_name[str_characterNum]] = (
+                self.dic_cameraGroup_LukeMai.get(character_name[str_characterNum], [])
+                + [addCamera]
+            )
         else:
             self.dic_cameraGroup_LukeMai["나머지"].append(addCamera)
 
@@ -375,7 +369,15 @@ class Camera_All(DataClass):
         # #티어 별 카메라 설치 평균
         for tier in self.dic_cameraGroup_tier:
             self.dic_cameraGroup_tier[tier] = np.mean(self.dic_cameraGroup_tier[tier])
-        rank_order = ["아이언", "브론즈", "실버", "골드", "플레티넘", "다이아", "데미갓"]
+        rank_order = [
+            "아이언",
+            "브론즈",
+            "실버",
+            "골드",
+            "플레티넘",
+            "다이아",
+            "데미갓",
+        ]
         self.dic_cameraGroup_tier = {
             key: value
             for key, value in sorted(
@@ -428,7 +430,15 @@ class Hyperloop(DataClass):
     def last_calculate(self):
         for tier in self.dic_Hyperloop_tier:
             self.dic_Hyperloop_tier[tier] = np.mean(self.dic_Hyperloop_tier[tier])
-        rank_order = ["아이언", "브론즈", "실버", "골드", "플레티넘", "다이아", "데미갓"]
+        rank_order = [
+            "아이언",
+            "브론즈",
+            "실버",
+            "골드",
+            "플레티넘",
+            "다이아",
+            "데미갓",
+        ]
         self.dic_Hyperloop_tier = {
             key: value
             for key, value in sorted(
@@ -479,10 +489,13 @@ class GetMMRFromRank(DataClass):
             self._tier.get(user_data["mmrBefore"] // 1000, "미스릴~")
         )
 
+
 class RankPerTier(DataClass):
     def __init__(self, *conditions):
-        self.datas={}
+        self.datas = {}
+
     def add_data(self, user_data):
         return super().add_data(user_data)
+
     def last_calculate(self):
         return super().last_calculate()

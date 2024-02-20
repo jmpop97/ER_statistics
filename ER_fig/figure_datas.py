@@ -7,7 +7,7 @@ from ER_datas.data_class import *
 from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.id_characterName import LoadCharacter
 import json
-import pandas as pd 
+import pandas as pd
 
 plt.rcParams["font.family"] = "Malgun Gothic"
 plt.rcParams["axes.unicode_minus"] = False
@@ -307,7 +307,9 @@ class FigRankPerTier:
         plt.show()
 
     def _barplot(self):
-        self.db.datas["Tier"]=pd.Categorical(self.db.datas["Tier"],categories=self.db._tier.values())
+        self.db.datas["Tier"] = pd.Categorical(
+            self.db.datas["Tier"], categories=self.db._tier.values()
+        )
         ax = sns.displot(
             data=self.db.datas,
             x="Tier",
