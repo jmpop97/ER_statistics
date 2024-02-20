@@ -4,9 +4,9 @@ from function.public_function import clear_terminal
 import time
 from datetime import datetime
 import os
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 
-# load_dotenv()
+load_dotenv()
 
 NORMAL_MODE_NUMBER = int(os.environ.get("NORMAL_MODE_NUMBER"))
 RANK_MODE_NUMBER = int(os.environ.get("RANK_MODE_NUMBER"))
