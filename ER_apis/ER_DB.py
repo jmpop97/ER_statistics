@@ -5,7 +5,7 @@ import json
 from .cryption_secret import AESCipher
 import requests
 import time
-from ER_apis.ER_api import request_to_ER_api, request_top_players
+from ER_apis.ER_api import request_to_ER_api, request_region_rankers_eternity_cut
 from dotenv import load_dotenv
 import os
 
@@ -162,7 +162,7 @@ def insert_game_top_players_mmr_mongoDB(
     client = access_RW_mongoDB()
     access_db = client["ERDB"]
     collection = access_db["top_rank_players"]
-    responced_top_ranker_mmr_Data = request_top_players()
+    responced_top_ranker_mmr_Data = request_region_rankers_eternity_cut()
     if responced_top_ranker_mmr_Data==None:
         print("Responced Top Ranker's Data is empty")
         return False
