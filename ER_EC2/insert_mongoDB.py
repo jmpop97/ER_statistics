@@ -4,14 +4,18 @@ import sys
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from ER_apis.ER_DB import (
     insert_game_play_datas_mongoDB,
+    insert_game_top_players_mmr_mongoDB,
     get_highest_id,
     get_recent_game_id_from_ranker,
+    get_ranker_mmr,
 )
 import argparse
 
 argument_parser = argparse.ArgumentParser()
 argument_parser.add_argument("--n", help="GameNumbersToSave", type=int, default=1000)
-
+argument_parser.add_argument(
+    "--t", help="Add Top Ranking Player Datas", type=int, default=0
+)
 # need to optimaze
 # 1. how to get from_game_id to save
 # 2. how often to get apis.(current: every 00:00)
@@ -19,6 +23,11 @@ argument_parser.add_argument("--n", help="GameNumbersToSave", type=int, default=
 # 3.1 if we fetch datas too often, then the ranker's recent game_id won't change.
 
 if __name__ == "__main__":
+    top_ranker_player_data_flag = argument_parser.parse_args().t
+    if top_ranker_player_data_flag == 1:
+        if insert_game_top_players_mmr_mongoDB():
+            exit(0)
+        exit(1)
     highest_game_id_in_DB = get_highest_id()
     recent_game_id_from_top_ranker = get_recent_game_id_from_ranker()
     print("highest_game_id_in_DB: ", highest_game_id_in_DB)

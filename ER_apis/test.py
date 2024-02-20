@@ -4,6 +4,7 @@ from .ER_api import (
     save_games,
     request_free_characters,
     request_to_ER_api,
+    request_region_rankers_eternity_cut
 )
 import unittest
 from dotenv import load_dotenv
@@ -18,7 +19,13 @@ class SaveGames(unittest.TestCase):
         save_result = request_to_ER_api(
             request_url=f"https://open-api.bser.io/v1/freeCharacters/{NORMAL_MODE_NUMBER}"
         )
-        self.assertTrue(save_result is not None)
+        self.assertTrue(save_result != None)
 
     def test_request_free_characters(self):
         self.assertTrue(request_free_characters())
+    '''
+    
+    def test_request_region_rankers_eternity_cut(self):
+        responced_data = request_region_rankers_eternity_cut()
+        self.assertTrue(responced_data != None)
+    '''
