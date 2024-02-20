@@ -478,3 +478,11 @@ class GetMMRFromRank(DataClass):
         self.datas["Tier"].append(
             self._tier.get(user_data["mmrBefore"] // 1000, "미스릴~")
         )
+
+class RankPerTier(DataClass):
+    def __init__(self, *conditions):
+        self.datas={}
+    def add_data(self, user_data):
+        return super().add_data(user_data)
+    def last_calculate(self):
+        return super().last_calculate()
