@@ -18,5 +18,7 @@ echo "ER_DIR_PATH=${ER_DIR_PATH}" >> cron_backup
 echo "*/30 * * * * ${ER_DIR_PATH}/storage_check.sh >> ${ER_DIR_PATH}/logs/storage_check.log 2>&1" >> cron_backup
 # insert game match datas every day 00:00
 echo "0 0 * * * ${ER_DIR_PATH}/insert_to_mongoDB.sh >> ${ER_DIR_PATH}/logs/insert_to_mongoDB.log 2>&1" >> cron_backup
+# insert top ranking players
+echo "0 9 * * * ${ER_DIR_PATH}/get_top_ranking_players.sh > ${ER_DIR_PATH}/logs/get_top_ranking_players.sh 2>&1" >> cron_backup
 # editing crontab done
 crontab cron_backup
