@@ -81,7 +81,7 @@ def game_api(game_id: int, str_game_type_list: list) -> bool:
     responced_game_match_data = request_to_ER_api(
         request_url=f"https://open-api.bser.io/v1/games/{game_id}"
     )
-    if responced_game_match_data == None:
+    if responced_game_match_data.get("userGames",None) == None:
         return False
     else:
         mode = responced_game_match_data["userGames"][0]["matchingMode"]
