@@ -84,5 +84,5 @@ def ERDataCleansing(
             data_class.add_data_game_id()
             data_class.game_count()
         data_class.last_calculate()
-        print(data_class.user_count_num)
-        print(data_class.game_count_num)
+        print("유저 : ", data_class.user_count_num)
+        print("게임 : ", data_class.game_count_num)

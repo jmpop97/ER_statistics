@@ -461,7 +461,7 @@ class CreditBuildUpMMR(DataClass):
 """
 
 
-class GetMMRFromRank(DataClass):
+class GetMMRFromRankByTier(DataClass):
     def __init__(self, *conditions):
         super().__init__(*conditions)
         self.conditions = ["gameRank", "mmrBefore", "mmrGainInGame"]
@@ -488,6 +488,30 @@ class GetMMRFromRank(DataClass):
         self.datas["Tier"].append(
             self._tier.get(user_data["mmrBefore"] // 1000, "미스릴~")
         )
+
+
+class GetMMRFromRank(DataClass):
+    def __init__(self, *conditions):
+        super().__init__(*conditions)
+        self.conditions = ["gameRank", "mmrBefore", "mmrGainInGame"]
+        self._mmrRank = {1: 40, 2: 25, 3: 20, 4: 10, 5: 5, 6: 5}
+        self.datas = {}
+        self.datas["mmrRank"] = []
+        self.datas["mmrGainInGame"] = []
+        self.datas["mmrBefore_range250"] = []
+        self.datas["gameRank"] = []
+        self.range_list = {}
+
+    def add_data(self, user_data):
+        self.datas["gameRank"].append(user_data["gameRank"])
+        self.datas["mmrRank"].append(self._mmrRank.get(user_data["gameRank"], 0))
+        self.datas["mmrGainInGame"].append(user_data["mmrGainInGame"])
+        range_name = (user_data["mmrBefore"] // 250) * 250
+        self.datas["mmrBefore_range250"].append(range_name)
+        self.range_list[range_name] = None
+
+    def last_calculate(self):
+        self.range_list = list(self.range_list.keys())
 
 
 class RankPerTier(DataClass):
