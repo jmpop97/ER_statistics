@@ -1,11 +1,12 @@
 import requests
 import json
-from function.public_function import clear_terminal
+from View.View import ViewDownLoading
 import time
 from datetime import datetime
 import os
 from dotenv import load_dotenv
 
+Views = ViewDownLoading()
 load_dotenv()
 
 NORMAL_MODE_NUMBER = int(os.environ.get("NORMAL_MODE_NUMBER"))
@@ -110,7 +111,7 @@ def _save_game(game_id: int, responce_datas: dict) -> None:
     file_name = "./datas/Ver{0}.{1}_{2}_{3}.json".format(
         game_major_version, game_minor_version, game_mode, game_id
     )
-    print(file_name)
+    Views.file_name(file_name)
     with open(file_name, "w", encoding="utf-8") as outfile:
         json.dump(responce_datas, outfile, indent="\t", ensure_ascii=False)
 
@@ -121,16 +122,20 @@ def save_games(
     second: int = 1,
     game_type: list = ["Rank", "Normal", "Cobalt"],
 ) -> bool:
+
+    Views.end = n
     bool_value = True
     game_id = start_game
     while game_id < start_game + n:
+        Views.start(game_id)
+        Views.display()
         bool_value = game_api(game_id, game_type)
-        if bool_value:
-            print("game_id: ", game_id, "({0}/{1})".format(game_id - start_game + 1, n))
+        if not bool_value:
+            Views.bug()
         game_id += 1
         time.sleep(second)
-        clear_terminal()
-    print("end save_games")
+    Views.start("end")
+    Views.display()
     return bool_value
 
 
