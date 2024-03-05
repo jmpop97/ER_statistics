@@ -215,22 +215,26 @@ class ERAPI:
         second: int = 1,
         game_type: list = ["Rank", "Normal", "Cobalt"],
         duplication=True,
+        reverse=True,
+        d=1,
     ) -> bool:
 
         self.game_id = start_game
         self.View.end = n
         self.game_type = game_type
+        reverse_n = -1 if reverse else 1
 
-        while self.game_id != start_game + n:
+        while self.View.count < self.View.end - 1:
             self.View.start(self.game_id)
             self.View.display()
             if duplication:
                 if str(self.game_id) in self.game_list:
                     self.View.duplication_skip(self.game_id)
-            else:
-                if not self.game_api():
-                    self.View.bug()
-            self.game_id += 1
+                    self.game_id += reverse_n * d
+                    continue
+            if not self.game_api():
+                self.View.bug()
+            self.game_id += reverse_n * d
             time.sleep(second)
         self.View.start("end")
         self.View.display()
