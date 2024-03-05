@@ -5,6 +5,8 @@ import time
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+from glob import glob
+import re
 
 Views = ViewDownLoading()
 load_dotenv()
@@ -194,3 +196,87 @@ def request_region_rankers_eternity_cut(
                 "mmr": ranker_datas[ranker_nickname]["mmr"],
             }
     return None
+
+
+class ERAPI:
+    def __init__(self):
+        file_dir = "./datas" + "/*"
+        file_list = glob(file_dir)
+        self.game_list = [re.split("[_.]", file)[-2] for file in file_list]
+        self.View = ViewDownLoading()
+        self.game_type = ["Rank", "Normal", "Cobalt"]
+        self.game_id = 0
+
+    def save_games(
+        self,
+        start_game: int,
+        n: int = 1,
+        second: int = 1,
+        game_type: list = ["Rank", "Normal", "Cobalt"],
+        duplication=True,
+    ) -> bool:
+
+        self.game_id = start_game
+        self.View.end = n
+        self.game_type = game_type
+        duplication
+
+        while self.game_id != start_game + n:
+            self.View.start(self.game_id)
+            self.View.display()
+            if duplication:
+                if str(self.game_id) in self.game_list:
+                    self.View.duplication_skip(self.game_id)
+            else:
+                if not self.game_api():
+                    self.View.bug()
+            self.game_id += 1
+            time.sleep(second)
+        self.View.start("end")
+        self.View.display()
+        return not bool(self.View.bug_memory)
+
+    def game_api(self) -> bool:
+        self.translate_game_mode_int_to_str()
+        responced_game_match_data = request_to_ER_api(
+            request_url=f"https://open-api.bser.io/v1/games/{self.game_id}"
+        )
+        if not responced_game_match_data.get("userGames"):
+            return False
+        else:
+            mode = responced_game_match_data["userGames"][0]["matchingMode"]
+            if self.game_mode_num_dic.get(mode):
+                self._save_game(responced_game_match_data)
+            else:
+                self.View.type_skip(self.game_id)
+            return True
+
+    def translate_game_mode_int_to_str(self) -> None:
+        self.game_mode_num_dic = {}
+        for game_mode in self.game_type:
+            if game_mode == "Normal":
+                self.game_mode_num_dic[NORMAL_MODE_NUMBER] = "Normal"
+            elif game_mode == "Rank":
+                self.game_mode_num_dic[RANK_MODE_NUMBER] = "Rank"
+            elif game_mode == "Cobalt":
+                self.game_mode_num_dic[COBALT_MODE_NUMBER] = "Cobalt"
+
+    def _save_game(self, responce_datas: dict) -> None:
+        user_data = responce_datas["userGames"][0]
+        game_major_version = user_data["versionMajor"]
+        game_minor_version = user_data["versionMinor"]
+        """ game_mode
+        2 normal
+        3 rank
+        6 cobalt
+        """
+        game_mode = self.game_mode_num_dic.get(user_data["matchingMode"], "Bug")
+        """
+        이거 서버도 여러개다.(Ohio, Seoul, SaoPaulo)
+        """
+        file_name = "./datas/Ver{0}.{1}_{2}_{3}.json".format(
+            game_major_version, game_minor_version, game_mode, self.game_id
+        )
+        self.View.file_name(file_name)
+        with open(file_name, "w", encoding="utf-8") as outfile:
+            json.dump(responce_datas, outfile, indent="\t", ensure_ascii=False)
