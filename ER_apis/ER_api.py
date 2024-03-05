@@ -205,6 +205,7 @@ class ERAPI:
         self.game_list = [re.split("[_.]", file)[-2] for file in file_list]
         self.View = ViewDownLoading()
         self.game_type = ["Rank", "Normal", "Cobalt"]
+        self.translate_game_mode_int_to_str()
         self.game_id = 0
 
     def save_games(
@@ -219,7 +220,6 @@ class ERAPI:
         self.game_id = start_game
         self.View.end = n
         self.game_type = game_type
-        duplication
 
         while self.game_id != start_game + n:
             self.View.start(self.game_id)
