@@ -1,5 +1,4 @@
 from typing import Any
-from function.public_function import emty_list
 from .tier_mmr import Tier
 import numpy as np
 from ER_datas.id_characterName import LoadCharacter

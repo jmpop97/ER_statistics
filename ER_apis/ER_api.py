@@ -203,11 +203,11 @@ class ERAPI:
         self.game_type = ["Rank", "Normal", "Cobalt"]
         self.translate_game_mode_int_to_str()
         self.game_id = 0
+        self.View = ViewDownLoading()
     def open_dir_file(self):
         file_dir = "./datas" + "/*"
         file_list = glob(file_dir)
         self.game_list = [re.split("[_.]", file)[-2] for file in file_list]
-        self.View = ViewDownLoading()
     def save_games(
         self,
         start_game: int,
@@ -257,6 +257,11 @@ class ERAPI:
             return True
 
     def translate_game_mode_int_to_str(self) -> None:
+        """ game_mode
+        2 normal
+        3 rank
+        6 cobalt
+        """
         self.game_mode_num_dic = {}
         for game_mode in self.game_type:
             if game_mode == "Normal":
@@ -270,11 +275,7 @@ class ERAPI:
         user_data = responce_datas["userGames"][0]
         game_major_version = user_data["versionMajor"]
         game_minor_version = user_data["versionMinor"]
-        """ game_mode
-        2 normal
-        3 rank
-        6 cobalt
-        """
+
         game_mode = self.game_mode_num_dic.get(user_data["matchingMode"], "Bug")
         """
         이거 서버도 여러개다.(Ohio, Seoul, SaoPaulo)
