@@ -200,14 +200,14 @@ def request_region_rankers_eternity_cut(
 
 class ERAPI:
     def __init__(self):
+        self.game_type = ["Rank", "Normal", "Cobalt"]
+        self.translate_game_mode_int_to_str()
+        self.game_id = 0
+    def open_dir_file(self):
         file_dir = "./datas" + "/*"
         file_list = glob(file_dir)
         self.game_list = [re.split("[_.]", file)[-2] for file in file_list]
         self.View = ViewDownLoading()
-        self.game_type = ["Rank", "Normal", "Cobalt"]
-        self.translate_game_mode_int_to_str()
-        self.game_id = 0
-
     def save_games(
         self,
         start_game: int,
@@ -223,7 +223,8 @@ class ERAPI:
         self.View.end = n
         self.game_type = game_type
         reverse_n = -1 if reverse else 1
-
+        if duplication:
+            self.open_dir_file()
         while self.View.count < self.View.end - 1:
             self.View.start(self.game_id)
             self.View.display()
