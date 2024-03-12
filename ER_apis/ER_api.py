@@ -7,6 +7,7 @@ import os
 from dotenv import load_dotenv
 from glob import glob
 import re
+from public_setting.variable import game_DB
 
 Views = ViewDownLoading()
 load_dotenv()
@@ -216,17 +217,18 @@ class ERAPI:
         n: int = 1,
         second: int = 1,
         game_type: list = ["Rank", "Normal", "Cobalt"],
-        duplication=True,
-        reverse=True,
-        d=1,
+        duplication: bool = True,
+        reverse: bool = True,
+        d: int = 1,
+        root_dir: str = "",
     ) -> bool:
 
         self.game_id = start_game
         self.View.end = n
         self.game_type = game_type
+        self.game_list = game_DB().game_list
         reverse_n = -1 if reverse else 1
-        if duplication:
-            self.open_dir_file()
+
         while self.View.count < self.View.end - 1:
             self.View.start(self.game_id)
             self.View.display()
