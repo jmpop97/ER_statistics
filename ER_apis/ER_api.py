@@ -204,10 +204,12 @@ class ERAPI:
         self.translate_game_mode_int_to_str()
         self.game_id = 0
         self.View = ViewDownLoading()
+
     def open_dir_file(self):
         file_dir = "./datas" + "/*"
         file_list = glob(file_dir)
         self.game_list = [re.split("[_.]", file)[-2] for file in file_list]
+
     def save_games(
         self,
         start_game: int,
@@ -257,7 +259,7 @@ class ERAPI:
             return True
 
     def translate_game_mode_int_to_str(self) -> None:
-        """ game_mode
+        """game_mode
         2 normal
         3 rank
         6 cobalt

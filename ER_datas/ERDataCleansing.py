@@ -66,6 +66,7 @@ def ERDataCleansing(
                 "./datas/Ver9.0_Rank_31130633.json",
                 "./datas/Ver9.0_Rank_31131392.json",
             ]
+            print("test")
         else:
             game_list = glob(
                 "./datas/Ver{0}.{1}_{2}_*.json".format(
