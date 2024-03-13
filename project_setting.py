@@ -1,6 +1,6 @@
 import json
 import os
-from ER_apis.ER_api import save_games, game_api, request_free_characters
+from ER_apis.ER_api import save_games, game_api, request_free_characters, ERAPI
 from ER_datas.update_game_base_data import update_game_base_data
 import sys
 
@@ -66,8 +66,8 @@ class Apicontroller:
                 sys.exit()
 
     def get_test_case(self):
-        save_games(31131392, 1)
-        save_games(31130633, 1)
+        ERAPI().save_games(31131392)
+        ERAPI().save_games(31130633)
 
     def make_main_py(self):
         main = open("main.py", "w")
@@ -78,8 +78,7 @@ model = Apimodel()
 view = Apiview()
 controller = Apicontroller(model, view)
 controller.create_folders()
-print("1")
 controller.get_api()
 controller.get_test_case()
-controller.make_main_py()
+# controller.make_main_py()
 update_game_base_data()

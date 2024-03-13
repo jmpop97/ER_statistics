@@ -185,7 +185,7 @@ class FigureType:
         self.plt.title(condition)
 
 
-class TierGetMMR:
+class FigTierGetMMR:
     fig_size_x = 13
     fig_zise_y = 6
     font_size = 6
@@ -210,6 +210,7 @@ class TierGetMMR:
 
     def _tier_get_mmr(self):
         plt.figure(1, figsize=(self.fig_size_x, self.fig_zise_y))
+        plt.title("티어별 mmr 획득량")
         ax = sns.barplot(data=self.db.conditions, y="mmrGainInGame", x="Tier")
         ax.bar_label(ax.containers[0], fontsize=self.font_size)
 
@@ -224,7 +225,7 @@ class TierGetMMR:
             line += 4
 
     def _tier_cost(self):
-        with open("./base_datas/TierMMRCost/TierMMRCost.json", "r") as f:
+        with open("./handmadeDB/TierMMRCost/V13/TierMMRCost.json", "r") as f:
             tier_cost = json.load(f)
         for tier in sorted(set(self.db.conditions["Tier"])):
             self.tier_cost.append(tier_cost.get(str(tier), 2 * tier + 5))
@@ -232,11 +233,12 @@ class TierGetMMR:
 
     def _countplot(self):
         plt.figure(2, figsize=(self.fig_size_x, self.fig_zise_y))
+        plt.title("표본")
         ax = sns.countplot(data=self.db.conditions, x="Tier")
         ax.bar_label(ax.containers[0], fontsize=10)
 
 
-class TierGetMMRFromRank:
+class FigTierGetMMRFromRank:
     def __init__(self) -> None:
         self.db = GetMMRFromRank()
         ERDataCleansing(self.db)
@@ -254,7 +256,7 @@ class TierGetMMRFromRank:
             x="Tier",
             y="mmrGainInGame",
             estimator="mean",
-            order=self.db._tier.values(),
+            order=self.db._mmrRank,
         )
         ax = sns.barplot(data=self.db.datas, x="Tier", y="mmrRank", estimator="mean")
         ax.bar_label(ax.containers[0], label_type="center")
@@ -263,6 +265,7 @@ class TierGetMMRFromRank:
     def _tier_cost_red_line(self):
         self._tier_cost()
         plt.plot(self.tier, self.tier_cost, "r")
+        plt.title("티어별 mmr획득량")
 
     def _tier_cost(self):
         with open("./base_datas/TierMMRCost/TierMMRCost.json", "r") as f:
@@ -273,15 +276,16 @@ class TierGetMMRFromRank:
             self.tier.append(self.db._tier[tier])
 
 
-class TierGetMMRByRank:
+class FigTierGetMMRByRankWithTier:
     def __init__(self) -> None:
-        self.db = GetMMRFromRank()
+        self.db = GetMMRFromRankByTier()
         ERDataCleansing(self.db)
         self.tier_cost = []
         self.tier = []
 
     def plt(self):
         self._barplot()
+        plt.title("티어별 mmr획득량")
         plt.show()
 
     def _barplot(self):
@@ -296,14 +300,41 @@ class TierGetMMRByRank:
         )
 
 
-class FigRankPerTier:
+class FigTierGetMMRByRankWithBeforeMMR:
     def __init__(self) -> None:
         self.db = GetMMRFromRank()
+        ERDataCleansing(self.db)
+        self.tier_cost = []
+        self.tier = []
+
+    def plt(self):
+        self._barplot()
+        plt.title("mmr별 mmr획득량")
+        plt.show()
+
+    def _barplot(self):
+        # order_list=sorted(list(self.db.datas["range_list"].keys()))
+        plt1 = sns.color_palette("colorblind", len(self.db.range_list))
+        ax = sns.barplot(
+            data=self.db.datas,
+            x="gameRank",
+            y="mmrGainInGame",
+            hue="mmrBefore_range250",
+            estimator="mean",
+            order=[8, 7, 6, 5, 4, 3, 2, 1],
+            palette=plt1,
+            # hue_order=order_list
+        )
+
+
+class FigRankPerTier:
+    def __init__(self) -> None:
+        self.db = GetMMRFromRankByTier()
         ERDataCleansing(self.db)
 
     def plt(self):
         self._barplot()
-        # self._tier_cost_red_line()
+        plt.title("티어별 랭킹비율")
         plt.show()
 
     def _barplot(self):
@@ -316,4 +347,22 @@ class FigRankPerTier:
             hue="gameRank",
             multiple="fill",
         )
+
+
+class FigRankPerMMR:
+    def __init__(self) -> None:
+        self.db = GetMMRFromRank()
+        ERDataCleansing(self.db)
+
+    def plt(self):
+        self._barplot()
+        plt.title("mmr별 랭킹비율")
         plt.show()
+
+    def _barplot(self):
+        ax = sns.displot(
+            data=self.db.datas,
+            x="mmrBefore_range250",
+            hue="gameRank",
+            multiple="fill",
+        )
