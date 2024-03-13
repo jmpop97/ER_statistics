@@ -2,6 +2,7 @@ import json
 import os
 from glob import glob
 import itertools
+import re
 
 
 class Tier:
@@ -38,23 +39,25 @@ class Tier:
 
 
 class game_DB:
-    def __init__(self, types: list = ["Colbalt", "Normal", "Rank"]) -> None:
-        self.root_dir = os.environ.get("GAME_DB", "./datas")
-        self.DB_list = []
-        self.types = ["Colbalt", "Normal", "Rank"]
-
-    def set_DB_list(
+    def __init__(
         self,
         types: list = ["Colbalt", "Normal", "Rank"],
-        major_version: int = [13],
-        minor_version: int = [0],
-    ):
-        if types != ["Colbalt", "Normal", "Rank"]:
-            self.types = types
+        major_version: int = ["*"],
+        minor_version: int = ["*"],
+        root_dir: str = "",
+    ) -> None:
 
-        cases = list(itertools.product(major_version, minor_version, self.types))
+        self.game_list = []
+        self.dir_list = []
+        self.root_dir = os.environ.get("GAME_DB", "./datas")
+        if root_dir:
+            self.root_dir = root_dir
+        if root_dir:
+            self.root_dir = root_dir
+
+        cases = list(itertools.product(major_version, minor_version, types))
         for major_ver, minor_ver, type_name in cases:
-            self.DB_list += glob(
+            self.dir_list += glob(
                 f"{self.root_dir}/Ver{major_ver}.{minor_ver}_{type_name}*"
             )
-        return self.DB_list
+        self.game_list = [re.split("[_.]", file)[-2] for file in self.dir_list]
