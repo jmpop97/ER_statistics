@@ -225,7 +225,7 @@ class FigTierGetMMR:
             line += 4
 
     def _tier_cost(self):
-        with open("./base_datas/TierMMRCost/TierMMRCost.json", "r") as f:
+        with open("./handmadeDB/TierMMRCost/V13/TierMMRCost.json", "r") as f:
             tier_cost = json.load(f)
         for tier in sorted(set(self.db.conditions["Tier"])):
             self.tier_cost.append(tier_cost.get(str(tier), 2 * tier + 5))
@@ -256,7 +256,7 @@ class FigTierGetMMRFromRank:
             x="Tier",
             y="mmrGainInGame",
             estimator="mean",
-            order=self.db._tier.values(),
+            order=self.db._mmrRank,
         )
         ax = sns.barplot(data=self.db.datas, x="Tier", y="mmrRank", estimator="mean")
         ax.bar_label(ax.containers[0], label_type="center")
