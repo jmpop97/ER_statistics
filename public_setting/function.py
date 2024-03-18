@@ -1,5 +1,6 @@
 import os
 import dotenv
+import re
 
 
 def createFolder(directory):

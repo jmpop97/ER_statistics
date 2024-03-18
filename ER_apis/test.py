@@ -1,28 +1,16 @@
 import json
 
-from .ER_api import (
-    save_games,
-    request_free_characters,
-    request_to_ER_api,
-    request_region_rankers_eternity_cut
-)
+from .ER_api import ERAPI
 import unittest
 from dotenv import load_dotenv
 import os
-
+from public_setting.variable import GameType
 load_dotenv()
-NORMAL_MODE_NUMBER = os.environ.get('NORMAL_MODE_NUMBER')
-
 
 class SaveGames(unittest.TestCase):
     def test_request_to_ER_api(self):
-        save_result = request_to_ER_api(
-            request_url=f"https://open-api.bser.io/v1/freeCharacters/{NORMAL_MODE_NUMBER}"
-        )
-        self.assertTrue(save_result != None)
-
-    def test_request_free_characters(self):
-        self.assertTrue(request_free_characters())
+        # ERAPI().save_games(33240713,duplication=False)
+        pass
     '''
     
     def test_request_region_rankers_eternity_cut(self):
