@@ -1,84 +1,61 @@
-import json
-import os
-from ER_apis.ER_api import save_games, game_api, request_free_characters, ERAPI
-from ER_datas.update_game_base_data import update_game_base_data
-import sys
+from public_setting.function import createfile, ENV
+from ER_apis.ER_api import ERAPI_BASE_DB
+from ER_datas.update_game_base_data import BaseDB
 
 
-# Model
-class Apimodel:
-    def save_Api_key(self, key):
-        api_key_dic = {"token": key}
-        with open("setting/secret.json", "w") as file:
-            json.dump(api_key_dic, file)
-        print(os.path.isfile("setting/secret.json"))
+class View:
+    def __init__(self):
+        self.bug = {}
 
-    def test_Api_key(self):
-        if game_api:
-            save_games(31460173, 1)
-            return os.path.isfile("./datas/Ver10.0_Rank_31460173.json")
-        else:
-            return False
+    def eternal_token(self):
+        print("if 1 : skip")
 
-    def create_folders(self):
-        if os.path.exists("setting") == False:
-            os.mkdir("setting")
-        if os.path.exists("datas") == False:
-            os.mkdir("datas")
-        if os.path.exists("origin_datas") == False:
-            os.mkdir("origin_datas")
+        if self.bug:
+            print(self.bug)
+
+    def db_dir(self):
+        print("game DB 저장할 폴더를 정해주세요")
 
 
-# View
-class Apiview:
-    def get_Api_key(self):
-        if len(sys.argv) == 2:
-            return sys.argv[1]
-        elif len(sys.argv) > 2:
-            print("다시 입력해주세요.")
-            sys.exit()
-        else:
-            return input("키를 입력해주세요:")
+class Controller:
+    def eternal_token(self):
+        return input("Eternal Return Token : ")
 
-    def show_result(self, result):
-        print(result)
+    def db_dir(self):
+        return input("dir : ")
 
 
-# Controller
-class Apicontroller:
-    def __init__(self, model, view):
-        self.model = model
-        self.view = view
+class Model:
+    def __init__(self) -> None:
+        self.con = Controller()
+        self.view = View()
+        self.env = ENV()
+        # self.create_main()
+        # self.set_token_get_origin_data()
+        # self.setting_base_datas()
+        self.db_dir()
 
-    def create_folders(self):
-        self.model.create_folders()
-
-    def get_api(self):
+    def set_token_get_origin_data(self) -> bool:
         while True:
-            Api_key = self.view.get_Api_key()
-            self.model.save_Api_key(Api_key)
-            if self.model.test_Api_key():
-                os.remove("./datas/Ver10.0_Rank_31460173.json")
-                self.view.show_result("입력되었습니다.")
-                break
-            else:
-                self.view.show_result("잘못된 키가 입력되었습니다.")
-                sys.exit()
+            self.view.eternal_token()
+            token = self.con.eternal_token()
+            if token == "1":
+                return True
+            if ERAPI_BASE_DB().save_updated_game_base_data(token=token):
+                self.env.put({"ER_TOKEN": token})
+                return True
+            self.view.bug = {"message": "잘못된 token값"}
 
-    def get_test_case(self):
-        ERAPI().save_games(31131392)
-        ERAPI().save_games(31130633)
+    def setting_base_datas(self):
+        BaseDB()
 
-    def make_main_py(self):
-        main = open("main.py", "w")
-        main.close()
+    def create_main(self):
+        createfile("main.py")
+
+    def db_dir(self):
+        self.view.db_dir()
+        dir = self.con.db_dir()
+        self.env.put({"DB_DIR": dir})
 
 
-model = Apimodel()
-view = Apiview()
-controller = Apicontroller(model, view)
-controller.create_folders()
-controller.get_api()
-controller.get_test_case()
-# controller.make_main_py()
-update_game_base_data()
+Model()
