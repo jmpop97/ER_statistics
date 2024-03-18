@@ -38,7 +38,7 @@ class Tier:
         # return name
 
 
-class game_DB:
+class GameDB:
     def __init__(
         self,
         types: list = ["Colbalt", "Normal", "Rank"],
@@ -61,3 +61,23 @@ class game_DB:
                 f"{self.root_dir}/Ver{major_ver}.{minor_ver}_{type_name}*"
             )
         self.game_list = [re.split("[_.]", file)[-2] for file in self.dir_list]
+
+
+class GameType:
+    def __init__(self) -> None:
+        with open("./handmadeDB/game_type.json", "r", encoding="utf-8") as f:
+            self.type_num = json.load(f)
+
+        self.num_type = {}
+        for key, value in self.type_num.items():
+            self.num_type[value] = key
+
+
+class GameVerson:
+    def __init__(self) -> None:
+        file_name = "./setting/game_version.json"
+        with open(file_name, "r", encoding="utf-8") as f:
+            lastest_version = json.load(f)
+        self.major = lastest_version.get("CURRENT_GAME_MAJOR_VERSION", 0)
+        self.minor = lastest_version.get("CURRENT_GAME_MINOR_VERSION", 0)
+        pass

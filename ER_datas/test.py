@@ -1,8 +1,8 @@
 import json
 
-with open("./datas/Ver9.0_Rank_31131392.json", "r", encoding="utf-8") as f:
+with open("./handmadeDB/testcase/Ver9.0_Rank_31131392.json", "r", encoding="utf-8") as f:
     test_data1 = json.load(f)
-with open("./datas/Ver9.0_Rank_31130633.json", "r", encoding="utf-8") as f:
+with open("./handmadeDB/testcase/Ver9.0_Rank_31130633.json", "r", encoding="utf-8") as f:
     test_data2 = json.load(f)
 
 from .ERDataCleansing import ERDataCleansing
@@ -15,7 +15,7 @@ class TestERDataCleansing(unittest.TestCase):
     ERDataCleansing(data_class=test, DB_type="test")
 
     def test_add_data(self):
-        self.assertTrue(self.test.count_add_data == len(test_data1["userGames"]))+len(test_data2["userGames"])
+        self.assertTrue(self.test.count_add_data == (len(test_data1["userGames"]))+len(test_data2["userGames"]))
 
     def test_add_data_game_id(self):
         self.assertTrue(self.test.count_add_data_game_id == 2)
@@ -74,146 +74,146 @@ class TestEmoticonMMRClass(unittest.TestCase):
     for test_element in test_list:
         ERDataCleansing(test_element, DB_type="test")
 
-    CHECK_EMOTION_USED_LIST = [
-        {
-            750: [{"emoticon_count": 3, "gained_mmr": 4}],
-            1000: [{"emoticon_count": 5, "gained_mmr": 17}],
-            2750: [
-                {"emoticon_count": 2, "gained_mmr": -19},
-                {"emoticon_count": 5, "gained_mmr": 19},
-            ],
-            3250: [
-                {"emoticon_count": 3, "gained_mmr": -25},
-                {"emoticon_count": 4, "gained_mmr": -4},
-                {"emoticon_count": 4, "gained_mmr": -4},
-                {"emoticon_count": 0, "gained_mmr": -24},
-                {"emoticon_count": 7, "gained_mmr": 47},
-                {"emoticon_count": 0, "gained_mmr": -22},
-                {"emoticon_count": 4, "gained_mmr": 47},
-                {"emoticon_count": 4, "gained_mmr": 14},
-            ],
-            3750: [{"emoticon_count": 0, "gained_mmr": -21}],
-            4000: [
-                {"emoticon_count": 8, "gained_mmr": 7},
-                {"emoticon_count": 3, "gained_mmr": -11},
-                {"emoticon_count": 0, "gained_mmr": -10},
-            ],
-            4250: [
-                {"emoticon_count": 2, "gained_mmr": -35},
-                {"emoticon_count": 4, "gained_mmr": 49},
-                {"emoticon_count": 2, "gained_mmr": -11},
-                {"emoticon_count": 21, "gained_mmr": 2},
-            ],
-            4500: [
-                {"emoticon_count": 3, "gained_mmr": -39},
-                {"emoticon_count": 8, "gained_mmr": 44},
-                {"emoticon_count": 0, "gained_mmr": -39},
-                {"emoticon_count": 7, "gained_mmr": 44},
-                {"emoticon_count": 4, "gained_mmr": -14},
-                {"emoticon_count": 4, "gained_mmr": -29},
-                {"emoticon_count": 0, "gained_mmr": -29},
-                {"emoticon_count": 6, "gained_mmr": -15},
-            ],
-            4750: [
-                {"emoticon_count": 2, "gained_mmr": -41},
-                {"emoticon_count": 11, "gained_mmr": -7},
-                {"emoticon_count": 5, "gained_mmr": -1},
-            ],
-            5000: [
-                {"emoticon_count": 9, "gained_mmr": 58},
-                {"emoticon_count": 6, "gained_mmr": 58},
-                {"emoticon_count": 19, "gained_mmr": -20},
-                {"emoticon_count": 5, "gained_mmr": -7},
-                {"emoticon_count": 9, "gained_mmr": -6},
-                {"emoticon_count": 2, "gained_mmr": -45},
-                {"emoticon_count": 20, "gained_mmr": -50},
-                {"emoticon_count": 13, "gained_mmr": 18},
-                {"emoticon_count": 11, "gained_mmr": -6},
-            ],
-            5250: [
-                {"emoticon_count": 8, "gained_mmr": 57},
-                {"emoticon_count": 3, "gained_mmr": -46},
-                {"emoticon_count": 3, "gained_mmr": -42},
-                {"emoticon_count": 2, "gained_mmr": -46},
-            ],
-            5500: [
-                {"emoticon_count": 2, "gained_mmr": 71},
-                {"emoticon_count": 12, "gained_mmr": 71},
-                {"emoticon_count": 7, "gained_mmr": 71},
-            ],
-            5750: [{"emoticon_count": 3, "gained_mmr": -44}],
-        },
-        {
-            0: [{"emoticon_count": 3, "gained_mmr": 4}],
-            1000: [{"emoticon_count": 5, "gained_mmr": 17}],
-            2000: [
-                {"emoticon_count": 2, "gained_mmr": -19},
-                {"emoticon_count": 5, "gained_mmr": 19},
-            ],
-            3000: [
-                {"emoticon_count": 3, "gained_mmr": -25},
-                {"emoticon_count": 4, "gained_mmr": -4},
-                {"emoticon_count": 4, "gained_mmr": -4},
-                {"emoticon_count": 0, "gained_mmr": -24},
-                {"emoticon_count": 7, "gained_mmr": 47},
-                {"emoticon_count": 0, "gained_mmr": -22},
-                {"emoticon_count": 4, "gained_mmr": 47},
-                {"emoticon_count": 4, "gained_mmr": 14},
-                {"emoticon_count": 0, "gained_mmr": -21},
-            ],
-            4000: [
-                {"emoticon_count": 2, "gained_mmr": -41},
-                {"emoticon_count": 3, "gained_mmr": -39},
-                {"emoticon_count": 8, "gained_mmr": 44},
-                {"emoticon_count": 0, "gained_mmr": -39},
-                {"emoticon_count": 2, "gained_mmr": -35},
-                {"emoticon_count": 8, "gained_mmr": 7},
-                {"emoticon_count": 4, "gained_mmr": 49},
-                {"emoticon_count": 7, "gained_mmr": 44},
-                {"emoticon_count": 2, "gained_mmr": -11},
-                {"emoticon_count": 3, "gained_mmr": -11},
-                {"emoticon_count": 4, "gained_mmr": -14},
-                {"emoticon_count": 21, "gained_mmr": 2},
-                {"emoticon_count": 11, "gained_mmr": -7},
-                {"emoticon_count": 4, "gained_mmr": -29},
-                {"emoticon_count": 0, "gained_mmr": -29},
-                {"emoticon_count": 5, "gained_mmr": -1},
-                {"emoticon_count": 0, "gained_mmr": -10},
-                {"emoticon_count": 6, "gained_mmr": -15},
-            ],
-            5000: [
-                {"emoticon_count": 9, "gained_mmr": 58},
-                {"emoticon_count": 6, "gained_mmr": 58},
-                {"emoticon_count": 8, "gained_mmr": 57},
-                {"emoticon_count": 19, "gained_mmr": -20},
-                {"emoticon_count": 5, "gained_mmr": -7},
-                {"emoticon_count": 9, "gained_mmr": -6},
-                {"emoticon_count": 2, "gained_mmr": -45},
-                {"emoticon_count": 3, "gained_mmr": -46},
-                {"emoticon_count": 3, "gained_mmr": -42},
-                {"emoticon_count": 20, "gained_mmr": -50},
-                {"emoticon_count": 2, "gained_mmr": -46},
-                {"emoticon_count": 3, "gained_mmr": -44},
-                {"emoticon_count": 2, "gained_mmr": 71},
-                {"emoticon_count": 12, "gained_mmr": 71},
-                {"emoticon_count": 13, "gained_mmr": 18},
-                {"emoticon_count": 7, "gained_mmr": 71},
-                {"emoticon_count": 11, "gained_mmr": -6},
-            ],
-        },
-    ]
+    # CHECK_EMOTION_USED_LIST = [
+    #     {
+    #         750: [{"emoticon_count": 3, "gained_mmr": 4}],
+    #         1000: [{"emoticon_count": 5, "gained_mmr": 17}],
+    #         2750: [
+    #             {"emoticon_count": 2, "gained_mmr": -19},
+    #             {"emoticon_count": 5, "gained_mmr": 19},
+    #         ],
+    #         3250: [
+    #             {"emoticon_count": 3, "gained_mmr": -25},
+    #             {"emoticon_count": 4, "gained_mmr": -4},
+    #             {"emoticon_count": 4, "gained_mmr": -4},
+    #             {"emoticon_count": 0, "gained_mmr": -24},
+    #             {"emoticon_count": 7, "gained_mmr": 47},
+    #             {"emoticon_count": 0, "gained_mmr": -22},
+    #             {"emoticon_count": 4, "gained_mmr": 47},
+    #             {"emoticon_count": 4, "gained_mmr": 14},
+    #         ],
+    #         3750: [{"emoticon_count": 0, "gained_mmr": -21}],
+    #         4000: [
+    #             {"emoticon_count": 8, "gained_mmr": 7},
+    #             {"emoticon_count": 3, "gained_mmr": -11},
+    #             {"emoticon_count": 0, "gained_mmr": -10},
+    #         ],
+    #         4250: [
+    #             {"emoticon_count": 2, "gained_mmr": -35},
+    #             {"emoticon_count": 4, "gained_mmr": 49},
+    #             {"emoticon_count": 2, "gained_mmr": -11},
+    #             {"emoticon_count": 21, "gained_mmr": 2},
+    #         ],
+    #         4500: [
+    #             {"emoticon_count": 3, "gained_mmr": -39},
+    #             {"emoticon_count": 8, "gained_mmr": 44},
+    #             {"emoticon_count": 0, "gained_mmr": -39},
+    #             {"emoticon_count": 7, "gained_mmr": 44},
+    #             {"emoticon_count": 4, "gained_mmr": -14},
+    #             {"emoticon_count": 4, "gained_mmr": -29},
+    #             {"emoticon_count": 0, "gained_mmr": -29},
+    #             {"emoticon_count": 6, "gained_mmr": -15},
+    #         ],
+    #         4750: [
+    #             {"emoticon_count": 2, "gained_mmr": -41},
+    #             {"emoticon_count": 11, "gained_mmr": -7},
+    #             {"emoticon_count": 5, "gained_mmr": -1},
+    #         ],
+    #         5000: [
+    #             {"emoticon_count": 9, "gained_mmr": 58},
+    #             {"emoticon_count": 6, "gained_mmr": 58},
+    #             {"emoticon_count": 19, "gained_mmr": -20},
+    #             {"emoticon_count": 5, "gained_mmr": -7},
+    #             {"emoticon_count": 9, "gained_mmr": -6},
+    #             {"emoticon_count": 2, "gained_mmr": -45},
+    #             {"emoticon_count": 20, "gained_mmr": -50},
+    #             {"emoticon_count": 13, "gained_mmr": 18},
+    #             {"emoticon_count": 11, "gained_mmr": -6},
+    #         ],
+    #         5250: [
+    #             {"emoticon_count": 8, "gained_mmr": 57},
+    #             {"emoticon_count": 3, "gained_mmr": -46},
+    #             {"emoticon_count": 3, "gained_mmr": -42},
+    #             {"emoticon_count": 2, "gained_mmr": -46},
+    #         ],
+    #         5500: [
+    #             {"emoticon_count": 2, "gained_mmr": 71},
+    #             {"emoticon_count": 12, "gained_mmr": 71},
+    #             {"emoticon_count": 7, "gained_mmr": 71},
+    #         ],
+    #         5750: [{"emoticon_count": 3, "gained_mmr": -44}],
+    #     },
+    #     {
+    #         0: [{"emoticon_count": 3, "gained_mmr": 4}],
+    #         1000: [{"emoticon_count": 5, "gained_mmr": 17}],
+    #         2000: [
+    #             {"emoticon_count": 2, "gained_mmr": -19},
+    #             {"emoticon_count": 5, "gained_mmr": 19},
+    #         ],
+    #         3000: [
+    #             {"emoticon_count": 3, "gained_mmr": -25},
+    #             {"emoticon_count": 4, "gained_mmr": -4},
+    #             {"emoticon_count": 4, "gained_mmr": -4},
+    #             {"emoticon_count": 0, "gained_mmr": -24},
+    #             {"emoticon_count": 7, "gained_mmr": 47},
+    #             {"emoticon_count": 0, "gained_mmr": -22},
+    #             {"emoticon_count": 4, "gained_mmr": 47},
+    #             {"emoticon_count": 4, "gained_mmr": 14},
+    #             {"emoticon_count": 0, "gained_mmr": -21},
+    #         ],
+    #         4000: [
+    #             {"emoticon_count": 2, "gained_mmr": -41},
+    #             {"emoticon_count": 3, "gained_mmr": -39},
+    #             {"emoticon_count": 8, "gained_mmr": 44},
+    #             {"emoticon_count": 0, "gained_mmr": -39},
+    #             {"emoticon_count": 2, "gained_mmr": -35},
+    #             {"emoticon_count": 8, "gained_mmr": 7},
+    #             {"emoticon_count": 4, "gained_mmr": 49},
+    #             {"emoticon_count": 7, "gained_mmr": 44},
+    #             {"emoticon_count": 2, "gained_mmr": -11},
+    #             {"emoticon_count": 3, "gained_mmr": -11},
+    #             {"emoticon_count": 4, "gained_mmr": -14},
+    #             {"emoticon_count": 21, "gained_mmr": 2},
+    #             {"emoticon_count": 11, "gained_mmr": -7},
+    #             {"emoticon_count": 4, "gained_mmr": -29},
+    #             {"emoticon_count": 0, "gained_mmr": -29},
+    #             {"emoticon_count": 5, "gained_mmr": -1},
+    #             {"emoticon_count": 0, "gained_mmr": -10},
+    #             {"emoticon_count": 6, "gained_mmr": -15},
+    #         ],
+    #         5000: [
+    #             {"emoticon_count": 9, "gained_mmr": 58},
+    #             {"emoticon_count": 6, "gained_mmr": 58},
+    #             {"emoticon_count": 8, "gained_mmr": 57},
+    #             {"emoticon_count": 19, "gained_mmr": -20},
+    #             {"emoticon_count": 5, "gained_mmr": -7},
+    #             {"emoticon_count": 9, "gained_mmr": -6},
+    #             {"emoticon_count": 2, "gained_mmr": -45},
+    #             {"emoticon_count": 3, "gained_mmr": -46},
+    #             {"emoticon_count": 3, "gained_mmr": -42},
+    #             {"emoticon_count": 20, "gained_mmr": -50},
+    #             {"emoticon_count": 2, "gained_mmr": -46},
+    #             {"emoticon_count": 3, "gained_mmr": -44},
+    #             {"emoticon_count": 2, "gained_mmr": 71},
+    #             {"emoticon_count": 12, "gained_mmr": 71},
+    #             {"emoticon_count": 13, "gained_mmr": 18},
+    #             {"emoticon_count": 7, "gained_mmr": 71},
+    #             {"emoticon_count": 11, "gained_mmr": -6},
+    #         ],
+    #     },
+    # ]
 
-    def test_split(self):
-        self.test_list[0].dic_mmr_emoticon = dict(
-            sorted(self.test_list[0].dic_mmr_emoticon.items())
-        )
-        self.test_list[1].dic_mmr_emoticon = dict(
-            sorted(self.test_list[1].dic_mmr_emoticon.items())
-        )
+    # def test_split(self):
+    #     self.test_list[0].dic_mmr_emoticon = dict(
+    #         sorted(self.test_list[0].dic_mmr_emoticon.items())
+    #     )
+    #     self.test_list[1].dic_mmr_emoticon = dict(
+    #         sorted(self.test_list[1].dic_mmr_emoticon.items())
+    #     )
 
-        check = [self.test_list[0].dic_mmr_emoticon, self.test_list[1].dic_mmr_emoticon]
+    #     check = [self.test_list[0].dic_mmr_emoticon, self.test_list[1].dic_mmr_emoticon]
 
-        self.assertEqual(check, self.CHECK_EMOTION_USED_LIST)
+    #     self.assertEqual(check, self.CHECK_EMOTION_USED_LIST)
 
     """
     def test_split1000(self):

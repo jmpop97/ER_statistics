@@ -5,10 +5,13 @@ from ER_datas.data_class import DataClass
 from .rank_mmr import mmr_charges
 from .tier_mmr import Tier
 from ER_apis.ER_DB import query_mongoDB, create_query_version
+from public_setting.variable import GameDB, GameVerson
+from dotenv import load_dotenv
+from public_setting.function import createfile
 
 # game_data 가져오기
 
-
+load_dotenv()
 import json
 from glob import glob
 
@@ -73,6 +76,7 @@ def ERDataCleansing(
                     major_version, minor_version, mode
                 )
             )
+
         for file_name in game_list:
             with open(file_name, "r", encoding="utf-8") as f:
                 game_datas = json.load(f)
@@ -87,3 +91,44 @@ def ERDataCleansing(
         data_class.last_calculate()
         print("유저 : ", data_class.user_count_num)
         print("게임 : ", data_class.game_count_num)
+
+
+class ERDataCleansing:
+    def __init__(
+        self,
+        data_class=DataClass(),
+        game_mode=["Rank"],
+        DB_type: str = "",
+        major_version: int = -1,
+        minor_version: int = -1,
+    ) -> None:
+        game_verson = GameVerson()
+        major_version, minor_version = game_verson.major, game_verson.minor
+        root_dir = os.environ.get("DB_DIR")
+
+        if DB_type == "test":
+            game_list = glob("./handmadeDB/testcase/*")
+        else:
+            game_list = GameDB(
+                types=game_mode,
+                major_version=[major_version],
+                minor_version=[minor_version],
+                root_dir=root_dir,
+            ).dir_list
+
+        for file_name in game_list:
+            with open(file_name, "r", encoding="utf-8") as f:
+                game_datas = json.load(f)
+            # file_index = str(file_name.split("_")[2]).split(".")[0]
+            # print("Add {0}.json".format(file_index))
+            for user_data in game_datas["userGames"]:
+                """유저 정보"""
+                data_class.add_data(user_data)
+                data_class.user_count()
+            data_class.add_data_game_id()
+            data_class.game_count()
+        data_class.last_calculate()
+        print("유저 : ", data_class.user_count_num)
+        print("게임 : ", data_class.game_count_num)
+
+        pass
