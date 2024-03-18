@@ -51,6 +51,9 @@ python -m unittest
 <br>공식 api 받는함수
     * ERAPI().save_games(start_game: int,n: int = 1,second: int = 1,game_type: list = ["Rank", "Normal", "Cobalt"],duplication: bool = True,reverse: bool = True,d: int = 1,root_dir: str = "")
 <br>게임 데이터 저장
+    * ERAPI_BASE_DB().save_updated_game_base_data(token, language="Korean")
+<br>게임의 다양한 baseDB저장(ex :캐릭터 이름)
+
 ## ER_datas
 * ERDataCleansing.py
     * ERDataCleansing(data_class=DataClass(),game_mode=["Rank"],DB_type: str = "",major_version: int = -1,minor_version: int = -1)  
@@ -107,6 +110,12 @@ python -m unittest
         <br>250단위의 mmr별 데이터
         * datas[condition] : list = [data , ...] 
         condition = "gameRank", "mmrRank", "mmrGainInGame", "mmrBefore_range250"
+
+
+* update_game_base_data.py
+    *BaseDB()
+    <br>BaseDB 파일화
+
 ## ER_docker
 * crawler.py
     <br>데이터 크롤링
@@ -144,6 +153,15 @@ python -m unittest
     * FigRankPerMMR 
         <br>mmr 랭킹 비율 (다이아 부터 top3에서 큰차이가 있음)
 ## public_setting
+* function.py
+    * createFolder(directory)
+    <br>폴더 생성
+    * createfile(name)
+    <br>파일생성
+    * ENV().put(dic:dict)
+    <br>env 파일의 데이터 수정
+
+    
 * variable.py
     * Tier
     <br>게임 버전에 따른 티어 값 대입 필요
@@ -155,13 +173,21 @@ python -m unittest
     <br>티어에 따른 입장료값
     <br>n : int = mmr
     <br>n : str = 티어
-    * game_DB(types: list = ["Colbalt", "Normal", "Rank"],
+    * GameDB(types: list = ["Colbalt", "Normal", "Rank"],
 major_version: int = [`'*'`],minor_version: int = [`'*'`],root_dir: str = "")
-<br>DB설정
+    <br>DB설정
         - game_list : list
         <br>DB에 있는 게임 id
         - dir_list : list
-        <br>DB의 게임 데이터 
+        <br>DB의 게임 데이터
+    * GameType
+    <br>랭크,일반,코발트
+        - type_num = {이름 : 번호}
+        - num_type = {번호 : 이름}
+    * GameVerson
+    <br> major=15(시즌3)
+        - major
+        - minor
 
 # TODO
 1. 깃 버전에 따른 업데이트 함수
