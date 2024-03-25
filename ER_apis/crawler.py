@@ -10,6 +10,8 @@ import pandas as pd
 import time
 from bs4 import BeautifulSoup
 import pandas as pd
+from public_setting.function import Json
+import os
 
 OK_RESPONSE = 404
 REQUEST_CODES = "./setting/request_code.json"
@@ -98,6 +100,7 @@ class DakPlayerCrawler:
         self.season = "/matches?season=SEASON_" + str(season) + "&gameMode=RANK&page="
         self.page_num = 1
         self.mmr_change = []
+        self.player_name = player_name
 
     def crawling_mmr_change(self):
         crawling_url = self.base_url + self.player_name + self.season
@@ -144,3 +147,7 @@ class DakPlayerCrawler:
 
     def get_mmr_change(self):
         return self.mmr_change
+
+    def save(self):
+        db_dir = os.environ.get("DB_DIR", "./datas")
+        Json().save(f"{db_dir}/user/{self.player_name}.json", {"mmr": self.mmr_change})

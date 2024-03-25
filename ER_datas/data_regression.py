@@ -1,4 +1,4 @@
-from ER_docker.crawler import DakPlayerCrawler
+from ER_apis.crawler import DakPlayerCrawler
 from sklearn.linear_model import LinearRegression
 
 # import statsmodels.api as sm
