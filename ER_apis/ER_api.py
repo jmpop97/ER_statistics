@@ -225,6 +225,7 @@ class ERAPI:
         self.game_type = game_type
         self.game_list = GameDB(root_dir=root_dir).game_list
         self.root_dir = root_dir
+        createFolder(root_dir)
         reverse_n = -1 if reverse else 1
 
         while self.View.count < self.View.end - 1:

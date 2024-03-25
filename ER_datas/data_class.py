@@ -4,6 +4,9 @@ import numpy as np
 from ER_datas.id_characterName import LoadCharacter
 import json
 import re
+from ER_apis.crawler import DakPlayerCrawler
+from public_setting.function import Json
+import os
 
 calculater = ["/", "*", "+", "-", "(", ")", "%", "//"]
 
@@ -22,6 +25,33 @@ def _split_caclulater(name: str = "") -> list:
             _change = _changed
         _dic[_n] = _dic.get(_n, "") + i
     return _dic
+
+
+class User:
+    def __init__(self, user_name, season=12, update=False, save=True) -> None:
+        self.user_name = user_name
+        self.season = season
+        self.save = save
+        if update:
+            self.user_data = self.crawling()
+        else:
+            response = self.open_DB()
+            if response.get("mmr"):
+                self.user_data = response.get("mmr")
+            else:
+                self.user_data = self.crawling()
+
+    def open_DB(self):
+        db_dir = os.environ.get("DB_DIR", "./datas")
+        root_dir = f"{db_dir}/user/{self.user_name}.json"
+        return Json().read(root_dir)
+
+    def crawling(self):
+        craw = DakPlayerCrawler(self.user_name, self.season)
+        craw.crawling_mmr_change()
+        if self.save:
+            craw.save()
+        return craw.mmr_change
 
 
 class DataClass:
@@ -444,20 +474,6 @@ class Hyperloop(DataClass):
                 self.dic_Hyperloop_tier.items(), key=lambda x: rank_order.index(x[0])
             )
         }
-
-
-"""
-#크레딧으로 빌드업 템 만드는것과 후반 보면서 빌드하는 것에 차이(gainMMR)
-class CreditBuildUpMMR(DataClass):
-    def __init__(self) -> None:
-        super().__init__()
-
-    def add_data(self, user_data):
-        return super().add_data(user_data)
-
-    def last_calculate(self):
-        return super().last_calculate()
-"""
 
 
 class GetMMRFromRankByTier(DataClass):
