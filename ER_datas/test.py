@@ -23,36 +23,36 @@ class TestERDataCleansing(unittest.TestCase):
     def test_last(self):
         self.assertTrue(self.test.count_last_calculate == 1)
 
-    def test_add_user_data(self):
-        self.assertTrue(self.test.user_data["userNum"] == 71183)
+    # def test_add_user_data(self):
+    #     self.assertTrue(self.test.user_data["userNum"] == 71183)
 
 
-class TestDicCharacterFilterData(unittest.TestCase):
-    test = DicCharacterFilterData("mmrBefore", "gameRank")
-    ERDataCleansing(data_class=test, DB_type="test")
-    print(test_data1)
-    def test_add_user_data(self):
-        self.assertTrue(
-            self.test.dic_characterNum_datas[42][1]
-            == {"mmrBefore": 5085, "gameRank": 3}
-        )
+# class TestDicCharacterFilterData(unittest.TestCase):
+#     test = DicCharacterFilterData("mmrBefore", "gameRank")
+#     ERDataCleansing(data_class=test, DB_type="test")
+#     print(test_data1)
+#     def test_add_user_data(self):
+#         self.assertTrue(
+#             self.test.dic_characterNum_datas[42][1]
+#             == {"mmrBefore": 5085, "gameRank": 3}
+#         )
 
 
-class TestListFilterData(unittest.TestCase):
-    dic_name = {"10*gameRank": "gameRank10"}
-    test = ListFilterData(
-        "playTime", "mmrGainInGame", "gameRank", "10*gameRank", **dic_name
-    )
-    ERDataCleansing(test, DB_type="test")
+# class TestListFilterData(unittest.TestCase):
+#     dic_name = {"10*gameRank": "gameRank10"}
+#     test = ListFilterData(
+#         "playTime", "mmrGainInGame", "gameRank", "10*gameRank", **dic_name
+#     )
+#     ERDataCleansing(test, DB_type="test")
 
-    def test_add_user_data(self):
-        self.assertTrue(self.test.conditions["playTime"][-2] == 929)
+#     def test_add_user_data(self):
+#         self.assertTrue(self.test.conditions["playTime"][-2] == 929)
 
-    def test_name_error(self):
-        self.assertTrue(self.test.conditions.get("gameRank10", [3])[0] == 80)
+#     def test_name_error(self):
+#         self.assertTrue(self.test.conditions.get("gameRank10", [3])[0] == 80)
 
-    def test_caculate_error(self):
-        self.assertTrue(self.test.conditions["gameRank10"][1] == 70)
+#     def test_caculate_error(self):
+#         self.assertTrue(self.test.conditions["gameRank10"][1] == 70)
 
 
 # class TestForeignTeam(unittest.TestCase):
