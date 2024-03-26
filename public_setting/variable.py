@@ -31,11 +31,17 @@ class Tier:
                     return cost
             cost += ((n - start) // end) * 2
             return cost
-            print("int")
-        # for tier_name,start,end,cost in self.tier_DB.values():
-        #     if tier_name==name:
-        #         return cost
-        # return name
+
+    def cost_mmr(self, cost_value: int = 0) -> int:
+        mmr_value = 0
+        mmr_tier = "아이언4"
+        for name, start, end, cost in self.tier_DB.values():
+            if cost_value >= cost:
+                mmr_value = end
+                mmr_tier = name
+        if cost_value >= cost:
+            mmr_value = start + ((cost_value - cost) // 2 + 1) * end
+        return mmr_value, mmr_tier
 
 
 class GameDB:
@@ -81,3 +87,17 @@ class GameVerson:
         self.major = lastest_version.get("CURRENT_GAME_MAJOR_VERSION", 0)
         self.minor = lastest_version.get("CURRENT_GAME_MINOR_VERSION", 0)
         pass
+
+
+class GetMMR:
+    def __init__(self):
+        with open("./handmadeDB/GetMMR/getmmr.json", "r", encoding="utf-8") as f:
+            self.data = json.load(f)
+
+    def get_mmr(
+        self, rank: int = 1, kill: int = 0, sub_kill: int = 0, field_kill: int = 0
+    ) -> int:
+        mmr = 0
+        for i, j in zip(self.data[str(rank)], [1, kill, sub_kill, field_kill]):
+            mmr += i * j
+        return mmr
