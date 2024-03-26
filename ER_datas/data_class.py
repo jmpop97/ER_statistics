@@ -1,5 +1,5 @@
 from typing import Any
-from .tier_mmr import Tier
+from public_setting.variable import Tier
 import numpy as np
 from ER_datas.id_characterName import LoadCharacter
 import json
@@ -36,8 +36,8 @@ class User:
             self.user_data = self.crawling()
         else:
             response = self.open_DB()
-            if response.get("mmr"):
-                self.user_data = response.get("mmr")
+            if not response.get(400):
+                self.user_data = response
             else:
                 self.user_data = self.crawling()
 
@@ -51,7 +51,7 @@ class User:
         craw.crawling_mmr_change()
         if self.save:
             craw.save()
-        return craw.mmr_change
+        return craw.datas
 
 
 class DataClass:
@@ -159,6 +159,7 @@ class ListFilterData(DataClass):
             self.conditions[self.name_dic[condition_caculate]] += [eval(condition_str)]
 
 
+'''
 class ForeignTeam(DataClass):
     def __init__(self, *conditions):
         self.conditions = set([*conditions, "mmrBefore", "mmrGainInGame"])
@@ -229,6 +230,7 @@ class ForeignTeam(DataClass):
         for team in teams:
             print("team", team)
             teams[team]["tier"].mean()
+'''
 
 
 # 이모티콘 소통의 유의미 한가?(현 mmr, 획득 mmr)
