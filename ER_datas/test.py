@@ -30,7 +30,7 @@ class TestERDataCleansing(unittest.TestCase):
 class TestDicCharacterFilterData(unittest.TestCase):
     test = DicCharacterFilterData("mmrBefore", "gameRank")
     ERDataCleansing(data_class=test, DB_type="test")
-
+    print(test_data1)
     def test_add_user_data(self):
         self.assertTrue(
             self.test.dic_characterNum_datas[42][1]

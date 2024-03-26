@@ -31,11 +31,6 @@ class Tier:
                     return cost
             cost += ((n - start) // end) * 2
             return cost
-            print("int")
-        # for tier_name,start,end,cost in self.tier_DB.values():
-        #     if tier_name==name:
-        #         return cost
-        # return name
 
     def cost_mmr(self, cost_value: int = 0) -> int:
         mmr_value = 0

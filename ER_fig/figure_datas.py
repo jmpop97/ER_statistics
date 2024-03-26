@@ -454,6 +454,8 @@ class UserMMRWithDistribution:
         plt.plot(mmrs, y[::d], color="C0", linewidth=1, linestyle="-")
         plt.axvline(x=self.result[0], color="r", linestyle="--", linewidth=1)
         self.figtier()
+        plt.figure(2)
+        plt.plot(x, y, color="C0", linewidth=1, linestyle="-")
         plt.show()
 
     def figtier(self):
