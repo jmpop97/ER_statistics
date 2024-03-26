@@ -1,4 +1,4 @@
-from ER_docker.crawler import DakPlayerCrawler
+from ER_apis.crawler import DakPlayerCrawler
 from sklearn.linear_model import LinearRegression
 
 # import statsmodels.api as sm
@@ -10,7 +10,7 @@ class MMRRegression:
     def __init__(self, player_name, season):
         self.c = DakPlayerCrawler(player_name, season)
         self.c.crawling_mmr_change()
-        mmr_change = self.c.get_mmr_change()
+        mmr_change = self.c.datas["MMR"]
         self.data = np.array(mmr_change, dtype=float)
         self.model_module = ""
 
