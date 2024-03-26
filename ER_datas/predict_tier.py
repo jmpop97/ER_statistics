@@ -3,17 +3,16 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from keras.layers import Dense, LSTM
 from keras.models import Sequential
-from ER_docker.crawler import DakPlayerCrawler
+from ER_datas.data_class import User
 
 
 class Predict_Tier:
     def __init__(self, player_name, season):
-        self.c = DakPlayerCrawler(player_name, season)
+        self.c = User(player_name, season)
         self.mmrBefore = None
 
     def get_mmr_data(self):
-        self.c.crawling_mmr_change()
-        self.mmrBefore = self.c.get_mmr_change()
+        self.mmrBefore=self.c.user_data["MMR"]
         print(self.mmrBefore)
 
     def LSTM(self):
