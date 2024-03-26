@@ -5,17 +5,12 @@ import json
 from .cryption_secret import AESCipher
 import requests
 import time
-from ER_apis.ER_api import request_to_ER_api, request_region_rankers_eternity_cut
+from ER_apis.ER_api import request_to_ER_api
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 
-NORMAL_MODE_NUMBER = int(os.environ.get("NORMAL_MODE_NUMBER"))
-RANK_MODE_NUMBER = int(os.environ.get("RANK_MODE_NUMBER"))
-COBALT_MODE_NUMBER = int(os.environ.get("COBALT_MODE_NUMBER"))
-OK_RESPONSE = int(os.environ.get("OK_RESPONSE"))
-SEASON_ID = int(os.environ.get("SEASON_ID"))
 ETERNITY_CUT = 199
 DEMIGOD_CUT = 699
 
@@ -43,10 +38,9 @@ def access_RW_mongoDB() -> MongoClient:
 
 
 def test_access_mongoDB() -> MongoClient:
-    (
-        RW_EC2_DB_CONNECTION_STRING,
-        READ_EC2_DB_CONNECTION_STRING,
-    ) = get_mongoDB_connection_string_from_env()
+    RW_EC2_DB_CONNECTION_STRING, READ_EC2_DB_CONNECTION_STRING = (
+        get_mongoDB_connection_string_from_env()
+    )
     try:
         rw_client = MongoClient(RW_EC2_DB_CONNECTION_STRING, port=27017)
         rw_client.get_database("ERDB")

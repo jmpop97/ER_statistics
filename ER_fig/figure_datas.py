@@ -7,6 +7,10 @@ from ER_datas.data_class import *
 from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.id_characterName import LoadCharacter
 import json
+import pandas as pd
+from public_setting.variable import GetMMR
+from scipy.stats import norm
+from public_setting.variable import Tier
 
 plt.rcParams["font.family"] = "Malgun Gothic"
 plt.rcParams["axes.unicode_minus"] = False
@@ -184,7 +188,7 @@ class FigureType:
         self.plt.title(condition)
 
 
-class TierGetMMr:
+class FigTierGetMMR:
     fig_size_x = 13
     fig_zise_y = 6
     font_size = 6
@@ -209,6 +213,7 @@ class TierGetMMr:
 
     def _tier_get_mmr(self):
         plt.figure(1, figsize=(self.fig_size_x, self.fig_zise_y))
+        plt.title("티어별 mmr 획득량")
         ax = sns.barplot(data=self.db.conditions, y="mmrGainInGame", x="Tier")
         ax.bar_label(ax.containers[0], fontsize=self.font_size)
 
@@ -223,7 +228,7 @@ class TierGetMMr:
             line += 4
 
     def _tier_cost(self):
-        with open("./base_datas/TierMMRCost/TierMMRCost.json", "r") as f:
+        with open("./handmadeDB/TierMMRCost/V13/TierMMRCost.json", "r") as f:
             tier_cost = json.load(f)
         for tier in sorted(set(self.db.conditions["Tier"])):
             self.tier_cost.append(tier_cost.get(str(tier), 2 * tier + 5))
@@ -231,49 +236,232 @@ class TierGetMMr:
 
     def _countplot(self):
         plt.figure(2, figsize=(self.fig_size_x, self.fig_zise_y))
+        plt.title("표본")
         ax = sns.countplot(data=self.db.conditions, x="Tier")
         ax.bar_label(ax.containers[0], fontsize=10)
 
 
-class FigureAll:
-    def hyperloopfig(self):
-        hyper = Hyperloop("mmrBefore", "useHyperLoop")
-        ERDataCleansing(hyper)
-        fig = FigureType()
-        fig.bar_graph_one(db=hyper.dic_Hyperloop_tier)
+class FigTierGetMMRFromRank:
+    def __init__(self) -> None:
+        self.db = GetMMRFromRank()
+        ERDataCleansing(self.db)
+        self.tier_cost = []
+        self.tier = []
 
-    def camerafig(self):
-        camera = Camera_All(
-            "addSurveillanceCamera",
-            "addTelephotoCamera",
-            "mmrGainInGame",
-            "mmrBefore",
-            "gameRank",
-            "characterNum",
+    def plt(self):
+        self._barplot()
+        self._tier_cost_red_line()
+        plt.show()
+
+    def _barplot(self):
+        ax = sns.barplot(
+            data=self.db.datas,
+            x="Tier",
+            y="mmrGainInGame",
+            estimator="mean",
+            order=self.db._mmrRank,
         )
-        ERDataCleansing(camera)
-        fig = FigureType()
-        fig.bar_graph_all(
-            db1=camera.dic_cameraGroup_tier,
-            db2=camera.dic_cameraGroup_Rank,
-            db3=camera.dic_cameraGroup_mmr,
-            db4=camera.dic_cameraGroup_LukeMai,
+        ax = sns.barplot(data=self.db.datas, x="Tier", y="mmrRank", estimator="mean")
+        ax.bar_label(ax.containers[0], label_type="center")
+        ax.bar_label(ax.containers[1], label_type="center")
+
+    def _tier_cost_red_line(self):
+        self._tier_cost()
+        plt.plot(self.tier, self.tier_cost, "r")
+        plt.title("티어별 mmr획득량")
+
+    def _tier_cost(self):
+        with open("./base_datas/TierMMRCost/TierMMRCost.json", "r") as f:
+            tier_cost = json.load(f)
+        for tier in self.db._tier:
+            real_tier = tier * 4 + 3
+            self.tier_cost.append(tier_cost.get(str(real_tier), 2 * real_tier + 5))
+            self.tier.append(self.db._tier[tier])
+
+
+class FigTierGetMMRByRankWithTier:
+    def __init__(self) -> None:
+        self.db = GetMMRFromRankByTier()
+        ERDataCleansing(self.db)
+        self.tier_cost = []
+        self.tier = []
+
+    def plt(self):
+        self._barplot()
+        plt.title("티어별 mmr획득량")
+        plt.show()
+
+    def _barplot(self):
+        ax = sns.barplot(
+            data=self.db.datas,
+            x="gameRank",
+            y="mmrGainInGame",
+            hue="Tier",
+            estimator="mean",
+            order=[8, 7, 6, 5, 4, 3, 2, 1],
+            hue_order=self.db._tier.values(),
         )
 
-    def CharacterClassfig(self):
-        Character = CharacterClass("characterNum")
-        ERDataCleansing(Character)
-        fig = FigureType()
-        fig.bar_graph_one(Character.dic_characterNum_percentage_datas)
 
-    def ForeignTeamFig(self):
-        Foreign = ForeignTeam("mmrBefore", "mmrGainInGame", "language")
-        ERDataCleansing(Foreign)
-        fig = FigureType()
-        fig.bar_graph_one(Foreign.team)
+class FigTierGetMMRByRankWithBeforeMMR:
+    def __init__(self) -> None:
+        self.db = GetMMRFromRank()
+        ERDataCleansing(self.db)
+        self.tier_cost = []
+        self.tier = []
 
-    def EmoticonMMRFig(self):
-        EmoticonMMR = EmoticonMMRClass("mmrBefore", "useEmoticonCount", "mmrGain")
-        ERDataCleansing(EmoticonMMR)
-        fig = FigureType()
-        fig.bar_graph_one(EmoticonMMR.dic_mmr_emoticon)
+    def plt(self):
+        self._barplot()
+        plt.title("mmr별 mmr획득량")
+        plt.show()
+
+    def _barplot(self):
+        # order_list=sorted(list(self.db.datas["range_list"].keys()))
+        plt1 = sns.color_palette("colorblind", len(self.db.range_list))
+        ax = sns.barplot(
+            data=self.db.datas,
+            x="gameRank",
+            y="mmrGainInGame",
+            hue="mmrBefore_range250",
+            estimator="mean",
+            order=[8, 7, 6, 5, 4, 3, 2, 1],
+            palette=plt1,
+            # hue_order=order_list
+        )
+
+
+class FigRankPerTier:
+    def __init__(self) -> None:
+        self.db = GetMMRFromRankByTier()
+        ERDataCleansing(self.db)
+
+    def plt(self):
+        self._barplot()
+        plt.title("티어별 랭킹비율")
+        plt.show()
+
+    def _barplot(self):
+        self.db.datas["Tier"] = pd.Categorical(
+            self.db.datas["Tier"], categories=self.db._tier.values()
+        )
+        ax = sns.displot(
+            data=self.db.datas,
+            x="Tier",
+            hue="gameRank",
+            multiple="fill",
+        )
+
+
+class FigRankPerMMR:
+    def __init__(self) -> None:
+        self.db = GetMMRFromRank()
+        ERDataCleansing(self.db)
+
+    def plt(self):
+        self._barplot()
+        plt.title("mmr별 랭킹비율")
+        plt.show()
+
+    def _barplot(self):
+        ax = sns.displot(
+            data=self.db.datas,
+            x="mmrBefore_range250",
+            hue="gameRank",
+            multiple="fill",
+        )
+
+
+class FigUserRanktoTK:
+    def __init__(self, username) -> None:
+        user = User(username).user_data
+        dic = {}
+        l = len(user["MMR"])
+        print("표본 : ", l)
+        for rank, mmr, tk in zip(*user.values()):
+            dic[(rank, tk)] = dic.get((rank, tk), 0) + 1
+        user = {
+            "RANK": [],
+            "TK": [],
+            "MEAN": [],
+        }
+        for (rank, tk), value in dic.items():
+            user["RANK"].append(rank)
+            user["TK"].append(tk)
+            user["MEAN"].append(100 * value / l)
+        # print(dic)
+
+        plt.rcParams["font.family"] = "Malgun Gothic"
+        df = pd.DataFrame(data=user, columns=list(user.keys()))
+        df = df.sort_values(by=["RANK"], ascending=True)
+        df = df.pivot(index="TK", columns="RANK", values="MEAN")
+        sns.heatmap(df, annot=True, cmap="YlGnBu")
+        plt.show()
+
+
+class UserMMRWithDistribution:
+    def __init__(self, user_name, season=12, update=False, save=True) -> None:
+        self.user = User(user_name, season=season, update=update, save=save).user_data
+        self.tier = Tier()
+        self.db_set()
+        self.fig()
+
+    def db_set(self):
+        user = self.user
+        dic = {}
+        l = len(user["MMR"])
+        print("표본 : ", l)
+        for rank, mmr, tk in zip(*user.values()):
+            dic[(rank, tk)] = dic.get((rank, tk), 0) + 1
+        user = {"RANK": [], "TK": [], "MEAN": [], "GETMMR": []}
+        getmmr = GetMMR()
+        for (rank, tk), value in dic.items():
+            if rank[0] == "#":
+                user["RANK"].append(rank)
+                user["TK"].append(tk)
+                user["MEAN"].append(value / l)
+                user["GETMMR"].append(getmmr.get_mmr(rank=int(rank[1]), kill=tk))
+        self.user = user
+
+    def fig(self):
+        tier = self.tier
+        user = self.user
+        n = 500
+        d = 1000
+        x = np.linspace(0, n, d * n + 1, endpoint=True)
+        dy = np.linspace(0, 0, d * n + 1, endpoint=True)
+
+        count = 1
+        count_zero = 0
+        for per, mmr in zip(user["MEAN"], user["GETMMR"]):
+            v = (1 - per) * per * mmr
+            m = mmr
+            ddy = norm.pdf(x, loc=m, scale=v)
+            if not ddy[0] >= 0:
+                count_zero += per
+            else:
+                count += 1
+                dy += ddy * per
+        y = 0.5 - dy.cumsum() / d - count_zero
+        y = 0.5 - (np.absolute(y))
+        sum_x = sum(dy * x) / d
+        self.result = tier.cost_mmr(sum_x)
+        print(x[::d])
+        mmrs = []
+        for i in x[::d]:
+            mmr, tier_name = tier.cost_mmr(int(i))
+            mmrs.append(mmr)
+        print(f"예상 mmr : {self.result}")
+        plt.plot(mmrs, y[::d], color="C0", linewidth=1, linestyle="-")
+        plt.axvline(x=self.result[0], color="r", linestyle="--", linewidth=1)
+        self.figtier()
+        plt.figure(2)
+        plt.plot(x, y, color="C0", linewidth=1, linestyle="-")
+        plt.show()
+
+    def figtier(self):
+        tier = self.tier
+        tier_names = ["아이언1", "실버1", "골드1", "플레티넘1", "다이아1"]
+        for tier_name in tier_names:
+            cost = tier.tier_cost(tier_name)
+            mmr, _ = tier.cost_mmr(cost)
+            plt.axvline(x=mmr, color="b", linestyle=":", linewidth=0.3)

@@ -1,85 +1,104 @@
+from public_setting.function import createFolder, createfile, ENV
+from ER_apis.ER_api import ERAPI_BASE_DB
+from ER_datas.update_game_base_data import BaseDB
 import json
-import os
-from ER_apis.ER_api import save_games, game_api, request_free_characters
-from ER_datas.update_game_base_data import update_game_base_data
 import sys
+import os
 
 
-# Model
-class Apimodel:
-    def save_Api_key(self, key):
-        api_key_dic = {"token": key}
-        with open("setting/secret.json", "w") as file:
-            json.dump(api_key_dic, file)
-        print(os.path.isfile("setting/secret.json"))
+class View:
+    def __init__(self):
+        self.DB = {}
 
-    def test_Api_key(self):
-        if game_api:
-            save_games(31460173, 1)
-            return os.path.isfile("./datas/Ver10.0_Rank_31460173.json")
-        else:
-            return False
+    def eternal_token(self):
+        print("if 1 : skip")
 
-    def create_folders(self):
-        if os.path.exists("setting") == False:
-            os.mkdir("setting")
-        if os.path.exists("datas") == False:
-            os.mkdir("datas")
-        if os.path.exists("origin_datas") == False:
-            os.mkdir("origin_datas")
+        if self.DB.get("bug"):
+            print(self.DB["bug"])
+
+    def db_dir(self):
+        print("game DB 저장할 폴더를 정해주세요")
+
+    def set_game_ver_major(self):
+        print("major : int")
+
+    def set_game_ver_minor(self):
+        print("major : " + self.DB["major"])
+        print("minor : int")
 
 
-# View
-class Apiview:
-    def get_Api_key(self):
-        if len(sys.argv) == 2:
-            return sys.argv[1]
-        elif len(sys.argv) > 2:
-            print("다시 입력해주세요.")
-            sys.exit()
-        else:
-            return input("키를 입력해주세요:")
+class Controller:
+    def __init__(self, types) -> None:
+        self.types = types
 
-    def show_result(self, result):
-        print(result)
+    def eternal_token(self):
+        if self.types:
+            return os.environ.get("ER_TOKEN")
+        return input("Eternal Return Token : ")
+
+    def db_dir(self):
+        if self.types:
+            return ""
+        return input("dir : ")
+
+    def set_game_ver_major(self):
+        if self.types:
+            return "15"
+        return input("major : ")
+
+    def set_game_ver_minor(self):
+        if self.types:
+            return "1"
+        return input("minor : ")
 
 
-# Controller
-class Apicontroller:
-    def __init__(self, model, view):
-        self.model = model
-        self.view = view
+class Model:
+    def __init__(self, types: int = 0) -> None:
+        self.con = Controller(types)
+        self.view = View()
+        self.env = ENV()
 
-    def create_folders(self):
-        self.model.create_folders()
+        self.set_token_get_origin_data()
+        self.setting_base_datas()
+        self.db_dir()
+        self.set_game_ver()
 
-    def get_api(self):
+    def set_token_get_origin_data(self) -> bool:
         while True:
-            Api_key = self.view.get_Api_key()
-            self.model.save_Api_key(Api_key)
-            if self.model.test_Api_key():
-                os.remove("./datas/Ver10.0_Rank_31460173.json")
-                self.view.show_result("입력되었습니다.")
-                break
-            else:
-                self.view.show_result("잘못된 키가 입력되었습니다.")
-                sys.exit()
+            self.view.eternal_token()
+            token = self.con.eternal_token()
+            if token == "1":
+                return True
+            if ERAPI_BASE_DB().save_updated_game_base_data(token=token):
+                self.env.put({"ER_TOKEN": token})
+                return True
+            self.view.DB["bug"] = {"message": "잘못된 token값"}
 
-    def get_test_case(self):
-        save_games(31131392, 1)
-        save_games(31130633, 1)
+    def setting_base_datas(self):
+        BaseDB()
 
-    def make_main_py(self):
-        main = open("main.py", "w")
-        main.close()
+    def create_main(self):
+        createfile("main.py")
+
+    def db_dir(self):
+        self.view.db_dir()
+        dir = self.con.db_dir()
+        self.env.put({"DB_DIR": dir})
+
+    def set_game_ver(self):
+        self.view.set_game_ver_major()
+        major = self.con.set_game_ver_major()
+        self.view.DB["major"] = major
+        self.view.set_game_ver_minor()
+        minor = self.con.set_game_ver_minor()
+        data = {
+            "CURRENT_GAME_MAJOR_VERSION": major,
+            "CURRENT_GAME_MINOR_VERSION": minor,
+        }
+        createFolder("./setting")
+        with open("./setting/game_version.json", "w") as make_file:
+            json.dump(data, make_file)
 
 
-model = Apimodel()
-view = Apiview()
-controller = Apicontroller(model, view)
-controller.create_folders()
-print("1")
-controller.get_api()
-controller.get_test_case()
-controller.make_main_py()
-update_game_base_data()
+types = len(sys.argv) - 1
+Model(types)

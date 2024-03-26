@@ -1,24 +1,12 @@
 from typing import Any
-from function.public_function import emty_list
-from .tier_mmr import Tier
+from public_setting.variable import Tier
 import numpy as np
 from ER_datas.id_characterName import LoadCharacter
 import json
 import re
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-import sklearn
-from sklearn.linear_model import LinearRegression
-from scipy import optimize
-from scipy.integrate import odeint
-from keras.layers import Dense, Activation, Dropout
-from keras.layers import LSTM
-from keras.models import Sequential
-from sklearn.preprocessing import MinMaxScaler
-import time
-import lstm
-
+from ER_apis.crawler import DakPlayerCrawler
+from public_setting.function import Json
+import os
 
 calculater = ["/", "*", "+", "-", "(", ")", "%", "//"]
 
@@ -37,6 +25,33 @@ def _split_caclulater(name: str = "") -> list:
             _change = _changed
         _dic[_n] = _dic.get(_n, "") + i
     return _dic
+
+
+class User:
+    def __init__(self, user_name, season=12, update=False, save=True) -> None:
+        self.user_name = user_name
+        self.season = season
+        self.save = save
+        if update:
+            self.user_data = self.crawling()
+        else:
+            response = self.open_DB()
+            if not response.get(400):
+                self.user_data = response
+            else:
+                self.user_data = self.crawling()
+
+    def open_DB(self):
+        db_dir = os.environ.get("DB_DIR", "./datas")
+        root_dir = f"{db_dir}/user/{self.user_name}.json"
+        return Json().read(root_dir)
+
+    def crawling(self):
+        craw = DakPlayerCrawler(self.user_name, self.season)
+        craw.crawling_mmr_change()
+        if self.save:
+            craw.save()
+        return craw.datas
 
 
 class DataClass:
@@ -144,6 +159,7 @@ class ListFilterData(DataClass):
             self.conditions[self.name_dic[condition_caculate]] += [eval(condition_str)]
 
 
+'''
 class ForeignTeam(DataClass):
     def __init__(self, *conditions):
         self.conditions = set([*conditions, "mmrBefore", "mmrGainInGame"])
@@ -214,6 +230,7 @@ class ForeignTeam(DataClass):
         for team in teams:
             print("team", team)
             teams[team]["tier"].mean()
+'''
 
 
 # 이모티콘 소통의 유의미 한가?(현 mmr, 획득 mmr)
@@ -360,21 +377,15 @@ class Camera_All(DataClass):
         characterNum = user_data["characterNum"]
         str_characterNum = str(characterNum)
         if characterNum == 22:
-            self.dic_cameraGroup_LukeMai[
-                character_name[str_characterNum]
-            ] = self.dic_cameraGroup_LukeMai.get(
-                character_name[str_characterNum], []
-            ) + [
-                addCamera
-            ]
+            self.dic_cameraGroup_LukeMai[character_name[str_characterNum]] = (
+                self.dic_cameraGroup_LukeMai.get(character_name[str_characterNum], [])
+                + [addCamera]
+            )
         elif characterNum == 45:
-            self.dic_cameraGroup_LukeMai[
-                character_name[str_characterNum]
-            ] = self.dic_cameraGroup_LukeMai.get(
-                character_name[str_characterNum], []
-            ) + [
-                addCamera
-            ]
+            self.dic_cameraGroup_LukeMai[character_name[str_characterNum]] = (
+                self.dic_cameraGroup_LukeMai.get(character_name[str_characterNum], [])
+                + [addCamera]
+            )
         else:
             self.dic_cameraGroup_LukeMai["나머지"].append(addCamera)
 
@@ -389,7 +400,15 @@ class Camera_All(DataClass):
         # #티어 별 카메라 설치 평균
         for tier in self.dic_cameraGroup_tier:
             self.dic_cameraGroup_tier[tier] = np.mean(self.dic_cameraGroup_tier[tier])
-        rank_order = ["아이언", "브론즈", "실버", "골드", "플레티넘", "다이아", "데미갓"]
+        rank_order = [
+            "아이언",
+            "브론즈",
+            "실버",
+            "골드",
+            "플레티넘",
+            "다이아",
+            "데미갓",
+        ]
         self.dic_cameraGroup_tier = {
             key: value
             for key, value in sorted(
@@ -442,7 +461,15 @@ class Hyperloop(DataClass):
     def last_calculate(self):
         for tier in self.dic_Hyperloop_tier:
             self.dic_Hyperloop_tier[tier] = np.mean(self.dic_Hyperloop_tier[tier])
-        rank_order = ["아이언", "브론즈", "실버", "골드", "플레티넘", "다이아", "데미갓"]
+        rank_order = [
+            "아이언",
+            "브론즈",
+            "실버",
+            "골드",
+            "플레티넘",
+            "다이아",
+            "데미갓",
+        ]
         self.dic_Hyperloop_tier = {
             key: value
             for key, value in sorted(
@@ -451,4 +478,65 @@ class Hyperloop(DataClass):
         }
 
 
-# #mmr획득량을 통한 향후 티어 예측
+class GetMMRFromRankByTier(DataClass):
+    def __init__(self, *conditions):
+        super().__init__(*conditions)
+        self.conditions = ["gameRank", "mmrBefore", "mmrGainInGame"]
+        self._mmrRank = {1: 40, 2: 25, 3: 20, 4: 10, 5: 5, 6: 5}
+        self._tier = {
+            0: "아이언",
+            1: "브론즈",
+            2: "실버",
+            3: "골드",
+            4: "플레티넘",
+            5: "다이아",
+            6: "미스릴~",
+        }
+        self.datas = {}
+        self.datas["mmrRank"] = []
+        self.datas["mmrGainInGame"] = []
+        self.datas["Tier"] = []
+        self.datas["gameRank"] = []
+
+    def add_data(self, user_data):
+        self.datas["gameRank"].append(user_data["gameRank"])
+        self.datas["mmrRank"].append(self._mmrRank.get(user_data["gameRank"], 0))
+        self.datas["mmrGainInGame"].append(user_data["mmrGainInGame"])
+        self.datas["Tier"].append(
+            self._tier.get(user_data["mmrBefore"] // 1000, "미스릴~")
+        )
+
+
+class GetMMRFromRank(DataClass):
+    def __init__(self, *conditions):
+        super().__init__(*conditions)
+        self.conditions = ["gameRank", "mmrBefore", "mmrGainInGame"]
+        self._mmrRank = {1: 40, 2: 25, 3: 20, 4: 10, 5: 5, 6: 5}
+        self.datas = {}
+        self.datas["mmrRank"] = []
+        self.datas["mmrGainInGame"] = []
+        self.datas["mmrBefore_range250"] = []
+        self.datas["gameRank"] = []
+        self.range_list = {}
+
+    def add_data(self, user_data):
+        self.datas["gameRank"].append(user_data["gameRank"])
+        self.datas["mmrRank"].append(self._mmrRank.get(user_data["gameRank"], 0))
+        self.datas["mmrGainInGame"].append(user_data["mmrGainInGame"])
+        range_name = (user_data["mmrBefore"] // 250) * 250
+        self.datas["mmrBefore_range250"].append(range_name)
+        self.range_list[range_name] = None
+
+    def last_calculate(self):
+        self.range_list = list(self.range_list.keys())
+
+
+class RankPerTier(DataClass):
+    def __init__(self, *conditions):
+        self.datas = {}
+
+    def add_data(self, user_data):
+        return super().add_data(user_data)
+
+    def last_calculate(self):
+        return super().last_calculate()
