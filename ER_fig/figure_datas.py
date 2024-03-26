@@ -8,6 +8,9 @@ from ER_datas.ERDataCleansing import ERDataCleansing
 from ER_datas.id_characterName import LoadCharacter
 import json
 import pandas as pd
+from public_setting.variable import GetMMR
+from scipy.stats import norm
+from public_setting.variable import Tier
 
 plt.rcParams["font.family"] = "Malgun Gothic"
 plt.rcParams["axes.unicode_minus"] = False
@@ -366,3 +369,97 @@ class FigRankPerMMR:
             hue="gameRank",
             multiple="fill",
         )
+
+
+class FigUserRanktoTK:
+    def __init__(self, username) -> None:
+        user = User(username).user_data
+        dic = {}
+        l = len(user["MMR"])
+        print("표본 : ", l)
+        for rank, mmr, tk in zip(*user.values()):
+            dic[(rank, tk)] = dic.get((rank, tk), 0) + 1
+        user = {
+            "RANK": [],
+            "TK": [],
+            "MEAN": [],
+        }
+        for (rank, tk), value in dic.items():
+            user["RANK"].append(rank)
+            user["TK"].append(tk)
+            user["MEAN"].append(100 * value / l)
+        # print(dic)
+
+        plt.rcParams["font.family"] = "Malgun Gothic"
+        df = pd.DataFrame(data=user, columns=list(user.keys()))
+        df = df.sort_values(by=["RANK"], ascending=True)
+        df = df.pivot(index="TK", columns="RANK", values="MEAN")
+        sns.heatmap(df, annot=True, cmap="YlGnBu")
+        plt.show()
+
+
+class UserMMRWithDistribution:
+    def __init__(self, user_name, season=12, update=False, save=True) -> None:
+        self.user = User(user_name, season=season, update=update, save=save).user_data
+        self.tier = Tier()
+        self.db_set()
+        self.fig()
+
+    def db_set(self):
+        user = self.user
+        dic = {}
+        l = len(user["MMR"])
+        print("표본 : ", l)
+        for rank, mmr, tk in zip(*user.values()):
+            dic[(rank, tk)] = dic.get((rank, tk), 0) + 1
+        user = {"RANK": [], "TK": [], "MEAN": [], "GETMMR": []}
+        getmmr = GetMMR()
+        for (rank, tk), value in dic.items():
+            if rank[0] == "#":
+                user["RANK"].append(rank)
+                user["TK"].append(tk)
+                user["MEAN"].append(value / l)
+                user["GETMMR"].append(getmmr.get_mmr(rank=int(rank[1]), kill=tk))
+        self.user = user
+
+    def fig(self):
+        tier = self.tier
+        user = self.user
+        n = 500
+        d = 1000
+        x = np.linspace(0, n, d * n + 1, endpoint=True)
+        dy = np.linspace(0, 0, d * n + 1, endpoint=True)
+
+        count = 1
+        count_zero = 0
+        for per, mmr in zip(user["MEAN"], user["GETMMR"]):
+            v = (1 - per) * per * mmr
+            m = mmr
+            ddy = norm.pdf(x, loc=m, scale=v)
+            if not ddy[0] >= 0:
+                count_zero += per
+            else:
+                count += 1
+                dy += ddy * per
+        y = 0.5 - dy.cumsum() / d - count_zero
+        y = 0.5 - (np.absolute(y))
+        sum_x = sum(dy * x) / d
+        self.result = tier.cost_mmr(sum_x)
+        print(x[::d])
+        mmrs = []
+        for i in x[::d]:
+            mmr, tier_name = tier.cost_mmr(int(i))
+            mmrs.append(mmr)
+        print(f"예상 mmr : {self.result}")
+        plt.plot(mmrs, y[::d], color="C0", linewidth=1, linestyle="-")
+        plt.axvline(x=self.result[0], color="r", linestyle="--", linewidth=1)
+        self.figtier()
+        plt.show()
+
+    def figtier(self):
+        tier = self.tier
+        tier_names = ["아이언1", "실버1", "골드1", "플레티넘1", "다이아1"]
+        for tier_name in tier_names:
+            cost = tier.tier_cost(tier_name)
+            mmr, _ = tier.cost_mmr(cost)
+            plt.axvline(x=mmr, color="b", linestyle=":", linewidth=0.3)

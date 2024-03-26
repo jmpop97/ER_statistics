@@ -3,7 +3,6 @@ import os
 os.system("cls")
 from ER_datas.data_class import DataClass
 from .rank_mmr import mmr_charges
-from .tier_mmr import Tier
 from ER_apis.ER_DB import query_mongoDB, create_query_version
 from public_setting.variable import GameDB, GameVerson
 from dotenv import load_dotenv

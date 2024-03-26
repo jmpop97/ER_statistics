@@ -99,7 +99,12 @@ class DakPlayerCrawler:
         self.player_name = player_name
         self.season = "/matches?season=SEASON_" + str(season) + "&gameMode=RANK&page="
         self.page_num = 1
-        self.mmr_change = []
+        self.datas = {
+            "RANK": [],
+            "MMR": [],
+            "TK": [],
+        }
+
         self.player_name = player_name
 
     def crawling_mmr_change(self):
@@ -118,36 +123,21 @@ class DakPlayerCrawler:
                 exchange_options = self.driver.find_element(
                     By.XPATH, '//*[@id="content-container"]/div[2]/section[2]/div[1]'
                 ).text
-                start_str = "\n딜량\n"
-                end_str = "\nRP"
-                mmr_change = []
-                start_index = exchange_options.find(start_str)
-                while start_index != -1:
-                    end_index = exchange_options.find(
-                        end_str, start_index + len(start_str)
-                    )
-                    if end_index != -1:
-                        mmr = exchange_options[
-                            start_index + len(start_str) : end_index
-                        ].split("\n")[0]
-                        mmr_change.append(int(mmr))
-                    else:
-                        break
-                    start_index = exchange_options.find(
-                        start_str, end_index + len(end_str)
-                    )
-                if mmr_change == []:
+                data_list = exchange_options.split()
+                for i, index in enumerate(data_list):
+                    if index == "랭크":
+                        self.datas["RANK"].append(data_list[i - 1])
+                        self.datas["MMR"].append(int(data_list[i + 19]))
+                        self.datas["TK"].append(int(data_list[i + 7]))
+                if len(data_list) == 4:
                     break
-                self.mmr_change += mmr_change
                 self.page_num += 1
             except Exception as e:
                 break
-        self.mmr_change.reverse()
+        for i in self.datas.values():
+            i.reverse()
         self.driver.quit()
-
-    def get_mmr_change(self):
-        return self.mmr_change
 
     def save(self):
         db_dir = os.environ.get("DB_DIR", "./datas")
-        Json().save(f"{db_dir}/user/{self.player_name}.json", {"mmr": self.mmr_change})
+        Json().save(f"{db_dir}/user/{self.player_name}.json", self.datas)
