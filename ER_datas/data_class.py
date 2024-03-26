@@ -10,6 +10,15 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import sklearn
 from sklearn.linear_model import LinearRegression
+from scipy import optimize
+from scipy.integrate import odeint
+from keras.layers import Dense, Activation, Dropout
+from keras.layers import LSTM
+from keras.models import Sequential
+from sklearn.preprocessing import MinMaxScaler
+import time
+import lstm
+
 
 calculater = ["/", "*", "+", "-", "(", ")", "%", "//"]
 
@@ -443,36 +452,3 @@ class Hyperloop(DataClass):
 
 
 # #mmr획득량을 통한 향후 티어 예측
-class Predict_Tier(DataClass):
-    def __init__(self, *condition):
-        self.condition = condition
-        self.list_mmrBefore = []
-        self.list_mmrGainInGame = []
-        self.list_mmrLossEntryCost = []
-
-    def add_data(self, user_data):
-        mmrBefore = user_data["mmrBefore"]
-        mmrGainInGame = user_data["mmrGainInGame"]
-        mmrLossEntryCost = user_data["mmrLossEntryCost"]
-        self.list_mmrBefore.append(mmrBefore)
-        self.list_mmrGainInGame.append(mmrGainInGame)
-        self.list_mmrLossEntryCost.append(mmrLossEntryCost)
-
-    def last_calculate(self):
-        linear_regression = LinearRegression()
-        list_mmrBefore = np.array(self.list_mmrBefore)
-        list_mmrGainInGame = np.array(self.list_mmrGainInGame)
-        list_mmrBefore = list_mmrBefore.reshape(-1, 1)
-        linear_regression.fit(list_mmrBefore, list_mmrGainInGame)
-
-
-# #크레딧으로 빌드업 템 만드는것과 후반 보면서 빌드하는 것에 차이(gainMMR)
-# class CreditBuildUpMMR(DataClass):
-#     def __init__(self) -> None:
-#         super().__init__()
-
-#     def add_data(self, user_data):
-#         return super().add_data(user_data)
-
-#     def last_calculate(self):
-#         return super().last_calculate()

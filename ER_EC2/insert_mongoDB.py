@@ -13,7 +13,9 @@ import argparse
 
 argument_parser = argparse.ArgumentParser()
 argument_parser.add_argument("--n", help="GameNumbersToSave", type=int, default=1000)
-argument_parser.add_argument("--t", help="Add Top Ranking Player Datas", type=int, default=0)
+argument_parser.add_argument(
+    "--t", help="Add Top Ranking Player Datas", type=int, default=0
+)
 # need to optimaze
 # 1. how to get from_game_id to save
 # 2. how often to get apis.(current: every 00:00)
@@ -22,7 +24,7 @@ argument_parser.add_argument("--t", help="Add Top Ranking Player Datas", type=in
 
 if __name__ == "__main__":
     top_ranker_player_data_flag = argument_parser.parse_args().t
-    if top_ranker_player_data_flag==1:
+    if top_ranker_player_data_flag == 1:
         if insert_game_top_players_mmr_mongoDB():
             exit(0)
         exit(1)
@@ -32,7 +34,7 @@ if __name__ == "__main__":
     print("recent_game_id_from_top_ranker: ", recent_game_id_from_top_ranker)
     from_game_id = recent_game_id_from_top_ranker
     game_numbers_to_save = argument_parser.parse_args().n
-    
+
     # don't use added value
     # have to prevent duplicated key(game id) error
 
