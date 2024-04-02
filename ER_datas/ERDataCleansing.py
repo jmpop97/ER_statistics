@@ -65,6 +65,7 @@ def ERDataCleansing(
                     data_class.add_data(user_data)
                 data_class.add_data_game_id()
         elif DB_type == "test":
+            print("work")
             game_list = [
                 "./handmadeDB/testcase/Ver9.0_Rank_31130633.json",
                 "./handmadeDB/testcase/Ver9.0_Rank_31131392.json",
