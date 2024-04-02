@@ -1,7 +1,6 @@
 import os
 import dotenv
 import json
-import numpy as np
 
 
 def createFolder(directory):
