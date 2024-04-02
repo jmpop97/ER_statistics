@@ -12,7 +12,7 @@ class Predict_Tier:
         self.mmrBefore = None
 
     def get_mmr_data(self):
-        self.mmrBefore=self.c.user_data["MMR"]
+        self.mmrBefore = self.c.user_data["MMR"]
         print(self.mmrBefore)
 
     def LSTM(self):

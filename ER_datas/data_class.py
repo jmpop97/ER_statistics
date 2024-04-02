@@ -377,15 +377,21 @@ class Camera_All(DataClass):
         characterNum = user_data["characterNum"]
         str_characterNum = str(characterNum)
         if characterNum == 22:
-            self.dic_cameraGroup_LukeMai[character_name[str_characterNum]] = (
-                self.dic_cameraGroup_LukeMai.get(character_name[str_characterNum], [])
-                + [addCamera]
-            )
+            self.dic_cameraGroup_LukeMai[
+                character_name[str_characterNum]
+            ] = self.dic_cameraGroup_LukeMai.get(
+                character_name[str_characterNum], []
+            ) + [
+                addCamera
+            ]
         elif characterNum == 45:
-            self.dic_cameraGroup_LukeMai[character_name[str_characterNum]] = (
-                self.dic_cameraGroup_LukeMai.get(character_name[str_characterNum], [])
-                + [addCamera]
-            )
+            self.dic_cameraGroup_LukeMai[
+                character_name[str_characterNum]
+            ] = self.dic_cameraGroup_LukeMai.get(
+                character_name[str_characterNum], []
+            ) + [
+                addCamera
+            ]
         else:
             self.dic_cameraGroup_LukeMai["나머지"].append(addCamera)
 

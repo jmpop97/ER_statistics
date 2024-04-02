@@ -122,7 +122,6 @@ def save_games(
     second: int = 1,
     game_type: list = ["Rank", "Normal", "Cobalt"],
 ) -> bool:
-
     Views.end = n
     bool_value = True
     game_id = start_game
@@ -216,7 +215,6 @@ class ERAPI:
         d: int = 1,
         root_dir: str = os.environ.get("DB_DIR", "./datas"),
     ) -> bool:
-
         self.game_id = start_game
         self.View.end = n
         self.game_type = game_type

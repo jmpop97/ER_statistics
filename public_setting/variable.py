@@ -52,7 +52,6 @@ class GameDB:
         minor_version: int = ["*"],
         root_dir: str = "",
     ) -> None:
-
         self.game_list = []
         self.dir_list = []
         self.root_dir = os.environ.get("GAME_DB", "./datas")
