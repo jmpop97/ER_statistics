@@ -37,6 +37,7 @@ def load_lastest_verson_from_file():
 # game_mode ["Rank", "Normal"]
 # "Rank"
 #
+'''
 def ERDataCleansing(
     data_class=DataClass(),
     game_mode=["Rank"],
@@ -92,7 +93,7 @@ def ERDataCleansing(
         data_class.last_calculate()
         print("유저 : ", data_class.user_count_num)
         print("게임 : ", data_class.game_count_num)
-
+'''
 
 class ERDataCleansing:
     def __init__(
@@ -109,6 +110,7 @@ class ERDataCleansing:
 
         if DB_type == "test":
             game_list = glob("./handmadeDB/testcase/*")
+            print(game_list)
         else:
             game_list = GameDB(
                 types=game_mode,
