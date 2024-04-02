@@ -147,14 +147,11 @@ def save_games(
 #         return False
 #     return True
 
-
-# def request_top_players(
-#     seasonId: str = SEASON_ID, matchingTeamMode: str = RANK_MODE_NUMBER
-# ) -> dict | None:
+# def request_top_players(seasonId:str=SEASON_ID, matchingTeamMode:str=RANK_MODE_NUMBER) -> dict | None:
 #     responced_datas = request_to_ER_api(
 #         request_url=f"https://open-api.bser.io/v1/rank/top/{seasonId}/{matchingTeamMode}"
 #     )
-#     if responced_datas.get("code", 0) != OK_RESPONSE:
+#     if responced_datas.get("code", 0)!=OK_RESPONSE:
 #         return None
 #     return responced_datas
 
