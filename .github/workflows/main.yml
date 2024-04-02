@@ -25,7 +25,10 @@ jobs:
           touch .env
           echo "${{ secrets.ENV }}" >> .env
       - name: pip installation
-        run: pip install -r requirements.txt
+        run : |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
       - name: running project setting
         run: python project_setting.py ${{secrets.ER_API_KEY}}
       - name: running test code
