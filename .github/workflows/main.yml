@@ -25,7 +25,7 @@ jobs:
           touch .env
           echo "${{ secrets.ENV }}" >> .env
       - name: pip installation
-        run : |
+        run: |
           python -m venv venv
           source venv/bin/activate
           pip install -r requirements.txt
