@@ -197,7 +197,6 @@ class BaseDB:
         self.other_data = other_data
 
     def write_dictionary_to_file(self):
-
         # write base dictionary
         base_dict = dict(self.dict_data)
         for key in base_dict.keys():

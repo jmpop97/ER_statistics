@@ -12,14 +12,14 @@ jobs:
   PR:
     name: Pull Request(safe to test) Label
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'safe to test')
+    # if: contains(github.event.pull_request.labels.*.name, 'safe to test')
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{github.event.pull_request.base.sha}}
       - uses: actions/setup-python@v2
         with:
-          python-version: "3.10.6"
+          python-version: "3.11.8"
       - name: Make .env File
         run: |
           touch .env

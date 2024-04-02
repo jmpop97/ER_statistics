@@ -38,9 +38,10 @@ def access_RW_mongoDB() -> MongoClient:
 
 
 def test_access_mongoDB() -> MongoClient:
-    RW_EC2_DB_CONNECTION_STRING, READ_EC2_DB_CONNECTION_STRING = (
-        get_mongoDB_connection_string_from_env()
-    )
+    (
+        RW_EC2_DB_CONNECTION_STRING,
+        READ_EC2_DB_CONNECTION_STRING,
+    ) = get_mongoDB_connection_string_from_env()
     try:
         rw_client = MongoClient(RW_EC2_DB_CONNECTION_STRING, port=27017)
         rw_client.get_database("ERDB")
