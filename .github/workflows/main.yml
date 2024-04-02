@@ -27,7 +27,7 @@ jobs:
       - name: pip installation
         run: pip install -r requirements.txt
       - name: running project setting
-        run: python project_setting.py ${{secrets.ER_API_KEY}}
+        run: python project_setting.py 1
       - name: running test code
         run: python -m unittest
   bug:
