@@ -401,7 +401,7 @@ class FigUserRanktoTK:
 class UserMMRWithDistribution:
     def __init__(self, user_name, season=12, update=False, save=True) -> None:
         self.user = User(user_name, season=season, update=update, save=save).user_data
-        self.last_mmr=self.user["MMR"][-1]
+        self.last_mmr = self.user["MMR"][-1]
         self.tier = Tier()
         self.db_set()
         self.fig()
@@ -416,51 +416,52 @@ class UserMMRWithDistribution:
         Getmmr = GetMMR()
         for (rank, tk), value in dic.items():
             if rank[0] == "#":
-                per=value
-                getmmr=Getmmr.get_mmr(rank=int(rank[1]), kill=tk)
-                user[getmmr]=user.get(getmmr,0)+per
-                l+=per
-        mean=0
-        for mmr,per in user.items():
-            user[mmr]=per/l
-            mean+=mmr*per/l
+                per = value
+                getmmr = Getmmr.get_mmr(rank=int(rank[1]), kill=tk)
+                user[getmmr] = user.get(getmmr, 0) + per
+                l += per
+        mean = 0
+        for mmr, per in user.items():
+            user[mmr] = per / l
+            mean += mmr * per / l
         print("표본 : ", l)
-        print("기대 mmr : ",mean)
-        self.mean=mean
+        print("기대 mmr : ", mean)
+        self.mean = mean
         self.user = user
-    def duble_case(self,case:dict):
-        cases={}
-        for mmr,per in case.items():
-            for _mmr,_per in case.items():
-                mmr_=mmr+_mmr
-                per_=per*_per
-                cases[mmr_]=cases.get(mmr_,0)+per_
+
+    def duble_case(self, case: dict):
+        cases = {}
+        for mmr, per in case.items():
+            for _mmr, _per in case.items():
+                mmr_ = mmr + _mmr
+                per_ = per * _per
+                cases[mmr_] = cases.get(mmr_, 0) + per_
         return cases
 
     def fig(self):
-        '''2^번판에 점수 받을 확률'''
-        n=4
-        user=self.user
+        """2^번판에 점수 받을 확률"""
+        n = 4
+        user = self.user
         for _ in range(n):
-            user=self.duble_case(user)
-        users=list(user.items())
+            user = self.duble_case(user)
+        users = list(user.items())
         users.sort()
-        mmrs,pers=[],[]
-        for mmr,per in users:
-            mmrs.append(mmr/(2**n))
+        mmrs, pers = [], []
+        for mmr, per in users:
+            mmrs.append(mmr / (2**n))
             pers.append(per)
-        pers=1-np.cumsum(pers)
-        plt.plot(mmrs,pers)
+        pers = 1 - np.cumsum(pers)
+        plt.plot(mmrs, pers)
         self.figtier()
         plt.show()
 
     def figtier(self):
         tier = self.tier
-        tier_names = ["아이언1","브론즈1", "실버1", "골드1", "플레티넘1", "다이아1"]
+        tier_names = ["아이언1", "브론즈1", "실버1", "골드1", "플레티넘1", "다이아1"]
         for tier_name in tier_names:
             cost = tier.tier_cost(tier_name)
             plt.axvline(x=cost, color="b", linestyle=":", linewidth=0.3)
         cost = tier.tier_cost(self.last_mmr)
         plt.axvline(x=cost, color="g", linestyle=":", linewidth=1)
         plt.axvline(x=self.mean, color="r", linestyle=":", linewidth=1)
-        print("예측 tier",tier.cost_mmr(self.mean))
+        print("예측 tier", tier.cost_mmr(self.mean))
