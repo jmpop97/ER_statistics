@@ -58,10 +58,6 @@ jobs:
     runs-on: ubuntu-latest
     if: contains(github.ref, 'feature_EC2')
     steps:
-      # - name: Create env file
-      #   run:  |
-      #     touch .env
-      #     echo "${{secrets.ENV_VARS }}" >> .env
       - name: Checkout
         uses: actions/checkout@v3
         
