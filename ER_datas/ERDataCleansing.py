@@ -46,7 +46,6 @@ class ERDataCleansing:
         game_verson = GameVerson()
         major_version, minor_version = game_verson.major, game_verson.minor
         root_dir = os.environ.get("DB_DIR")
-        print(DB_type)
         if DB_type == "test":
             game_list = glob("./handmadeDB/testcase/*")
             print("gmae_list",game_list)
@@ -72,8 +71,8 @@ class ERDataCleansing:
         data_class.last_calculate()
         print("유저 : ", data_class.user_count_num)
         print("게임 : ", data_class.game_count_num)
+        print("db", DB_type)
 
-        pass
 
 
 class ASYNC_ERDataCleansing:
