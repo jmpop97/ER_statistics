@@ -50,7 +50,7 @@ def request_to_ER_api(
     try:
         requestDataWithHeader = requests.get(request_url, headers=header_dict)
 
-        if requestDataWithHeader.status_code == OK_RESPONSE:
+        if requestDataWithHeader.status_code == "200":
             responced_datas = requestDataWithHeader.json()
             return responced_datas
         elif requestDataWithHeader.status_code == 429:
