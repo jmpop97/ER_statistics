@@ -34,65 +34,6 @@ def load_lastest_verson_from_file():
     )
 
 
-# game_mode ["Rank", "Normal"]
-# "Rank"
-#
-def ERDataCleansing(
-    data_class=DataClass(),
-    game_mode=["Rank"],
-    DB_type: str = "",
-    major_version: int = -1,
-    minor_version: int = -1,
-) -> None:
-    if not DB_type:
-        if major_version == -1 and minor_version == -1:
-            major_version, minor_version = load_lastest_verson_from_file()
-        elif major_version == -1 or minor_version == -1:
-            print("version error,used base Version")
-
-    for mode in game_mode:
-        if DB_type == "EC2":
-            major_version, minor_version = load_lastest_verson_from_file()
-            query = create_query_version(
-                majorVersion=major_version,
-                minorVersion=minor_version,
-                game_mode=game_mode,
-            )
-            game_list = query_mongoDB(query_list=query)
-            for game_datas in game_list:
-                for user_data in game_datas["userGames"]:
-                    """유저 정보"""
-                    data_class.add_data(user_data)
-                data_class.add_data_game_id()
-        elif DB_type == "test":
-            game_list = [
-                "./datas/Ver9.0_Rank_31130633.json",
-                "./datas/Ver9.0_Rank_31131392.json",
-            ]
-            print("test")
-        else:
-            game_list = glob(
-                "./datas/Ver{0}.{1}_{2}_*.json".format(
-                    major_version, minor_version, mode
-                )
-            )
-
-        for file_name in game_list:
-            with open(file_name, "r", encoding="utf-8") as f:
-                game_datas = json.load(f)
-            # file_index = str(file_name.split("_")[2]).split(".")[0]
-            # print("Add {0}.json".format(file_index))
-            for user_data in game_datas["userGames"]:
-                """유저 정보"""
-                data_class.add_data(user_data)
-                data_class.user_count()
-            data_class.add_data_game_id()
-            data_class.game_count()
-        data_class.last_calculate()
-        print("유저 : ", data_class.user_count_num)
-        print("게임 : ", data_class.game_count_num)
-
-
 class ERDataCleansing:
     def __init__(
         self,
@@ -105,9 +46,9 @@ class ERDataCleansing:
         game_verson = GameVerson()
         major_version, minor_version = game_verson.major, game_verson.minor
         root_dir = os.environ.get("DB_DIR")
-
         if DB_type == "test":
             game_list = glob("./handmadeDB/testcase/*")
+            print("gmae_list",game_list)
         else:
             game_list = GameDB(
                 types=game_mode,
@@ -130,8 +71,8 @@ class ERDataCleansing:
         data_class.last_calculate()
         print("유저 : ", data_class.user_count_num)
         print("게임 : ", data_class.game_count_num)
+        print("db", DB_type)
 
-        pass
 
 
 class ASYNC_ERDataCleansing:
