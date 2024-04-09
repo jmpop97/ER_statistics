@@ -13,6 +13,57 @@ from public_setting.function import createFolder, createfile, ENV
 load_dotenv()
 
 
+def setting_header(param_dict: dict = {}) -> (dict, dict):
+    with open("setting/secret.json", "r", encoding="utf-8") as f:
+        token = json.load(f)
+    header_dict = {}
+    header_dict.setdefault("x-api-key", token["token"])
+    return header_dict, param_dict
+
+def request_to_ER_api(
+    request_url: str, header_dict: dict = None, second: int = 1
+) -> dict:
+    if header_dict == None:
+        header_dict, _ = setting_header()
+    try:
+        requestDataWithHeader = requests.get(request_url, headers=header_dict)
+
+        if requestDataWithHeader.status_code == "200":
+            responced_datas = requestDataWithHeader.json()
+            return responced_datas
+        elif requestDataWithHeader.status_code == 429:
+            print("Too many requests. Waiting and retrying...")
+            time.sleep(second)
+            return request_to_ER_api(request_url, header_dict, second)
+        else:
+            print("Error: {0}".format(requestDataWithHeader.status_code))
+            return None
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+
+def request_to_ER_api(
+    request_url: str, header_dict: dict = None, second: int = 1
+) -> dict:
+    if header_dict == None:
+        header_dict, _ = setting_header()
+    try:
+        requestDataWithHeader = requests.get(request_url, headers=header_dict)
+
+        if requestDataWithHeader.status_code == OK_RESPONSE:
+            responced_datas = requestDataWithHeader.json()
+            return responced_datas
+        elif requestDataWithHeader.status_code == 429:
+            print("Too many requests. Waiting and retrying...")
+            time.sleep(second)
+            return request_to_ER_api(request_url, header_dict, second)
+        else:
+            print("Error: {0}".format(requestDataWithHeader.status_code))
+            return None
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+
 
 class ERAPI:
     def __init__(self):
