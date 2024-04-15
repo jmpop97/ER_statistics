@@ -66,17 +66,6 @@ def request_to_ER_api(
 
 
 class ERAPI:
-    def __init__(self):
-        self.game_type = ["Rank", "Normal", "Cobalt"]
-        self.game_id = 0
-        self.View = ViewDownLoading()
-        self.type_dic = GameType()
-
-    def open_dir_file(self):
-        file_dir = self.root_dir + "/*"
-        file_list = glob(file_dir)
-        self.game_list = [re.split("[_.]", file)[-2] for file in file_list]
-
     def save_games(
         self,
         start_game: int,
@@ -88,6 +77,7 @@ class ERAPI:
         d: int = 1,
         root_dir: str = os.environ.get("DB_DIR", "./datas"),
     ) -> bool:
+        
         self.game_id = start_game
         self.View.end = n
         self.game_type = game_type
@@ -111,6 +101,18 @@ class ERAPI:
         self.View.start("end")
         self.View.display()
         return not bool(self.View.bug_memory)
+    
+    def __init__(self):
+        self.game_type = ["Rank", "Normal", "Cobalt"]
+        self.game_id = 0
+        self.View = ViewDownLoading()
+        self.type_dic = GameType()
+
+    def open_dir_file(self):
+        file_dir = self.root_dir + "/*"
+        file_list = glob(file_dir)
+        self.game_list = [re.split("[_.]", file)[-2] for file in file_list]
+
 
     def game_api(self) -> bool:
         responced_game_match_data = self.request_to_ER_api(
